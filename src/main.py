@@ -7,28 +7,29 @@ import sklearn.preprocessing as skpre
 
 class RegressionClass:
     def __init__(self):
-        x = np.arange(0, 1, 0.05)
-        y = np.arange(0, 1, 0.05)
-        self.x, self.y = np.meshgrid(x, y)
+        self.x = np.arange(0, 1, 0.05)
+        self.y = np.arange(0, 1, 0.05)
 
-    def franke_function(self):
 
-        term1 = 0.75 * np.exp(-(0.25 * (9 * self.x - 2) ** 2) - 0.25 * ((9 * self.y - 2) ** 2))
-        term2 = 0.75 * np.exp(-((9 * self.x + 1) ** 2) / 49.0 - 0.1 * (9 * self.y + 1))
-        term3 = 0.5 * np.exp(-(9 * self.x - 7) ** 2 / 4.0 - 0.25 * ((9 * self.y - 3) ** 2))
-        term4 = -0.2 * np.exp(-(9 * self.x - 4) ** 2 - (9 * self.y - 7) ** 2)
+    def franke_function(self, x, y):
+
+        term1 = 0.75 * np.exp(-(0.25 * (9 * x - 2) ** 2) - 0.25 * ((9 * y - 2) ** 2))
+        term2 = 0.75 * np.exp(-((9 * x + 1) ** 2) / 49.0 - 0.1 * (9 * y + 1))
+        term3 = 0.5 * np.exp(-(9 * x - 7) ** 2 / 4.0 - 0.25 * ((9 * y - 3) ** 2))
+        term4 = -0.2 * np.exp(-(9 * x - 4) ** 2 - (9 * y - 7) ** 2)
         return term1 + term2 + term3 + term4
 
-    def franke_noise(self, stddev):
-        franke = self.franke_function()
+    def franke_noise(self, x, y, stddev):
+        franke = self.franke_function(x, y)
         noise = stddev * np.random.normal(1, stddev, size=franke.shape)
         return franke + noise
 
 
     def plot_franke(self):
         fig = plt.figure()
+        xx, yy = np.meshgrid(self.x, self.y)
         ax = fig.gca(projection="3d")
-        z = self.franke_noise(0.5)
+        z = self.franke_noise(xx, yy, 0.5)
         # z = self.franke_function()
         # Plot the surface.
         surf = ax.plot_surface(
@@ -44,19 +45,23 @@ class RegressionClass:
 
 
     def design_matrix(self, degree):
-        X = np.zeros((2, len(self.x[0])))
-        X[0, :] = self.x[0, :]
-        X[1, :] = self.y[:, 0]
+        X = np.zeros((2, len(self.x)))
+        X[0, :] = self.x
+        X[1, :] = self.y
         X = X.T
+        print(X)
         poly = skpre.PolynomialFeatures(degree)
         return poly.fit_transform(X)
-        
 
 
-    def ordinary_least_squares(self):
+
+    def ordinary_least_squares(self, degree):
+        X = self.design_matrix(degree)
+        z = self.franke_function(self.x, self.y)
         XTX = np.dot(X.T, X)
-        XTy = np.dot(X.T, y)
-        beta =  np.linalg.solve(XTX, XTy)
+        XTz = np.dot(X.T, z)
+        beta =  np.linalg.solve(XTX, XTz)
+        return beta
 
     def mean_squared_error(self):
         pass
@@ -68,4 +73,4 @@ class RegressionClass:
 if __name__=="__main__":
     np.random.seed(100)
     test = RegressionClass()
-    test.design_matrix(5)
+    test.ordinary_least_squares(5)
