@@ -4,6 +4,7 @@ from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 from random import random, seed
+import sklearn.preprocessing as skpre
 
 class RegressionClass:
     def __init__(self):
@@ -45,16 +46,23 @@ class RegressionClass:
 
     def ordinary_least_squares(self):
         XTX = np.dot(X.T, X)
-        XTy = np.dot(X.T, y )
+        XTy = np.dot(X.T, y)
         beta =  np.linalg.solve(XTX, XTy)
 
     def design_matrix(self, degree):
-        X = np.zeros(len(self.x[0], degree*3 + 1))
-        
+        #N = 0
+        #for i in range(degree + 1):
+        #    N += (i + 1)
+        #print(N)
+        #exit()
+        #X = np.zeros(len(self.x[0], degree*3 + 1))
+        poly = skpre.PolynomialFeatures(degree)
+        print(X)
+
 
     def ordinary_least_squares(self):
         pass
-    
+
 
 
     def mean_squared_error(self):
@@ -66,3 +74,5 @@ class RegressionClass:
 
 if __name__=="__main__":
     np.random.seed(100)
+    test = RegressionClass()
+    test.design_matrix(5)
