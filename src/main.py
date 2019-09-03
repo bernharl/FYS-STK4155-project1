@@ -5,11 +5,12 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 import sklearn.preprocessing as skpre
 
+
 class RegressionClass:
-    def __init__(self):
+    def __init__(self, stddev):
         self.x = np.arange(0, 1, 0.05)
         self.y = np.arange(0, 1, 0.05)
-
+        self.stddev = stddev
 
     def franke_function(self, x, y):
 
@@ -19,17 +20,16 @@ class RegressionClass:
         term4 = -0.2 * np.exp(-(9 * x - 4) ** 2 - (9 * y - 7) ** 2)
         return term1 + term2 + term3 + term4
 
-    def franke_noise(self, x, y, stddev):
+    def franke_noise(self, x, y):
         franke = self.franke_function(x, y)
-        noise = stddev * np.random.normal(1, stddev, size=franke.shape)
+        noise = stddev * np.random.normal(0, self.stddev, size=franke.shape)
         return franke + noise
-
 
     def plot_franke(self):
         fig = plt.figure()
         xx, yy = np.meshgrid(self.x, self.y)
         ax = fig.gca(projection="3d")
-        z = self.franke_noise(xx, yy, 0.5)
+        z = self.franke_noise(xx, yy)
         # z = self.franke_function()
         # Plot the surface.
         surf = ax.plot_surface(
@@ -43,7 +43,6 @@ class RegressionClass:
         fig.colorbar(surf, shrink=0.5, aspect=5)
         plt.show()
 
-
     def design_matrix(self, degree):
         X = np.zeros((2, len(self.x)))
         X[0, :] = self.x
@@ -53,15 +52,18 @@ class RegressionClass:
         poly = skpre.PolynomialFeatures(degree)
         return poly.fit_transform(X)
 
-
-
     def ordinary_least_squares(self, degree):
+        """
+        Calculates ordinary least squares regression and the variance of 
+        estimated parameters
+        """
         X = self.design_matrix(degree)
         z = self.franke_function(self.x, self.y)
         XTX = np.dot(X.T, X)
         XTz = np.dot(X.T, z)
-        beta =  np.linalg.solve(XTX, XTz)
-        return beta
+        beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
+        beta_variance = self.stdd ** 2 * np.inv(XTX)
+        return beta, beta_variance
 
     def mean_squared_error(self):
         pass
@@ -70,7 +72,7 @@ class RegressionClass:
         pass
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     np.random.seed(100)
     test = RegressionClass()
     test.ordinary_least_squares(5)
