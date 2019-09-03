@@ -7,10 +7,12 @@ import sklearn.preprocessing as skpre
 
 
 class RegressionClass:
-    def __init__(self, stddev):
+    def __init__(self, degree, stddev):
         self.x = np.arange(0, 1, 0.05)
         self.y = np.arange(0, 1, 0.05)
         self.stddev = stddev
+        self.degree = degree
+        self.modeled = False
 
     def franke_function(self, x, y):
         """
@@ -51,7 +53,7 @@ class RegressionClass:
         fig.colorbar(surf, shrink=0.5, aspect=5)
         plt.show()
 
-    def design_matrix(self, degree):
+    def design_matrix(self):
         """
         Creates the design matrix
         """
@@ -60,27 +62,35 @@ class RegressionClass:
         X[1, :] = self.y
         X = X.T
         print(X)
-        poly = skpre.PolynomialFeatures(degree)
+        poly = skpre.PolynomialFeatures(self.degree)
         return poly.fit_transform(X)
 
-    def ordinary_least_squares(self, degree):
+    def ordinary_least_squares(self):
         """
-        Calculates ordinary least squares regression and the variance of 
+        Calculates ordinary least squares regression and the variance of
         estimated parameters
         """
-        X = self.design_matrix(degree)
+        X = self.design_matrix()
         z = self.franke_function(self.x, self.y)
         XTX = np.dot(X.T, X)
         XTz = np.dot(X.T, z)
         beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
         beta_variance = self.stdd ** 2 * np.inv(XTX)
-        return beta, beta_variance
+        self.beta, self.beta_variance = beta, beta_variance
+        self.modeled = True
 
     def mean_squared_error(self):
         pass
 
     def r_squared(self):
         pass
+
+
+    def eval_model(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return self.design_matrix() @ self.beta
+
 
 
 if __name__ == "__main__":
