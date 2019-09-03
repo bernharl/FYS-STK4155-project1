@@ -7,15 +7,15 @@ import sklearn.preprocessing as skpre
 
 
 class RegressionClass:
-    def __init__(self, degree=5, stddev=1):
-        self.x = np.arange(0, 1, 0.05)
-        self.y = np.arange(0, 1, 0.05)
+    def __init__(self, degree=5, stddev=1, step=0.05):
+        self.x = np.arange(0, 1, step)
+        self.y = np.arange(0, 1, step)
         self.stddev = stddev
         self.n = len(self.x)
         self.degree = degree
         self.modeled = False
 
-    def franke_function(self, x, y):
+    def f(self, x, y):
         """
         Creates the Franke function
         """
@@ -25,13 +25,13 @@ class RegressionClass:
         term4 = -0.2 * np.exp(-(9 * x - 4) ** 2 - (9 * y - 7) ** 2)
         return term1 + term2 + term3 + term4
 
-    def franke_noise(self, x, y):
+    def noise_function(self, x, y):
         """
-        Adds Gaussian noise to the Franke function,  ~ N(0,stddev)
+        Adds Gaussian noise to the function f,  ~ N(0,stddev)
         """
-        franke = self.franke_function(x, y)
-        noise = self.stddev * np.random.normal(0, self.stddev, size=franke.shape)
-        return franke + noise
+        f = self.f(x, y)
+        noise = np.random.normal(0, self.stddev, size=f.shape)
+        return f + noise
 
     def plot_franke(self):
         """
@@ -40,7 +40,7 @@ class RegressionClass:
         fig = plt.figure()
         xx, yy = np.meshgrid(self.x, self.y)
         ax = fig.gca(projection="3d")
-        z = self.franke_noise(xx, yy)
+        z = self.noise_function(xx, yy)
         # z = self.franke_function()
         # Plot the surface.
         surf = ax.plot_surface(
@@ -71,14 +71,14 @@ class RegressionClass:
         estimated parameters
         """
         X = self.design_matrix()
-        z = self.franke_function(self.x, self.y)
-        XTX = np.dot(X.T, X)
-        XTz = np.dot(X.T, z)
+        z = self.noise_function(self.x, self.y)
+        XTX = X.T @ X
+        XTz = X.T @ z
         beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
-        beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
-        self.beta, self.beta_variance = beta, beta_variance
+        beta_variance = self.stddev ** 2 * np.linalg.pinv(XTX)
+        self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
         self.modeled = True
-
+        self.z_ = z
 
     @property
     def eval_model(self):
@@ -86,29 +86,33 @@ class RegressionClass:
             raise RuntimeError("Run a regression method first!")
         return self.design_matrix() @ self.beta
 
-
     @property
     def mean_squared_error(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
 
-        return (
-            np.sum((self.franke_function(self.x, self.y) - self.eval_model) ** 2)
-            / self.n
-        )
-
+        return np.sum((self.z_ - self.eval_model) ** 2) / self.n
 
     @property
     def r_squared(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        z = self.franke_function(self.x, self.y)
+        z = self.z_
         return 1 - np.sum((z - self.eval_model) ** 2) / np.sum((z - np.mean(z)) ** 2)
 
+    @property
+    def beta_variance(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return self.beta_variance_
 
 if __name__ == "__main__":
     np.random.seed(100)
-    test = RegressionClass()
+    test = RegressionClass(degree=5, stddev=1, step=0.05)
     test.ordinary_least_squares()
-    print(test.mean_squared_error)
+    print(f"MSE {test.mean_squared_error}")
     print(f"R2 score {test.r_squared}")
+    print(f"Beta variance {test.beta_variance}")
+    plt.plot(test.eval_model, color="blue")
+    plt.plot(test.z_, color="red")
+    plt.show()
