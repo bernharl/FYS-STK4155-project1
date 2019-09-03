@@ -8,6 +8,7 @@ import sklearn.model_selection as sklms
 
 # TO DO: Make method for getting model data that is separate from regression method
 
+
 class RegressionClass:
     def __init__(self, degree=5, stddev=1, step=0.05):
         self.x = np.arange(0, 1, step)
@@ -107,8 +108,6 @@ class RegressionClass:
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.beta_variance_
-
-
 
 
 if __name__ == "__main__":
