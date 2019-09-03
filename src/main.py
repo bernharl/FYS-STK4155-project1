@@ -3,8 +3,10 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
-import sklearn.preprocessing as skpre
+import sklearn.preprocessing as sklpre
+import sklearn.model_selection as sklms
 
+# TO DO: Make method for getting model data that is separate from regression method
 
 class RegressionClass:
     def __init__(self, degree=5, stddev=1, step=0.05):
@@ -62,7 +64,7 @@ class RegressionClass:
         X[0, :] = self.x
         X[1, :] = self.y
         X = X.T
-        poly = skpre.PolynomialFeatures(self.degree)
+        poly = sklpre.PolynomialFeatures(self.degree)
         return poly.fit_transform(X)
 
     def ordinary_least_squares(self):
@@ -105,6 +107,9 @@ class RegressionClass:
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.beta_variance_
+
+
+
 
 if __name__ == "__main__":
     np.random.seed(100)
