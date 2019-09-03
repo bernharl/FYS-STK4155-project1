@@ -45,7 +45,7 @@ class RegressionClass:
 
     def ordinary_least_squares(self):
         XTX = np.dot(X.T, X)
-        XTy = np.dot(X.T, y)
+        XTy = np.dot(X.T, y )
         beta =  np.linalg.solve(XTX, XTy)
 
     def design_matrix(self, degree):
