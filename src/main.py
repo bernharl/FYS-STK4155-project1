@@ -7,10 +7,11 @@ import sklearn.preprocessing as skpre
 
 
 class RegressionClass:
-    def __init__(self, degree, stddev):
+    def __init__(self, degree=5, stddev=1):
         self.x = np.arange(0, 1, 0.05)
         self.y = np.arange(0, 1, 0.05)
         self.stddev = stddev
+        self.n = len(self.x)
         self.degree = degree
         self.modeled = False
 
@@ -57,11 +58,10 @@ class RegressionClass:
         """
         Creates the design matrix
         """
-        X = np.zeros((2, len(self.x)))
+        X = np.zeros((2, self.n))
         X[0, :] = self.x
         X[1, :] = self.y
         X = X.T
-        print(X)
         poly = skpre.PolynomialFeatures(self.degree)
         return poly.fit_transform(X)
 
@@ -75,25 +75,40 @@ class RegressionClass:
         XTX = np.dot(X.T, X)
         XTz = np.dot(X.T, z)
         beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
-        beta_variance = self.stdd ** 2 * np.inv(XTX)
+        beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
         self.beta, self.beta_variance = beta, beta_variance
         self.modeled = True
 
-    def mean_squared_error(self):
-        pass
 
-    def r_squared(self):
-        pass
-
-
+    @property
     def eval_model(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.design_matrix() @ self.beta
 
 
+    @property
+    def mean_squared_error(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+
+        return (
+            np.sum((self.franke_function(self.x, self.y) - self.eval_model) ** 2)
+            / self.n
+        )
+
+
+    @property
+    def r_squared(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        z = self.franke_function(self.x, self.y)
+        return 1 - np.sum((z - self.eval_model) ** 2) / np.sum((z - np.mean(z)) ** 2)
+
 
 if __name__ == "__main__":
     np.random.seed(100)
     test = RegressionClass()
-    test.ordinary_least_squares(5)
+    test.ordinary_least_squares()
+    print(test.mean_squared_error)
+    print(f"R2 score {test.r_squared}")
