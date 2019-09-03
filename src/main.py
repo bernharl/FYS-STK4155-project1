@@ -5,7 +5,6 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 from random import random, seed
 
-
 class RegressionClass:
     def __init__(self):
         x = np.arange(0, 1, 0.05)
@@ -42,5 +41,45 @@ class RegressionClass:
         # Add a color bar which maps values to colors.
         fig.colorbar(surf, shrink=0.5, aspect=5)
         plt.show()
-test = RegressionClass()
-test.plot_franke()
+
+
+    def ordinary_least_squares(self):
+
+        X = np.zeros((len(self.x[0]), 5)):
+        X[:, 0] = 1.0
+        X[:, 1] = x[0, :, 0] 
+        X[:, 2] = x[0, :, 0] ** 2
+        X[:, 3] = x[0, :, 0] ** 2
+            self.x, self.y, z, cmap=cm.coolwarm, linewidth=0, antialiased=False
+        )
+        # Customize the z axis.
+        ax.set_zlim(-0.10, 1.40)
+        ax.zaxis.set_major_locator(LinearLocator(10))
+        ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
+        # Add a color bar which maps values to colors.
+        fig.colorbar(surf, shrink=0.5, aspect=5)
+        plt.show()
+
+
+    def design_matrix(self, degree):
+        """ 
+        Setting up the design matrix
+        """
+        X = np.zeros(len(self.x[0], degree*3 + 1))
+        X[:, 0] = 1.0 
+
+
+    def ordinary_least_squares(self):
+    
+
+
+    def mean_squared_error(self):
+        MSE = 
+        return MSE 
+
+    def r_squared(self):
+        R2_score = 
+
+
+if __name__=="__main__":
+    np.random.seed(100)
