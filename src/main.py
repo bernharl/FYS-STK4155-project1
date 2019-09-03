@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
-from random import random, seed
 import sklearn.preprocessing as skpre
 
 class RegressionClass:
@@ -44,26 +43,20 @@ class RegressionClass:
         plt.show()
 
 
+    def design_matrix(self, degree):
+        X = np.zeros((2, len(self.x[0])))
+        X[0, :] = self.x[0, :]
+        X[1, :] = self.y[:, 0]
+        X = X.T
+        poly = skpre.PolynomialFeatures(degree)
+        return poly.fit_transform(X)
+        
+
+
     def ordinary_least_squares(self):
         XTX = np.dot(X.T, X)
         XTy = np.dot(X.T, y)
         beta =  np.linalg.solve(XTX, XTy)
-
-    def design_matrix(self, degree):
-        #N = 0
-        #for i in range(degree + 1):
-        #    N += (i + 1)
-        #print(N)
-        #exit()
-        #X = np.zeros(len(self.x[0], degree*3 + 1))
-        poly = skpre.PolynomialFeatures(degree)
-        print(X)
-
-
-    def ordinary_least_squares(self):
-        pass
-
-
 
     def mean_squared_error(self):
         pass
