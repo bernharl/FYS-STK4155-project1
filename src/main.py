@@ -44,14 +44,9 @@ class RegressionClass:
 
 
     def ordinary_least_squares(self):
-
-        X = np.zeros((len(self.x[0]), 5)):
-        X[:, 0] = 1.0
-        X[:, 1] = x[0, :, 0] 
-        X[:, 2] = x[0, :, 0] ** 2
-        X[:, 3] = x[0, :, 0] ** 2
-            self.x, self.y, z, cmap=cm.coolwarm, linewidth=0, antialiased=False
-        )
+        XTX = np.dot(X.T, X)
+        XTy = np.dot(X.T, y)
+        beta =  np.linalg.solve(XTX, XTy)
 
     def design_matrix(self, degree):
         X = np.zeros(len(self.x[0], degree*3 + 1))
