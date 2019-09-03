@@ -13,7 +13,9 @@ class RegressionClass:
         self.stddev = stddev
 
     def franke_function(self, x, y):
-
+        """
+        Creates the Franke function
+        """
         term1 = 0.75 * np.exp(-(0.25 * (9 * x - 2) ** 2) - 0.25 * ((9 * y - 2) ** 2))
         term2 = 0.75 * np.exp(-((9 * x + 1) ** 2) / 49.0 - 0.1 * (9 * y + 1))
         term3 = 0.5 * np.exp(-(9 * x - 7) ** 2 / 4.0 - 0.25 * ((9 * y - 3) ** 2))
@@ -21,11 +23,17 @@ class RegressionClass:
         return term1 + term2 + term3 + term4
 
     def franke_noise(self, x, y):
+        """
+        Adds Gaussian noise to the Franke function,  ~ N(0,stddev)
+        """
         franke = self.franke_function(x, y)
         noise = stddev * np.random.normal(0, self.stddev, size=franke.shape)
         return franke + noise
 
     def plot_franke(self):
+        """
+        3D plot of the Franke function
+        """
         fig = plt.figure()
         xx, yy = np.meshgrid(self.x, self.y)
         ax = fig.gca(projection="3d")
@@ -44,6 +52,9 @@ class RegressionClass:
         plt.show()
 
     def design_matrix(self, degree):
+        """
+        Creates the design matrix
+        """
         X = np.zeros((2, len(self.x)))
         X[0, :] = self.x
         X[1, :] = self.y
