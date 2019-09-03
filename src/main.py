@@ -30,7 +30,7 @@ class RegressionClass:
         Adds Gaussian noise to the Franke function,  ~ N(0,stddev)
         """
         franke = self.franke_function(x, y)
-        noise = stddev * np.random.normal(0, self.stddev, size=franke.shape)
+        noise = self.stddev * np.random.normal(0, self.stddev, size=franke.shape)
         return franke + noise
 
     def plot_franke(self):
