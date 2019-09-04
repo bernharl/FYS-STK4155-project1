@@ -113,11 +113,11 @@ class RegressionClass:
 
 if __name__ == "__main__":
     np.random.seed(100)
-    test = RegressionClass(degree=5, stddev=1, step=0.05)
     test.ordinary_least_squares()
     print(f"MSE {test.mean_squared_error}")
     print(f"R2 score {test.r_squared}")
     print(f"Beta variance {test.beta_variance}")
     plt.plot(test.eval_model, color="blue")
-    plt.plot(test.z_, color="red")
+    plt.plot(test.z_    test = RegressionClass(degree=5, stddev=1, step=0.05)
+, color="red")
     plt.show()
