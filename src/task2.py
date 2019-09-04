@@ -19,11 +19,17 @@ class ResamplingClass(RegressionClass):
         """
         Method for k-fold cross-validation
         """
-        pass
+        data = self.z_
+        X = self.design_matrix()
+        k_fold_data = np.array_split(data, k)
+        k_fold_X = np.array_split(X, k)
+        index = np.arange(0, self.n, step = 1)
+        index_split = np.array_split(index, k)
         
-
-
-
+            
+        
+        
+        
 if __name__ == "__main__":
     np.random.seed(100)
-    h = ResamplingClass()
+    h = ResamplingClass().k_fold(5)
