@@ -20,7 +20,7 @@ class RegressionClass:
         self.z_ = self.noise_function(self.x, self.y)
 
 
-    def f(self, x, y):
+    def generate_data(self, x, y):
         """
         Creates the Franke function
         """
@@ -34,7 +34,7 @@ class RegressionClass:
         """
         Adds Gaussian noise to the function f,  ~ N(0,stddev)
         """
-        f = self.f(x, y)
+        f = self.generate_data(x, y)
         noise = np.random.normal(0, self.stddev, size=f.shape)
         return f + noise
 
@@ -46,7 +46,6 @@ class RegressionClass:
         xx, yy = np.meshgrid(self.x, self.y)
         ax = fig.gca(projection="3d")
         z = self.noise_function(xx, yy)
-        # z = self.franke_function()
         # Plot the surface.
         surf = ax.plot_surface(
             self.x, self.y, z, cmap=cm.coolwarm, linewidth=0, antialiased=False
@@ -113,11 +112,11 @@ class RegressionClass:
 
 if __name__ == "__main__":
     np.random.seed(100)
+    test = RegressionClass(degree=5, stddev=1, step=0.05)
     test.ordinary_least_squares()
     print(f"MSE {test.mean_squared_error}")
     print(f"R2 score {test.r_squared}")
     print(f"Beta variance {test.beta_variance}")
     plt.plot(test.eval_model, color="blue")
-    plt.plot(test.z_    test = RegressionClass(degree=5, stddev=1, step=0.05)
-, color="red")
+    plt.plot(test.z_, color="red")
     plt.show()
