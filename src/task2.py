@@ -19,7 +19,7 @@ class ResamplingClass(RegressionClass):
         """
         Method for k-fold cross-validation
         """
-        
+        pass
         
 
 
