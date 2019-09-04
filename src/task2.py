@@ -7,7 +7,6 @@ import sklearn.preprocessing as sklpre
 import sklearn.model_selection as sklms
 from main import RegressionClass
 
-
 class ResamplingClass(RegressionClass):
     def __init__(self, degree=5, stddev=1, step=0.05):
         super().__init__(degree, stddev, step)
@@ -20,7 +19,7 @@ class ResamplingClass(RegressionClass):
         """
         Method for k-fold cross-validation
         """
-        pass
+        
         
 
 
