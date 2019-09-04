@@ -17,6 +17,8 @@ class RegressionClass:
         self.n = len(self.x)
         self.degree = degree
         self.modeled = False
+        self.z_ = self.noise_function(self.x, self.y)
+
 
     def f(self, x, y):
         """
@@ -74,14 +76,13 @@ class RegressionClass:
         estimated parameters
         """
         X = self.design_matrix()
-        z = self.noise_function(self.x, self.y)
         XTX = X.T @ X
-        XTz = X.T @ z
+        XTz = X.T @ self.z_
         beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
         beta_variance = self.stddev ** 2 * np.linalg.pinv(XTX)
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
         self.modeled = True
-        self.z_ = z
+
 
     @property
     def eval_model(self):
