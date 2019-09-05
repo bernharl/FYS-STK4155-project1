@@ -10,9 +10,9 @@ from main import RegressionClass
 class ResamplingClass(RegressionClass):
     def __init__(self, degree=5, stddev=1, step=0.05):
         super().__init__(degree, stddev, step)
-        X = super().design_matrix()
+        self.X = super().design_matrix()
         self.X_train, self.X_test, self.z_train, self.z_test = sklms.train_test_split(
-            X, self.z_, test_size=0.33
+            self.X, self.z_, test_size=0.33
         )
 
     def k_fold(self, k):
@@ -20,9 +20,8 @@ class ResamplingClass(RegressionClass):
         Method for k-fold cross-validation
         """
         data = self.z_
-        X = self.design_matrix()
         k_fold_data = np.array_split(data, k)
-        k_fold_X = np.array_split(X, k)
+        k_fold_X = np.array_split(self.X, k)
         index = np.arange(0, self.n, step = 1, dtype="int")
         index_split = np.array_split(index, k)
 
