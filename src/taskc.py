@@ -17,6 +17,9 @@ class PlaceholderName(ResamplingClass):
         self.lambd = lambd
 
     def ridge_regression(self):
+        """
+        Calculates Ridge regression 
+        """
         X = self.X[:,1:]
         I = np.identity(len(self.X[1])-1)
         beta = np.zeros(len(self.X[1]))
@@ -28,6 +31,9 @@ class PlaceholderName(ResamplingClass):
         self.modeled = True
 
     def lasso_regression(self):
+        """
+        Calculates LASSO regression
+        """
         self.beta = skllm.Lasso(alpha=self.lambd).fit(self.X, self.z_)
         self.modeled = True
         
