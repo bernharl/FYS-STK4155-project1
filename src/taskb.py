@@ -17,7 +17,7 @@ class ResamplingClass(RegressionClass):
 
     def k_fold(self, k):
         """
-        Method for k-fold cross-validation
+        Calculates k-fold cross-validation for our data
         """
         data = self.z_
         k_fold_data = np.array_split(data, k)

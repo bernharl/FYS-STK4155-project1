@@ -1,12 +1,7 @@
 from taskb import ResamplingClass
 from main import RegressionClass
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
-import sklearn.preprocessing as sklpre
-import sklearn.model_selection as sklms
 import sklearn.linear_model as skllm
 
 
@@ -17,6 +12,9 @@ class PlaceholderName(ResamplingClass):
         self.lambd = lambd
 
     def ridge_regression(self):
+        """
+        Calculates Ridge regression 
+        """
         X = self.X[:,1:]
         I = np.identity(len(self.X[1])-1)
         beta = np.zeros(len(self.X[1]))
@@ -28,6 +26,9 @@ class PlaceholderName(ResamplingClass):
         self.modeled = True
 
     def lasso_regression(self):
+        """
+        Calculates LASSO regression
+        """
         self.beta = skllm.Lasso(alpha=self.lambd).fit(self.X, self.z_)
         self.modeled = True
         
