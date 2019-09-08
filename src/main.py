@@ -52,6 +52,8 @@ class RegressionClass:
         fig = plt.figure()
         ax = fig.gca(projection="3d")
         # Plot the surface.
+        if self.modeled:
+            ax.scatter(self.x, self.y, self.eval_model)
         surf = ax.plot_surface(
             self.x_meshgrid, self.y_meshgrid, self.z_meshgrid, cmap=cm.coolwarm, linewidth=0, antialiased=False
         )
@@ -118,8 +120,12 @@ class RegressionClass:
 if __name__ == "__main__":
     np.random.seed(100)
     test = RegressionClass(degree=5, stddev=0.1, step=0.05)
-    test.plot_franke()
     test.ordinary_least_squares()
-    print(f"MSE {test.mean_squared_error}")
-    print(f"R2 score {test.r_squared}")
-    print(f"Beta variance {test.beta_variance}")
+    #test.plot_franke()
+    #print(f"MSE {test.mean_squared_error}")
+    #print(f"R2 score {test.r_squared}")
+    #print(f"Beta variance {test.beta_variance}")
+    print(f"x mesh: {test.x_meshgrid}")
+    print(f"x flat: {test.x.shape}")
+    print(f"X: {test.design_matrix().shape}")
+    #print(f"Beta {test.beta}")
