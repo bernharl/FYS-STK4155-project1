@@ -1,12 +1,7 @@
 from taskb import ResamplingClass
 from main import RegressionClass
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
-import sklearn.preprocessing as sklpre
-import sklearn.model_selection as sklms
 import sklearn.linear_model as skllm
 
 
