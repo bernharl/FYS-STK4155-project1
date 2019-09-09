@@ -20,8 +20,8 @@ class RegressionClass:
         self.y = self.y_meshgrid.flatten()
         self.z_ = self.z_meshgrid.flatten()
         self.n = len(self.x)
-        self.X = self.design_matrix()
         self.degree = degree
+        self.X = self.design_matrix()
         self.modeled = False
 
 
@@ -157,8 +157,8 @@ class LassoRegression(RidgeRegression):
 
 if __name__ == "__main__":
     np.random.seed(100)
-    test = RegressionClass(degree=5, stddev=0.1, step=0.05)
-    test.ordinary_least_squares()
+    test = OrdinaryLeastSquares(degree=5, stddev=0.1, step=0.05)
+    test.regression_method()
     test.plot_franke()
     print(f"MSE {test.mean_squared_error}")
     print(f"R2 score {test.r_squared}")
