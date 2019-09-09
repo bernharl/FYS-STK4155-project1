@@ -85,20 +85,28 @@ class RegressionClass:
         index = np.arange(0, self.n, 1)
         index = np.random.choice(index, replace=False, size=len(index))
         index = np.array_split(index, k)
+        r2_score = np.zeros(k)
+        mse = np.zeros_like(r2_score)
         for i in range(k):
             test_index = index[i]
             train_index = []
             for j in range(k):
                 if j != i:
                     train_index.append(index[j])
-            train_index = np.array(train_index).flatten()
+            #train_index = np.array(train_index).flatten()
+            train_index = np.concatenate(train_index)
             self.X_train, self.X_test, self.z_train, self.z_test = (
-                self.X[:, train_index],
-                self.X[:, test_index],
+                self.X[train_index, :],
+                self.X[test_index, :],
                 self.z_[train_index],
-                self.z_[test_indexs],
+                self.z_[test_index],
             )
             self.regression_method()
+            r2_score[i] = self.r_squared
+            mse[i] = self.mean_squared_error
+        r2_score = np.mean(r2_score)
+        mse = np.mean(mse)
+
 
 
 
@@ -110,6 +118,7 @@ class RegressionClass:
         )
         if already_modeled:
             self.regression_method()
+
 
     def design_matrix(self):
         """
@@ -145,7 +154,7 @@ class RegressionClass:
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        return np.sum((self.z_test - self.eval_model) ** 2) / self.n
+        return np.mean((self.z_test - self.eval_model) ** 2)
 
     @property
     def r_squared(self):
@@ -224,9 +233,11 @@ class LassoRegression(RidgeRegression):
 
 if __name__ == "__main__":
     np.random.seed(50)
-    #test = OrdinaryLeastSquares(degree=5, stddev=0.1, step=0.05)
-    #test.regression_method()
-    #test.plot_franke()
+    test = OrdinaryLeastSquares(degree=5, stddev=0.1, step=0.05)
+    test.regression_method()
+    # test.plot_franke()
+    test.k_fold(10)
+    # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
     # print(f"Beta variance {test.beta_variance}")
@@ -234,6 +245,6 @@ if __name__ == "__main__":
     # test2.regression_method()
     # test2.plot_franke()
 
-    test3= LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
-    test3.regression_method()
-    test3.plot_franke()
+    # test3= LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
+    # test3.regression_method()
+    # test3.plot_franke()
