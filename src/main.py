@@ -5,9 +5,7 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 import sklearn.preprocessing as sklpre
 import sklearn.model_selection as sklms
-
-# TO DO: Make method for getting model data that is separate from regression method
-
+import sklearn.linear_model as skllm
 
 class RegressionClass:
     def __init__(self, degree=5, stddev=1, step=0.05):
@@ -23,8 +21,6 @@ class RegressionClass:
         self.degree = degree
         self.X = self.design_matrix()
         self.modeled = False
-
-
 
 
     def generate_data(self):
@@ -91,7 +87,6 @@ class RegressionClass:
     def mean_squared_error(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-
         return np.sum((self.z_ - self.eval_model) ** 2) / self.n
 
     @property
@@ -152,6 +147,7 @@ class LassoRegression(RidgeRegression):
     def eval_model(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
+        return self.beta.predict(self.X)
 
 
 
