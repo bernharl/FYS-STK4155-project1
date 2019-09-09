@@ -14,20 +14,11 @@ class ResamplingClass(RegressionClass):
             self.X, self.z_, test_size=0.33
         )
 
-    def k_fold(self, k):
+    def k_fold(self, k=5):
         """
         Calculates k-fold cross-validation for our data
         """
         data = self.z_
-        k_fold_data = np.array_split(data, k)
-        k_fold_X = np.array_split(self.X, k)
-        index = np.arange(0, self.n, step = 1, dtype="int")
-        index_split = np.array_split(index, k)
-
-        for i in range(k):
-            # print(index_split[i])
-            train_data = k_fold_data[i]
-            test_data = np.delete(k_fold_data, i, axis=0).flatten()
 
 
 
@@ -36,4 +27,5 @@ class ResamplingClass(RegressionClass):
 
 if __name__ == "__main__":
     np.random.seed(100)
-    h = ResamplingClass().k_fold(5)
+    h = ResamplingClass()
+    h.k_fold()
