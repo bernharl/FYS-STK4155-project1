@@ -21,6 +21,9 @@ class RegressionClass:
         self.n = len(self.x)
         self.degree = degree
         self.X = self.design_matrix()
+        self.X_train, self.X_test, self.z_train, self.z_test = sklms.train_test_split(
+            self.X, self.z_, test_size=0.33
+        )
         self.modeled = False
 
     def generate_data(self):
@@ -51,7 +54,7 @@ class RegressionClass:
         ax = fig.gca(projection="3d")
         # Plot the surface.
         if self.modeled:
-            ax.scatter(self.x, self.y, self.eval_model)
+            ax.scatter(self.x, self.y, self.regression_model)
         surf = ax.plot_surface(
             self.x_meshgrid,
             self.y_meshgrid,
@@ -68,6 +71,46 @@ class RegressionClass:
         fig.colorbar(surf, shrink=0.5, aspect=5)
         plt.show()
 
+    def k_fold(self, k=5):
+        """
+        Calculates k-fold cross-validation for our data
+        """
+        already_modeled = self.modeled
+        X_train_old, X_test_old, z_train_old, z_test_old = (
+            self.X_train,
+            self.X_test,
+            self.z_train,
+            self.z_test,
+        )
+        index = np.arange(0, self.n, 1)
+        index = np.random.choice(index, replace=False, size=len(index))
+        index = np.array_split(index, k)
+        for i in range(k):
+            test_index = index[i]
+            train_index = []
+            for j in range(k):
+                if j != i:
+                    train_index.append(index[j])
+            train_index = np.array(train_index).flatten()
+            self.X_train, self.X_test, self.z_train, self.z_test = (
+                self.X[:, train_index],
+                self.X[:, test_index],
+                self.z_[train_index],
+                self.z_[test_indexs],
+            )
+            self.regression_method()
+
+
+
+        self.X_train, self.X_test, self.z_train, self.z_test = (
+            X_train_old,
+            X_test_old,
+            z_train_old,
+            z_test_old,
+        )
+        if already_modeled:
+            self.regression_method()
+
     def design_matrix(self):
         """
         Creates the design matrix
@@ -83,10 +126,17 @@ class RegressionClass:
         raise RuntimeError("Please do not use this class directly!")
 
     @property
-    def eval_model(self):
+    def regression_model(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.X @ self.beta
+
+
+    @property
+    def eval_model(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return self.X_test @ self.beta
 
     @property
     def mean_squared_error(self):
@@ -95,7 +145,7 @@ class RegressionClass:
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        return np.sum((self.z_ - self.eval_model) ** 2) / self.n
+        return np.sum((self.z_test - self.eval_model) ** 2) / self.n
 
     @property
     def r_squared(self):
@@ -104,7 +154,7 @@ class RegressionClass:
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        z = self.z_
+        z = self.z_test
         return 1 - np.sum((z - self.eval_model) ** 2) / np.sum((z - np.mean(z)) ** 2)
 
     @property
@@ -120,9 +170,9 @@ class OrdinaryLeastSquares(RegressionClass):
         Calculates ordinary least squares regression and the variance of
         estimated parameters
         """
-        X = self.X
+        X = self.X_train
         XTX = X.T @ X
-        XTz = X.T @ self.z_
+        XTz = X.T @ self.z_train
         beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
         beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
@@ -138,12 +188,12 @@ class RidgeRegression(RegressionClass):
         """
         Uses Ridge regression for given data to calculate regression parameters
         """
-        X = self.X[:, 1:]
-        I = np.identity(len(self.X[1]) - 1)
-        beta = np.zeros(len(self.X[1]))
-        beta[0] = np.mean(self.z_)  # appears to be wrong, nneed further inspection
+        X = self.X_train[:, 1:]
+        I = np.identity(len(self.X_train[1]) - 1)
+        beta = np.zeros(len(self.X_train[1]))
+        beta[0] = np.mean(self.z_train)  # appears to be wrong, nneed further inspection
         beta[1:] = np.linalg.solve(
-            np.dot(X.T, X) + self.lambd * I, np.dot(X.T, self.z_)
+            np.dot(X.T, X) + self.lambd * I, np.dot(X.T, self.z_train)
         )
         self.beta = beta
         self.modeled = True
@@ -154,7 +204,7 @@ class LassoRegression(RidgeRegression):
         """
         Uses LASSO regression for given data to calculate regression parameters
         """
-        self.beta = skllm.Lasso(alpha=self.lambd).fit(self.X, self.z_)
+        self.beta = skllm.Lasso(alpha=self.lambd).fit(self.X_train, self.z_train)
         self.modeled = True
 
     @property
@@ -164,14 +214,19 @@ class LassoRegression(RidgeRegression):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        return self.beta.predict(self.X)
+        return self.beta.predict(self.X_test)
 
+    @property
+    def regression_model(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return self.beta.predict(self.X)
 
 if __name__ == "__main__":
     np.random.seed(50)
-    test = OrdinaryLeastSquares(degree=5, stddev=0.1, step=0.05)
-    test.regression_method()
-    test.plot_franke()
+    #test = OrdinaryLeastSquares(degree=5, stddev=0.1, step=0.05)
+    #test.regression_method()
+    #test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
     # print(f"Beta variance {test.beta_variance}")
@@ -179,6 +234,6 @@ if __name__ == "__main__":
     # test2.regression_method()
     # test2.plot_franke()
 
-    # test3= LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=1e-50)
-    # test3.regression_method()
-    # test3.plot_franke()
+    test3= LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
+    test3.regression_method()
+    test3.plot_franke()
