@@ -20,6 +20,7 @@ class RegressionClass:
         self.y = self.y_meshgrid.flatten()
         self.z_ = self.z_meshgrid.flatten()
         self.n = len(self.x)
+        self.X = self.design_matrix()
         self.degree = degree
         self.modeled = False
 
@@ -77,12 +78,14 @@ class RegressionClass:
         poly = sklpre.PolynomialFeatures(self.degree)
         return poly.fit_transform(X)
 
+    def regression_method(self):
+        raise RuntimeError("Please do not use this class directly!")
 
     @property
     def eval_model(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        return self.design_matrix() @ self.beta
+        return self.X @ self.beta
 
     @property
     def mean_squared_error(self):
@@ -105,12 +108,12 @@ class RegressionClass:
         return self.beta_variance_
 
 class OrdinaryLeastSquares(RegressionClass):
-    def ordinary_least_squares(self):
+    def regression_method(self):
         """
         Calculates ordinary least squares regression and the variance of
         estimated parameters
         """
-        X = self.design_matrix()
+        X = self.X
         XTX = X.T @ X
         XTz = X.T @ self.z_
         beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
@@ -123,9 +126,9 @@ class RidgeRegression(RegressionClass):
         super().__init__(degree, stddev, step)
         self.lambd = lambd
 
-    def ridge_regression(self):
+    def regression_method(self):
         """
-        Calculates Ridge regression 
+        Calculates Ridge regression
         """
         X = self.X[:,1:]
         I = np.identity(len(self.X[1])-1)
@@ -138,13 +141,13 @@ class RidgeRegression(RegressionClass):
         self.modeled = True
 
 class LassoRegression(RidgeRegression):
-    def lasso_regression(self):
+    def regression_method(self):
         """
         Calculates LASSO regression
         """
         self.beta = skllm.Lasso(alpha=self.lambd).fit(self.X, self.z_)
         self.modeled = True
-        
+
     @property
     def eval_model(self):
         if not self.modeled:

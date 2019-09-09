@@ -10,7 +10,6 @@ from main import RegressionClass
 class ResamplingClass(RegressionClass):
     def __init__(self, degree=5, stddev=1, step=0.05):
         super().__init__(degree, stddev, step)
-        self.X = super().design_matrix()
         self.X_train, self.X_test, self.z_train, self.z_test = sklms.train_test_split(
             self.X, self.z_, test_size=0.33
         )
