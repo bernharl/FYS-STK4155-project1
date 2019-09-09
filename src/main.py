@@ -135,6 +135,7 @@ class RidgeRegression(RegressionClass):
         self.beta = beta
         self.modeled = True
 
+
 class LassoRegression(RidgeRegression):
     def regression_method(self):
         """
