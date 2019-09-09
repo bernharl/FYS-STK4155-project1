@@ -7,6 +7,7 @@ import sklearn.preprocessing as sklpre
 import sklearn.model_selection as sklms
 import sklearn.linear_model as skllm
 
+
 class RegressionClass:
     def __init__(self, degree=5, stddev=1, step=0.05):
         x = np.arange(0, 1, step)
@@ -22,7 +23,6 @@ class RegressionClass:
         self.X = self.design_matrix()
         self.modeled = False
 
-
     def generate_data(self):
         """
         Creates the Franke function
@@ -37,7 +37,7 @@ class RegressionClass:
 
     def noise_function(self):
         """
-        Adds Gaussian noise to the function f,  ~ N(0,stddev)
+        Adds Gaussian noise with mean zero to the generated data
         """
         f = self.generate_data()
         noise = np.random.normal(0, self.stddev, size=f.shape)
@@ -45,7 +45,7 @@ class RegressionClass:
 
     def plot_franke(self):
         """
-        3D plot of the Franke function
+        3D plot of the Franke function and the linear regression model
         """
         fig = plt.figure()
         ax = fig.gca(projection="3d")
@@ -53,7 +53,12 @@ class RegressionClass:
         if self.modeled:
             ax.scatter(self.x, self.y, self.eval_model)
         surf = ax.plot_surface(
-            self.x_meshgrid, self.y_meshgrid, self.z_meshgrid, cmap=cm.coolwarm, linewidth=0, antialiased=False
+            self.x_meshgrid,
+            self.y_meshgrid,
+            self.z_meshgrid,
+            cmap=cm.coolwarm,
+            linewidth=0,
+            antialiased=False,
         )
         # Customize the z axis.
         ax.set_zlim(-0.10, 1.40)
@@ -85,12 +90,18 @@ class RegressionClass:
 
     @property
     def mean_squared_error(self):
+        """
+        Calculates the MSE for chosen regression model
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return np.sum((self.z_ - self.eval_model) ** 2) / self.n
 
     @property
     def r_squared(self):
+        """
+        Calculates R2 score for chosen regression model
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         z = self.z_
@@ -101,6 +112,7 @@ class RegressionClass:
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.beta_variance_
+
 
 class OrdinaryLeastSquares(RegressionClass):
     def regression_method(self):
@@ -116,6 +128,7 @@ class OrdinaryLeastSquares(RegressionClass):
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
         self.modeled = True
 
+
 class RidgeRegression(RegressionClass):
     def __init__(self, degree=5, stddev=1, step=0.05, lambd=0.1):
         super().__init__(degree, stddev, step)
@@ -123,12 +136,12 @@ class RidgeRegression(RegressionClass):
 
     def regression_method(self):
         """
-        Calculates Ridge regression
+        Uses Ridge regression for given data to calculate regression parameters
         """
-        X = self.X[:,1:]
-        I = np.identity(len(self.X[1])-1)
+        X = self.X[:, 1:]
+        I = np.identity(len(self.X[1]) - 1)
         beta = np.zeros(len(self.X[1]))
-        beta[0] = np.mean(self.z_)
+        beta[0] = np.mean(self.z_)  # appears to be wrong, nneed further inspection
         beta[1:] = np.linalg.solve(
             np.dot(X.T, X) + self.lambd * I, np.dot(X.T, self.z_)
         )
@@ -139,24 +152,33 @@ class RidgeRegression(RegressionClass):
 class LassoRegression(RidgeRegression):
     def regression_method(self):
         """
-        Calculates LASSO regression
+        Uses LASSO regression for given data to calculate regression parameters
         """
         self.beta = skllm.Lasso(alpha=self.lambd).fit(self.X, self.z_)
         self.modeled = True
 
     @property
     def eval_model(self):
+        """
+        Returns model data using the design matrix and estimated regression parameters
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.beta.predict(self.X)
 
 
-
 if __name__ == "__main__":
-    np.random.seed(100)
+    np.random.seed(50)
     test = OrdinaryLeastSquares(degree=5, stddev=0.1, step=0.05)
     test.regression_method()
     test.plot_franke()
-    print(f"MSE {test.mean_squared_error}")
-    print(f"R2 score {test.r_squared}")
-    print(f"Beta variance {test.beta_variance}")
+    # print(f"MSE {test.mean_squared_error}")
+    # print(f"R2 score {test.r_squared}")
+    # print(f"Beta variance {test.beta_variance}")
+    # test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05)
+    # test2.regression_method()
+    # test2.plot_franke()
+
+    # test3= LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=1e-50)
+    # test3.regression_method()
+    # test3.plot_franke()
