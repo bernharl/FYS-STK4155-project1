@@ -25,6 +25,7 @@ class RegressionClass:
 
 
 
+
     def generate_data(self):
         """
         Creates the Franke function
@@ -76,19 +77,6 @@ class RegressionClass:
         poly = sklpre.PolynomialFeatures(self.degree)
         return poly.fit_transform(X)
 
-    def ordinary_least_squares(self):
-        """
-        Calculates ordinary least squares regression and the variance of
-        estimated parameters
-        """
-        X = self.design_matrix()
-        XTX = X.T @ X
-        XTz = X.T @ self.z_
-        beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
-        beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
-        self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
-        self.modeled = True
-
 
     @property
     def eval_model(self):
@@ -115,6 +103,53 @@ class RegressionClass:
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.beta_variance_
+
+class OrdinaryLeastSquares(RegressionClass):
+    def ordinary_least_squares(self):
+        """
+        Calculates ordinary least squares regression and the variance of
+        estimated parameters
+        """
+        X = self.design_matrix()
+        XTX = X.T @ X
+        XTz = X.T @ self.z_
+        beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
+        beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
+        self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
+        self.modeled = True
+
+class RidgeRegression(RegressionClass):
+    def __init__(self, degree=5, stddev=1, step=0.05, lambd=0.1):
+        super().__init__(degree, stddev, step)
+        self.lambd = lambd
+
+    def ridge_regression(self):
+        """
+        Calculates Ridge regression 
+        """
+        X = self.X[:,1:]
+        I = np.identity(len(self.X[1])-1)
+        beta = np.zeros(len(self.X[1]))
+        beta[0] = np.mean(self.z_)
+        beta[1:] = np.linalg.solve(
+            np.dot(X.T, X) + self.lambd * I, np.dot(X.T, self.z_)
+        )
+        self.beta = beta
+        self.modeled = True
+
+class LassoRegression(RidgeRegression):
+    def lasso_regression(self):
+        """
+        Calculates LASSO regression
+        """
+        self.beta = skllm.Lasso(alpha=self.lambd).fit(self.X, self.z_)
+        self.modeled = True
+        
+    @property
+    def eval_model(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+
 
 
 if __name__ == "__main__":
