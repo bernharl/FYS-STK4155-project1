@@ -25,7 +25,7 @@ class RegressionClass:
 
     def generate_data(self):
         """
-        Creates the Franke function
+        Generates data using the Franke function
         """
         x = self.x_meshgrid
         y = self.y_meshgrid
