@@ -73,7 +73,7 @@ class RegressionClass:
         fig.colorbar(surf, shrink=0.5, aspect=5)
         plt.show()
 
-    def k_fold(self, k=5):
+    def k_fold(self, k=5, calc_train=False):
         """
         Calculates k-fold cross-validation for our data
         """
@@ -88,6 +88,9 @@ class RegressionClass:
         index = np.random.choice(index, replace=False, size=len(index))
         index = np.array_split(index, k)
         mse = np.zeros(k)
+        if calc_train:
+            mse_train = np.zeros_like(mse)
+
         for i in range(k):
             test_index = index[i]
             train_index = []
@@ -103,7 +106,12 @@ class RegressionClass:
             )
             self.regression_method()
             mse[i] = self.mean_squared_error
+            if calc_train:
+                mse_train[i] = self.mean_squared_error_train
+
         mse = np.mean(mse)
+        if calc_train:
+            mse_train = np.mean(mse_train)
 
         self.X_train, self.X_test, self.z_train, self.z_test = (
             X_train_old,
@@ -113,6 +121,9 @@ class RegressionClass:
         )
         if already_modeled:
             self.regression_method()
+
+        if calc_train:
+            return mse, mse_train
 
         return mse
 
@@ -150,6 +161,13 @@ class RegressionClass:
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return np.mean((self.z_test - self.eval_model) ** 2)
+
+    @property
+    def mean_squared_error_train(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        model_train = self.X_train @ self.beta
+        return np.mean((self.z_train - model_train) ** 2)
 
     @property
     def r_squared(self):
@@ -236,9 +254,9 @@ if __name__ == "__main__":
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
     # print(f"Beta variance {test.beta_variance}")
-    test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05, lambd=0)
-    test2.regression_method()
-    test2.plot_franke()
+    # test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05, lambd=0)
+    # test2.regression_method()
+    # test2.plot_franke()
 
     # test3= LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
     # test3.regression_method()
