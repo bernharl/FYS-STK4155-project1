@@ -105,7 +105,6 @@ class RegressionClass:
             mse[i] = self.mean_squared_error
         mse = np.mean(mse)
 
-
         self.X_train, self.X_test, self.z_train, self.z_test = (
             X_train_old,
             X_test_old,
@@ -136,7 +135,6 @@ class RegressionClass:
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.X @ self.beta
-
 
     @property
     def eval_model(self):
@@ -195,13 +193,11 @@ class RidgeRegression(RegressionClass):
         """
         Uses Ridge regression for given data to calculate regression parameters
         """
-        X = self.X_train[:, 1:]
+        X = self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
         I = np.identity(len(self.X_train[1]) - 1)
         beta = np.zeros(len(self.X_train[1]))
         beta[0] = np.mean(self.z_train)  # appears to be wrong, need further inspection
-        beta[1:] = np.linalg.solve(
-            np.dot(X.T, X) + self.lambd * I, np.dot(X.T, self.z_train)
-        )
+        beta[1:] = np.linalg.solve(X.T @ X + self.lambd * I, X.T @ self.z_train)
         self.beta = beta
         self.modeled = True
 
@@ -229,19 +225,20 @@ class LassoRegression(RidgeRegression):
             raise RuntimeError("Run a regression method first!")
         return self.beta.predict(self.X)
 
+
 if __name__ == "__main__":
     np.random.seed(50)
-    test = OrdinaryLeastSquares(degree=5, stddev=0.1, step=0.05)
-    test.regression_method()
+    # test = OrdinaryLeastSquares(degree=5, stddev=0.1, step=0.05)
+    # test.regression_method()
     # test.plot_franke()
-    test.k_fold(10)
+    # test.k_fold(10)
     # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
     # print(f"Beta variance {test.beta_variance}")
-    # test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05)
-    # test2.regression_method()
-    # test2.plot_franke()
+    test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05, lambd=0)
+    test2.regression_method()
+    test2.plot_franke()
 
     # test3= LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
     # test3.regression_method()
