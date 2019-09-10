@@ -56,7 +56,7 @@ class RegressionClass:
         ax = fig.gca(projection="3d")
         # Plot the surface.
         if self.modeled:
-            ax.scatter(self.x, self.y, self.regression_model)
+            ax.scatter(self.x, self.y, self.regression_model, s=2, color="black")
         surf = ax.plot_surface(
             self.x_meshgrid,
             self.y_meshgrid,
@@ -64,6 +64,7 @@ class RegressionClass:
             cmap=cm.coolwarm,
             linewidth=0,
             antialiased=False,
+            alpha=0.5
         )
         # Customize the z axis.
         ax.set_zlim(-0.10, 1.40)
@@ -254,10 +255,10 @@ if __name__ == "__main__":
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
     # print(f"Beta variance {test.beta_variance}")
-    # test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05, lambd=0)
-    # test2.regression_method()
-    # test2.plot_franke()
+    test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05, lambd=0)
+    test2.regression_method()
+    test2.plot_franke()
 
-    # test3= LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
+    # test3 = LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
     # test3.regression_method()
     # test3.plot_franke()
