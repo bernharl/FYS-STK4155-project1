@@ -10,9 +10,10 @@ import sklearn.linear_model as skllm
 
 class RegressionClass:
     def __init__(self, degree=5, stddev=1, step=0.05):
+        self.stddev = stddev
         x = np.arange(0, 1, step)
         y = np.arange(0, 1, step)
-        self.stddev = stddev
+        # Generate meshgrid data points.
         self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
         self.z_meshgrid = self.noise_function()
         self.x = self.x_meshgrid.flatten()
@@ -21,6 +22,7 @@ class RegressionClass:
         self.n = len(self.x)
         self.degree = degree
         self.X = self.design_matrix()
+        # Split data into training and test set.
         self.X_train, self.X_test, self.z_train, self.z_test = sklms.train_test_split(
             self.X, self.z_, test_size=0.33
         )
@@ -182,7 +184,8 @@ class OrdinaryLeastSquares(RegressionClass):
         X = self.X_train
         XTX = X.T @ X
         XTz = X.T @ self.z_train
-        beta = np.linalg.solve(XTX, XTz)  # solves XTXbeta = XTz
+        # Solve XTXbeta = XTz
+        beta = np.linalg.solve(XTX, XTz)  
         beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
         self.modeled = True
@@ -200,7 +203,7 @@ class RidgeRegression(RegressionClass):
         X = self.X_train[:, 1:]
         I = np.identity(len(self.X_train[1]) - 1)
         beta = np.zeros(len(self.X_train[1]))
-        beta[0] = np.mean(self.z_train)  # appears to be wrong, nneed further inspection
+        beta[0] = np.mean(self.z_train)  # appears to be wrong, need further inspection
         beta[1:] = np.linalg.solve(
             np.dot(X.T, X) + self.lambd * I, np.dot(X.T, self.z_train)
         )
