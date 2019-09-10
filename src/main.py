@@ -84,7 +84,7 @@ class RegressionClass:
             self.z_train,
             self.z_test,
         )
-        index = np.arange(0, self.n, 1)
+        index = np.arange(0, len(X_train_old[:, 0]), 1)
         index = np.random.choice(index, replace=False, size=len(index))
         index = np.array_split(index, k)
         mse = np.zeros(k)
@@ -96,17 +96,14 @@ class RegressionClass:
                     train_index.append(index[j])
             train_index = np.concatenate(train_index)
             self.X_train, self.X_test, self.z_train, self.z_test = (
-                self.X[train_index, :],
-                self.X[test_index, :],
-                self.z_[train_index],
-                self.z_[test_index],
+                X_train_old[train_index, :],
+                X_train_old[test_index, :],
+                z_train_old[train_index],
+                z_train_old[test_index],
             )
             self.regression_method()
             mse[i] = self.mean_squared_error
         mse = np.mean(mse)
-        return mse
-
-
 
 
         self.X_train, self.X_test, self.z_train, self.z_test = (
@@ -118,6 +115,7 @@ class RegressionClass:
         if already_modeled:
             self.regression_method()
 
+        return mse
 
     def design_matrix(self):
         """
@@ -182,7 +180,7 @@ class OrdinaryLeastSquares(RegressionClass):
         XTX = X.T @ X
         XTz = X.T @ self.z_train
         # Solve XTXbeta = XTz
-        beta = np.linalg.solve(XTX, XTz)  
+        beta = np.linalg.solve(XTX, XTz)
         beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
         self.modeled = True
