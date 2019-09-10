@@ -87,15 +87,13 @@ class RegressionClass:
         index = np.arange(0, self.n, 1)
         index = np.random.choice(index, replace=False, size=len(index))
         index = np.array_split(index, k)
-        r2_score = np.zeros(k)
-        mse = np.zeros_like(r2_score)
+        mse = np.zeros(k)
         for i in range(k):
             test_index = index[i]
             train_index = []
             for j in range(k):
                 if j != i:
                     train_index.append(index[j])
-            #train_index = np.array(train_index).flatten()
             train_index = np.concatenate(train_index)
             self.X_train, self.X_test, self.z_train, self.z_test = (
                 self.X[train_index, :],
@@ -104,10 +102,9 @@ class RegressionClass:
                 self.z_[test_index],
             )
             self.regression_method()
-            r2_score[i] = self.r_squared
             mse[i] = self.mean_squared_error
-        r2_score = np.mean(r2_score)
         mse = np.mean(mse)
+        return mse
 
 
 
