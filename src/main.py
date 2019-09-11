@@ -6,20 +6,30 @@ import numpy as np
 import sklearn.preprocessing as sklpre
 import sklearn.model_selection as sklms
 import sklearn.linear_model as skllm
+import imageio
 
 
 class RegressionClass:
     def __init__(
-        self, degree=5, stddev=1, step=0.05, terrain_data=False, filename=None, path=None
+        self,
+        degree=5,
+        stddev=1,
+        step=0.05,
+        terrain_data=False,
+        filename=None,
+        path=None,
     ):
         if terrain_data:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
-                self.z_ = self.read_image_data()
-                self.stddev = np.std(self.z_)
-                self.x = np.arange(0, len(self.z_[0, :]))
-                self.y = np.arange(0, len(self.z_[:, 0]))
+                self.z_meshgrid = self.read_image_data()
+                RuntimeWarning(
+                    "Given standard deviation is ignored and replaced by the image data's deviations"
+                )
+                self.stddev = np.std(self.z_meshgrid)
+                x = np.arange(0, len(self.z_meshgrid[0, :]))
+                y = np.arange(0, len(self.z_meshgrid[:, 0]))
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
                 raise ValueError("filename must be a string")
@@ -42,6 +52,7 @@ class RegressionClass:
             self.X, self.z_, test_size=0.33
         )
         self.modeled = False
+
 
     def generate_data(self):
         """
@@ -80,6 +91,7 @@ class RegressionClass:
         # Plot the surface.
         if self.modeled:
             ax.scatter(self.x, self.y, self.regression_model, s=2, color="black")
+            print("Scattered")
         surf = ax.plot_surface(
             self.x_meshgrid,
             self.y_meshgrid,
@@ -89,12 +101,14 @@ class RegressionClass:
             antialiased=False,
             alpha=0.5,
         )
+        print("Surfed")
         # Customize the z axis.
         ax.set_zlim(-0.10, 1.40)
         ax.zaxis.set_major_locator(LinearLocator(10))
         ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
         # Add a color bar which maps values to colors.
         fig.colorbar(surf, shrink=0.5, aspect=5)
+        print("Showing")
         plt.show()
 
     def k_fold(self, k=5, calc_train=False):
@@ -270,17 +284,27 @@ class LassoRegression(RidgeRegression):
 
 if __name__ == "__main__":
     np.random.seed(50)
-    # test = OrdinaryLeastSquares(degree=5, stddev=0.1, step=0.05)
-    # test.regression_method()
-    # test.plot_franke()
+    test = OrdinaryLeastSquares(
+        degree=5,
+        stddev=0.1,
+        step=0.05,
+        terrain_data=True,
+        filename="SRTM_data_Kolnes_Norway.tif",
+        path="datafiles/",
+    )
+    print("Init")
+    test.regression_method()
+    print("Solved")
+    test.plot_franke()
+    print("Plotted")
     # test.k_fold(10)
     # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
     # print(f"Beta variance {test.beta_variance}")
-    test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05, lambd=0)
-    test2.regression_method()
-    test2.plot_franke()
+    # test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05, lambd=0)
+    # test2.regression_method()
+    # test2.plot_franke()
 
     # test3 = LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
     # test3.regression_method()
