@@ -245,6 +245,17 @@ class RidgeRegression(RegressionClass):
         super().__init__(degree, stddev, step, terrain_data, filename, path)
         self.lambd = lambd
 
+    def design_matrix(self, normalize=False):
+        """
+        Creates the design matrix
+        """
+        X = np.zeros((2, self.n))
+        X[0, :] = self.x - np.mean(self.x) * int(normalize)
+        X[1, :] = self.y - np.mean(self.y) * int(normalize)
+        X = X.T
+        poly = sklpre.PolynomialFeatures(self.degree)
+        return poly.fit_transform(X)
+
     def regression_method(self):
         """
         Uses Ridge regression for given data to calculate regression parameters
@@ -252,7 +263,7 @@ class RidgeRegression(RegressionClass):
         X = self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
         I = np.identity(len(self.X_train[1]) - 1)
         beta = np.zeros(len(self.X_train[1]))
-        beta[0] = np.mean(self.z_train)  
+        beta[0] = np.mean(self.z_train)
         beta[1:] = np.linalg.solve(X.T @ X + self.lambd * I, X.T @ self.z_train)
         self.beta = beta
         self.modeled = True
@@ -284,7 +295,7 @@ class LassoRegression(RidgeRegression):
 
 if __name__ == "__main__":
     np.random.seed(50)
-    
+
     test = RidgeRegression(
         degree=5,
         stddev=0.1,
@@ -293,14 +304,14 @@ if __name__ == "__main__":
         filename="SRTM_data_Kolnes_Norway3.tif",
         path="datafiles/",
     )
-    
+
     print("Init")
     test.regression_method()
     print("Solved")
     test.plot_franke()
     print("Plotted")
     # print(test.k_fold())
-    
+
     # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
@@ -312,4 +323,3 @@ if __name__ == "__main__":
     # test3 = LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
     # test3.regression_method()
     # test3.plot_franke()
-    
