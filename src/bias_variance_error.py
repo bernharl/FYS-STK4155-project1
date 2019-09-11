@@ -8,7 +8,7 @@ pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)
 
 for i in degrees:
-    OLS = OrdinaryLeastSquares(degree=i, stddev=0.1)
+    OLS = OrdinaryLeastSquares(degree=i, stddev=0.1,terrain_data=True, filename="SRTM_data_Kolnes_Norway.tif", path="datafiles/",)
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
 
 plt.plot(degrees, (pred_error), label="Test", color="r")

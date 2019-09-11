@@ -103,7 +103,7 @@ class RegressionClass:
         )
         print("Surfed")
         # Customize the z axis.
-        ax.set_zlim(-0.10, 1.40)
+        #ax.set_zlim(-0.10, 1.40)
         ax.zaxis.set_major_locator(LinearLocator(10))
         ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
         # Add a color bar which maps values to colors.
@@ -295,9 +295,9 @@ if __name__ == "__main__":
     print("Init")
     test.regression_method()
     print("Solved")
-    test.plot_franke()
+    #test.plot_franke()
     print("Plotted")
-    # test.k_fold(10)
+    print(test.k_fold())
     # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
