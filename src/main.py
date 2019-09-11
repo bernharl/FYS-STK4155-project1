@@ -99,7 +99,7 @@ class RegressionClass:
             cmap=cm.coolwarm,
             linewidth=0,
             antialiased=False,
-            alpha=0.5,
+            alpha=0.6,
         )
         print("Surfed")
         # Customize the z axis.
@@ -241,8 +241,8 @@ class OrdinaryLeastSquares(RegressionClass):
 
 
 class RidgeRegression(RegressionClass):
-    def __init__(self, degree=5, stddev=1, step=0.05, lambd=0.1, alt_data=None):
-        super().__init__(degree, stddev, step, alt_data)
+    def __init__(self, degree=5, stddev=1, step=0.05, lambd=0.1, terrain_data=False, filename=None, path=None):
+        super().__init__(degree, stddev, step, terrain_data, filename, path)
         self.lambd = lambd
 
     def regression_method(self):
@@ -252,7 +252,7 @@ class RidgeRegression(RegressionClass):
         X = self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
         I = np.identity(len(self.X_train[1]) - 1)
         beta = np.zeros(len(self.X_train[1]))
-        beta[0] = np.mean(self.z_train)  # appears to be wrong, need further inspection
+        beta[0] = np.mean(self.z_train)  
         beta[1:] = np.linalg.solve(X.T @ X + self.lambd * I, X.T @ self.z_train)
         self.beta = beta
         self.modeled = True
@@ -284,20 +284,23 @@ class LassoRegression(RidgeRegression):
 
 if __name__ == "__main__":
     np.random.seed(50)
-    test = OrdinaryLeastSquares(
+    
+    test = RidgeRegression(
         degree=5,
         stddev=0.1,
-        step=0.05,
-        terrain_data=True,
-        filename="SRTM_data_Kolnes_Norway.tif",
+        step=0.05, lambd=0.1,
+        terrain_data=False,
+        filename="SRTM_data_Kolnes_Norway3.tif",
         path="datafiles/",
     )
+    
     print("Init")
     test.regression_method()
     print("Solved")
-    #test.plot_franke()
+    test.plot_franke()
     print("Plotted")
-    print(test.k_fold())
+    # print(test.k_fold())
+    
     # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
@@ -309,3 +312,4 @@ if __name__ == "__main__":
     # test3 = LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
     # test3.regression_method()
     # test3.plot_franke()
+    
