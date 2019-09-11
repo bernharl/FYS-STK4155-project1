@@ -9,7 +9,7 @@ import sklearn.linear_model as skllm
 
 
 class RegressionClass:
-    def __init__(self, degree=5, stddev=1, step=0.05):
+    def __init__(self, degree=5, stddev=1, step=0.05, alt_data=None):
         self.stddev = stddev
         x = np.arange(0, 1, step)
         y = np.arange(0, 1, step)
@@ -27,6 +27,13 @@ class RegressionClass:
             self.X, self.z_, test_size=0.33
         )
         self.modeled = False
+        if alt_data == None:
+            pass
+        elif callable(alt_data):
+            self.generate_data = alt_data
+        else:
+            raise ValueError("alt_data must be either None or callable")
+
 
     def generate_data(self):
         """
@@ -204,8 +211,8 @@ class OrdinaryLeastSquares(RegressionClass):
 
 
 class RidgeRegression(RegressionClass):
-    def __init__(self, degree=5, stddev=1, step=0.05, lambd=0.1):
-        super().__init__(degree, stddev, step)
+    def __init__(self, degree=5, stddev=1, step=0.05, lambd=0.1, alt_data=None):
+        super().__init__(degree, stddev, step, alt_data)
         self.lambd = lambd
 
     def regression_method(self):

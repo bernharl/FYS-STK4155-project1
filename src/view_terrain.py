@@ -3,7 +3,7 @@ from imageio import imread
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
-
+from main import OrdinaryLeastSquares, RidgeRegression, LassoRegression
 # Load the terrain
 # terrain1 = imread("datafiles/SRTM_data_Kolnes_Norway1.tif")
 # terrain1 = imread("datafiles/SRTM_data_Kolnes_Norway2.tif")
@@ -19,3 +19,6 @@ plt.colorbar()
 plt.xlabel("X")
 plt.ylabel("Y")
 plt.show()
+
+def test():
+    pass
