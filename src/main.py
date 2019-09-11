@@ -9,13 +9,28 @@ import sklearn.linear_model as skllm
 
 
 class RegressionClass:
-    def __init__(self, degree=5, stddev=1, step=0.05, alt_data=None):
-        self.stddev = stddev
-        x = np.arange(0, 1, step)
-        y = np.arange(0, 1, step)
-        # Generate meshgrid data points.
-        self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
-        self.z_meshgrid = self.noise_function()
+    def __init__(
+        self, degree=5, stddev=1, step=0.05, terrain_data=False, filename=None, path=None
+    ):
+        if terrain_data:
+            if isinstance(filename, str):
+                self.filename = filename
+                self.path = path
+                self.z_ = self.read_image_data()
+                self.stddev = np.std(self.z_)
+                self.x = np.arange(0, len(self.z_[0, :]))
+                self.y = np.arange(0, len(self.z_[:, 0]))
+                self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
+            else:
+                raise ValueError("filename must be a string")
+        else:
+            self.stddev = stddev
+            x = np.arange(0, 1, step)
+            y = np.arange(0, 1, step)
+            # Generate meshgrid data points.
+            self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
+            self.z_meshgrid = self.noise_function()
+
         self.x = self.x_meshgrid.flatten()
         self.y = self.y_meshgrid.flatten()
         self.z_ = self.z_meshgrid.flatten()
@@ -27,13 +42,6 @@ class RegressionClass:
             self.X, self.z_, test_size=0.33
         )
         self.modeled = False
-        if alt_data == None:
-            pass
-        elif callable(alt_data):
-            self.generate_data = alt_data
-        else:
-            raise ValueError("alt_data must be either None or callable")
-
 
     def generate_data(self):
         """
@@ -46,6 +54,14 @@ class RegressionClass:
         term3 = 0.5 * np.exp(-(9 * x - 7) ** 2 / 4.0 - 0.25 * ((9 * y - 3) ** 2))
         term4 = -0.2 * np.exp(-(9 * x - 4) ** 2 - (9 * y - 7) ** 2)
         return term1 + term2 + term3 + term4
+
+    def read_image_data(self):
+        if self.path == None:
+            file_name_path = self.filename
+        else:
+            file_name_path = self.path + self.filename
+        imdata = imageio.imread(file_name_path)
+        return imdata
 
     def noise_function(self):
         """
@@ -71,7 +87,7 @@ class RegressionClass:
             cmap=cm.coolwarm,
             linewidth=0,
             antialiased=False,
-            alpha=0.5
+            alpha=0.5,
         )
         # Customize the z axis.
         ax.set_zlim(-0.10, 1.40)

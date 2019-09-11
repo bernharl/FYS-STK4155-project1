@@ -16,10 +16,12 @@ plt.plot(degrees, (pred_error_train), label="Train", color="g")
 plt.xlabel("Model Complexity [polynomial degree]")
 plt.ylabel("Prediction Error")
 plt.ylim([0, 0.14])
-plt.text(0.02, 0.13, "High bias\nLow variance\n<------", fontsize=10,
-        verticalalignment='top')
-plt.text(8, 0.13, "Low bias\nHigh variance\n------>", fontsize=10,
-        verticalalignment='top')
+plt.text(
+    0.02, 0.13, "High bias\nLow variance\n<------", fontsize=10, verticalalignment="top"
+)
+plt.text(
+    8, 0.13, "Low bias\nHigh variance\n------>", fontsize=10, verticalalignment="top"
+)
 plt.legend(loc=3)
 plt.savefig("../doc/figs/biasvariancetradeoff.eps")
 plt.show()
