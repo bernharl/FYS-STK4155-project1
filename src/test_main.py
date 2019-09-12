@@ -14,8 +14,8 @@ def test_kfold():
     EPE_scikit = np.mean(
         -sklms.cross_val_score(
             OLS_scikit,
-            OLS_test.X,
-            OLS_test.z_,
+            OLS_test.X_train,
+            OLS_test.z_train,
             scoring="neg_mean_squared_error",
             cv=kfold,
             n_jobs=-1,
@@ -23,3 +23,4 @@ def test_kfold():
     )
     relative = EPE_test/EPE_scikit
     np.testing.assert_almost_equal(relative, 1,  decimal=1)
+
