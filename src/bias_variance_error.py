@@ -3,6 +3,17 @@ import matplotlib.pyplot as plt
 from main import OrdinaryLeastSquares, RidgeRegression, LassoRegression
 
 
+fonts = {
+        "font.family": "serif",
+        "axes.labelsize": 11,
+        "font.size": 11,
+        "legend.fontsize": 11,
+        "xtick.labelsize": 11,
+        "ytick.labelsize": 11,
+}
+
+plt.rcParams.update(fonts)
+
 # Prediction error for OLS regression
 degrees = np.arange(0, 11)
 
@@ -18,50 +29,133 @@ for i in degrees:
         path="datafiles/",
     )
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
+pred_log = np.log10(pred_error)
+pred_log_train = np.log10(pred_error_train)
+fig, ax = plt.subplots()
+fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
+ax.plot(degrees, pred_log, label="Test", color="r")
+ax.plot(degrees, pred_log_train, label="Train", color="g")
+ax.set_xlabel("Model Complexity [polynomial degree]")
+ax.set_ylabel(r"log$_{10}$(Prediction Error)")
+ax.set_ylim(
+    [
+        np.min(pred_log_train) - np.min(np.abs(pred_log_train)) * 0.1,
+        np.max(pred_log) + np.max(np.abs(pred_log)) * 0.3,
+    ]
+)
 
-"""
-plt.plot(degrees, np.log10(pred_error), label="Test", color="r")
-plt.plot(degrees, np.log10(pred_error_train), label="Train", color="g")
-plt.xlabel("Model Complexity [polynomial degree]")
-plt.ylabel("Prediction Error")
-# plt.ylim([0, 0.14])
-plt.text(
-    0.02, 0.13, "High bias\nLow variance\n<------", fontsize=10, verticalalignment="top"
+ax.text(
+    0.05,
+    0.8,
+    "High bias\nLow variance\n<------",
+    horizontalalignment="left",
+    verticalalignment="baseline",
+    transform=ax.transAxes,
 )
-plt.text(
-    8, 0.13, "Low bias\nHigh variance\n------>", fontsize=10, verticalalignment="top"
+ax.text(
+    0.95,
+    0.8,
+    "Low bias\nHigh variance\n------>",
+    horizontalalignment="right",
+    verticalalignment="baseline",
+    transform=ax.transAxes,
 )
-plt.legend(loc=3)
-plt.savefig("../doc/figs/biasvariancetradeoff.eps")
-plt.show()
-"""
+
+ax.legend(loc=3)
+fig.tight_layout()
+fig.savefig("../doc/figs/biasvariancetradeoff.eps")
+
 
 # Prediction error for Ridge regression
-lambda_Ridge = np.linspace(0, 20, 20)
+lambda_Ridge = np.linspace(0, 200, 100)
 pred_error_ridge = np.zeros_like(lambda_Ridge)
 pred_error_train_ridge = np.zeros_like(pred_error_ridge)
 
 for j, lamb in enumerate(lambda_Ridge):
-    ridge_reg = RidgeRegression(lambd=lamb)
+    ridge_reg = RidgeRegression(lambd=lamb, stddev=0.1)
     pred_error_ridge[j], pred_error_train_ridge[j] = ridge_reg.k_fold(
         k=5, calc_train=True
     )
+pred_log = np.log10(pred_error_ridge)
+pred_log_train = np.log10(pred_error_train_ridge)
 
-plt.plot(lambda_Ridge, np.log10(pred_error_ridge), label="Test", color="r")
-plt.plot(lambda_Ridge, np.log10(pred_error_train_ridge), label="Train", color="g")
-plt.xlabel("Model Complexity [polynomial degree]")
-plt.ylabel("Prediction Error")
-# plt.ylim([0, 0.14])
-plt.text(
-    0.02, 0.13, "High bias\nLow variance\n<------", fontsize=10, verticalalignment="top"
+fig, ax = plt.subplots()
+fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
+ax.plot(lambda_Ridge, pred_log, label="Test", color="r")
+ax.plot(lambda_Ridge, pred_log_train, label="Train", color="g")
+ax.set_xlabel("Hyperparameter")
+ax.set_ylabel(r"log$_{10}$(Prediction Error)")
+ax.set_ylim(
+    [
+        np.min(pred_log_train) - np.min(np.abs(pred_log_train)) * 0.1,
+        np.max(pred_log) + np.max(np.abs(pred_log)) * 0.3,
+    ]
 )
-plt.text(
-    8, 0.13, "Low bias\nHigh variance\n------>", fontsize=10, verticalalignment="top"
-)
-plt.legend(loc=3)
-plt.savefig("../doc/figs/biasvariancetradeoff_Ridge.eps")
-plt.show()
 
+ax.text(
+    0.05,
+    0.8,
+    "Low bias\nHigh variance\n<------",
+    horizontalalignment="left",
+    verticalalignment="baseline",
+    transform=ax.transAxes,
+)
+ax.text(
+    0.95,
+    0.8,
+    "High bias\nLow variance\n------>",
+    horizontalalignment="right",
+    verticalalignment="baseline",
+    transform=ax.transAxes,
+)
+
+ax.legend(loc=3)
+fig.tight_layout()
+fig.savefig("../doc/figs/biasvariancetradeoff_Ridge.eps")
 
 # Prediction error for LASSO regression
-lambda_LASSO = np.linspace(0, 1, 10)
+lambda_lasso = np.linspace(0, 200, 100)
+pred_error_lasso = np.zeros_like(lambda_lasso)
+pred_error_train_lasso = np.zeros_like(pred_error_lasso)
+
+for j, lamb in enumerate(lambda_lasso):
+    lasso_reg = RidgeRegression(lambd=lamb, stddev=0.1)
+    pred_error_lasso[j], pred_error_train_lasso[j] = lasso_reg.k_fold(
+        k=5, calc_train=True
+    )
+pred_log = np.log10(pred_error_lasso)
+pred_log_train = np.log10(pred_error_train_lasso)
+
+fig, ax = plt.subplots()
+fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
+ax.plot(lambda_lasso, pred_log, label="Test", color="r")
+ax.plot(lambda_lasso, pred_log_train, label="Train", color="g")
+ax.set_xlabel("Hyperparameter")
+ax.set_ylabel(r"log$_{10}$(Prediction Error)")
+ax.set_ylim(
+    [
+        np.min(pred_log_train) - np.min(np.abs(pred_log_train)) * 0.1,
+        np.max(pred_log) + np.max(np.abs(pred_log)) * 0.3,
+    ]
+)
+
+ax.text(
+    0.05,
+    0.8,
+    "Low bias\nHigh variance\n<------",
+    horizontalalignment="left",
+    verticalalignment="baseline",
+    transform=ax.transAxes,
+)
+ax.text(
+    0.95,
+    0.8,
+    "High bias\nLow variance\n------>",
+    horizontalalignment="right",
+    verticalalignment="baseline",
+    transform=ax.transAxes,
+)
+
+ax.legend(loc=3)
+fig.tight_layout()
+fig.savefig("../doc/figs/biasvariancetradeoff_LASSO.eps")
