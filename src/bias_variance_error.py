@@ -5,11 +5,11 @@ from main import OrdinaryLeastSquares, RidgeRegression, LassoRegression
 
 fonts = {
         "font.family": "serif",
-        "axes.labelsize": 11,
-        "font.size": 11,
-        "legend.fontsize": 11,
-        "xtick.labelsize": 11,
-        "ytick.labelsize": 11,
+        "axes.labelsize": 10,
+        "font.size": 10,
+        "legend.fontsize": 10,
+        "xtick.labelsize": 10,
+        "ytick.labelsize": 10,
 }
 
 plt.rcParams.update(fonts)
