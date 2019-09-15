@@ -44,15 +44,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et semper nibh, i
 
 \section{Theory}
 \subsection{Linear regression methods}
-If data is assumed to be on the form
+If given a data set $Y$ of $n$ samples and the set is assumed to be on the form
 \[
 Y = f(X)+ \varepsilon 
 \]
-where $\varepsilon \sim N(0,\ \sigma ^2)$, then a model for the data can be on the form
-
+where $\varepsilon \sim N(0,\ \sigma ^2)$ and $f$ is some function of a design matrix $X\in R^{n\times p}$, then it is possible by using linear regression to fit a linear model of $p$ degrees with outcome $\hat{Y}$ on the form
 \[
-\hat{Y} = \bm{X}^T\hat{\beta}.
+\hat{Y} = \bm{X}^T\hat{\beta},
 \]
+with $\hat{\beta}$ being a $(p\times 1)$ vector containing linear regression parameters.
 It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, which minimizes the expression
 \begin{equation}
     \hat{\beta}^\text{OLS} = \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_i^n (y_i - X_{i*}^T \beta)^2 \right],
