@@ -1,4 +1,4 @@
-\documentclass[a4paper, 11pt]{article}
+\documentclass[a4paper, 10pt]{article}
 
 \usepackage[a4paper, total={6in, 8.5in}]{geometry}
 
@@ -36,26 +36,6 @@
 
 \begin{multicols}{2}
 \section{Introduction}
-If we assume data 
-\[
-Y = X^T\beta + \varepsilon 
-\]
-where $\varepsilon \sim N(0,\ \sigma ^2)$, then we can model
-
-\[
-\hat{Y} = \bm{X}^T\hat{\beta} 
-\]
-
-\begin{equation}
-    \hat{\beta}^{OLS} = \text{argmin}_{ \hat{\beta} } \left[ (y_i - x_i^T \beta)^2 \right]
-\end{equation}
-
-
-\begin{equation}
-    \hat{\beta}^{OLS} = (\bm{X}^T\bm{X})^{-1} \bm{X}^T \bm{y}
-    \label{eq:beta_OLS}
-\end{equation}
-
 
 
 
@@ -63,9 +43,47 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et semper nibh, i
 
 
 \section{Theory}
-Donec congue libero in eros pharetra varius. Mauris at facilisis ante. Sed quis turpis porta, ornare mauris et, feugiat ipsum. Mauris convallis cursus magna. Aenean et vehicula arcu, nec blandit felis. Maecenas neque sem, tincidunt in ipsum eget, pulvinar viverra elit. Proin sed arcu in nisi consectetur interdum. Aliquam vestibulum dui nec turpis fringilla maximus. Pellentesque semper lectus sed pulvinar pharetra. Sed condimentum ornare arcu in ultrices. Vestibulum mollis nibh sed porttitor convallis.
+\subsection{Linear regression methods}
+If data is assumed to be on the form
+\[
+Y = f(X)+ \varepsilon 
+\]
+where $\varepsilon \sim N(0,\ \sigma ^2)$, then a model for the data can be on the form
+
+\[
+\hat{Y} = \bm{X}^T\hat{\beta}.
+\]
+It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, which minimizes the expression
+\begin{equation}
+    \hat{\beta}^\text{OLS} = \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_i^n (y_i - X_{i*}^T \beta)^2 \right],
+    \label{eq:argminbeta_OLS}
+\end{equation}
+giving an analytical expression for the optimal regression parameters
+\begin{equation}
+    \hat{\beta}^{\text{OLS}} = (\bm{X}^T\bm{X})^{-1} \bm{X}^T \bm{y}.
+    \label{eq:beta_OLS}
+\end{equation}
+Ridge regression
+\begin{equation}
+    \hat{\beta}^\text{ridge} = \text{argmin}_\beta \left[ \frac{1}{n}\sum_i^n(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right]
+    \label{eq:argminbeta_ridge}
+\end{equation}
+with the analytical optimal regression parameters
+\begin{equation}
+    \hat{\beta}^\text{ridge} = (\bm{X}^T\bm{X} +\lambda \bm{I})^{-1} \bm{X}^T \bm{y}.
+    \label{eq:beta_ridge}
+\end{equation}
+The Least Absolute Shrinkage and Selection Operator (LASSO) regression minimizes
+\begin{equation}
+    \hat{\beta}^\text{lasso} =  \text{argmin}_\beta \left[  \frac{1}{n}\sum_i^n(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right].
+    \label{eq:argminbeta_lasso}
+\end{equation}
+
+\subsection{Resampling}
+When working with limited amounts of data, 
 
 
+k-fold cross-validation
 \section{Method}
 Donec elementum tempor eros, in gravida massa scelerisque ut. Vestibulum facilisis metus at ornare commodo. Donec lacus eros, dapibus id nunc id, suscipit ullamcorper justo. In vel felis mauris. Integer ultricies dolor quis vehicula ultricies. Pellentesque mattis elit quis tempus ullamcorper. Donec a nulla orci. Quisque pretium mauris vitae ipsum aliquet, quis malesuada est viverra. Maecenas quis consequat diam, vitae hendrerit tellus. Donec vulputate erat massa, id sollicitudin tellus cursus ut. Aliquam dui justo, interdum ut efficitur suscipit, ullamcorper eget nisi. Ut gravida, tortor at ornare suscipit, lacus tellus malesuada metus, vel lacinia justo lorem in nisl. Donec et sem eget lacus egestas auctor. Integer egestas, lorem eget volutpat malesuada, est nunc efficitur mi, ac pulvinar elit libero quis risus. Aenean convallis aliquam eros, interdum molestie sapien pretium sit amet. Aliquam at aliquam diam.
 \begin{equation}
@@ -95,6 +113,11 @@ Donec elementum tempor eros, in gravida massa scelerisque ut. Vestibulum facilis
     \includegraphics{figs/biasvariancetradeoff_Ridge.eps}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression.}
 \end{figure}    
+
+\begin{figure}[h]
+    \includegraphics{figs/biasvariancetradeoff_LASSO.eps}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression.}
+\end{figure} 
 
 \begin{multicols}{2}
 
