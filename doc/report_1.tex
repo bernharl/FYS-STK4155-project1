@@ -83,7 +83,19 @@ The Least Absolute Shrinkage and Selection Operator (LASSO) regression minimizes
 Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
 
 \section{Method}
- it can be useful to consider the mean squared error (MSE), defined as 
+Use Franke's function to study how to model a fit for two-dimensional data. The function is given by 
+\begin{align*}
+f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)}\\
+ &+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \\
+ &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} \\
+ &-\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }.
+\end{align*}
+ which in this project is defined on $x,\ y \in [0,1]$. 
+
+
+
+
+it can be useful to consider the mean squared error (MSE), defined as 
 \begin{equation}
     MSE(\hat{y},\hat{\tilde{y}}) = \frac{1}{n}
     \sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2, 
