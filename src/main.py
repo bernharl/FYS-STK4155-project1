@@ -29,6 +29,7 @@ class RegressionClass:
                 )
                 self.stddev = np.std(self.z_meshgrid)
                 x = np.arange(0, len(self.z_meshgrid[0, :]))
+                #x = sklpre.scale(x, with_std=False)
                 y = np.arange(0, len(self.z_meshgrid[:, 0]))
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
@@ -36,6 +37,7 @@ class RegressionClass:
         else:
             self.stddev = stddev
             x = np.arange(0, 1, step)
+            #x = sklpre.scale(x, with_std=False)
             y = np.arange(0, 1, step)
             # Generate meshgrid data points.
             self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
@@ -44,13 +46,15 @@ class RegressionClass:
         self.x = self.x_meshgrid.flatten()
         self.y = self.y_meshgrid.flatten()
         self.z_ = self.z_meshgrid.flatten()
+        #print(np.mean(self.z_))
         self.n = len(self.x)
         self.degree = degree
-        self.X = self.design_matrix()
+        self.X = self.design_matrix(self.x, self.y)
         # Split data into training and test set.
         self.X_train, self.X_test, self.z_train, self.z_test = sklms.train_test_split(
-            self.X, self.z_, test_size=0.33
+            self.X, self.z_, test_size=0.33, shuffle=True
         )
+        #print(np.mean(self.z_train))
         self.modeled = False
 
 
@@ -165,13 +169,15 @@ class RegressionClass:
 
         return mse
 
-    def design_matrix(self):
+    def design_matrix(self, x, y):
         """
         Creates the design matrix
         """
-        X = np.zeros((2, self.n))
-        X[0, :] = self.x
-        X[1, :] = self.y
+        if len(x) != len(y):
+            raise ValueError("x and y must have the same length")
+        X = np.zeros((2, len(x)))
+        X[0, :] = x
+        X[1, :] = y
         X = X.T
         poly = sklpre.PolynomialFeatures(self.degree)
         return poly.fit_transform(X)
@@ -230,11 +236,13 @@ class OrdinaryLeastSquares(RegressionClass):
         Calculates ordinary least squares regression and the variance of
         estimated parameters
         """
-        X = self.X_train
+        X = self.X_train#[:, 1:]
         XTX = X.T @ X
         XTz = X.T @ self.z_train
         # Solve XTXbeta = XTz
+        #beta = np.zeros_like(self.X_train[0])
         beta = np.linalg.solve(XTX, XTz)
+        #beta[0] = np.mean(self.z_train)
         beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
         self.modeled = True
@@ -245,24 +253,38 @@ class RidgeRegression(RegressionClass):
         super().__init__(degree, stddev, step, terrain_data, filename, path)
         self.lambd = lambd
 
-    def design_matrix(self, normalize=False):
-        """
-        Creates the design matrix
-        """
-        X = np.zeros((2, self.n))
-        X[0, :] = self.x - np.mean(self.x) * int(normalize)
-        X[1, :] = self.y - np.mean(self.y) * int(normalize)
-        X = X.T
-        poly = sklpre.PolynomialFeatures(self.degree)
-        return poly.fit_transform(X)
+    #def design_matrix(self, normalize=False):
+    #    """
+    #    Creates the design matrix
+    #    """
+    #    X = np.zeros((2, self.n))
+    #    X[0, :] = self.x - np.mean(self.x) * int(normalize)
+    #    X[1, :] = self.y - np.mean(self.y) * int(normalize)
+    #    X = X.T
+    #    poly = sklpre.PolynomialFeatures(self.degree)
+    #    return poly.fit_transform(X)
 
     def regression_method(self):
         """
         Uses Ridge regression for given data to calculate regression parameters
         """
+        #x_train = sklpre.scale(self.X_train[:, 1], with_std=False)
+        #x_train = self.X_train[:, 1] - np.mean(self.X_train[:, 1])
+        #print(x_train)
+        #y_train = sklpre.scale(self.X_train[:, 2], with_std=False)
+        #y_train = self.X_train[:, 2] - np.mean(self.X_train[:, 2])
+        #print(y_train)
+        #X = self.design_matrix(x_train, y_train)[:, 1:]
+
+        #print(X)
+        #exit()
+        #X = sklpre.scale(self.X_train[:, 1:], with_std=False)
         X = self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
-        I = np.identity(len(self.X_train[1]) - 1)
-        beta = np.zeros(len(self.X_train[1]))
+        #print(X)
+        #X = self.X_train[:, 1:]
+        #self.X[:, 1:] = sklpre.scale(self.X[:, 1:], with_std=False)
+        I = np.identity(len(X[0]))
+        beta = np.zeros(len(X[0]) + 1)
         beta[0] = np.mean(self.z_train)
         beta[1:] = np.linalg.solve(X.T @ X + self.lambd * I, X.T @ self.z_train)
         self.beta = beta
@@ -294,24 +316,32 @@ class LassoRegression(RidgeRegression):
 
 
 if __name__ == "__main__":
-    np.random.seed(50)
+    #np.random.seed(50)
 
-    test = RidgeRegression(
+    ridge = RidgeRegression(
         degree=5,
-        stddev=0.1,
-        step=0.05, lambd=0.1,
+        stddev=0,
+        step=0.05, lambd=0,
         terrain_data=False,
         filename="SRTM_data_Kolnes_Norway3.tif",
         path="datafiles/",
     )
+    ridge.regression_method()
+    ridge.plot_franke()
 
-    print("Init")
-    test.regression_method()
-    print("Solved")
-    test.plot_franke()
-    print("Plotted")
+    ols = OrdinaryLeastSquares(
+            degree=5,
+            stddev=0,
+            step=0.05,
+            terrain_data=False,
+            filename="SRTM_data_Kolnes_Norway3.tif",
+            path="datafiles/",
+            )
+    ols.regression_method()
+    ols.plot_franke()
+    print(ridge.beta[0], ols.beta[0])
+    #print(np.mean(ols.z_train), np.mean(ridge.z_train))
     # print(test.k_fold())
-
     # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
