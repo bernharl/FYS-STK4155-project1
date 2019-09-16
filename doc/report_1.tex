@@ -44,15 +44,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et semper nibh, i
 
 \section{Theory}
 \subsection{Linear regression methods}
-If data is assumed to be on the form
+If given a data set $Y$ of $n$ samples and the set is assumed to be on the form
 \[
 Y = f(X)+ \varepsilon 
 \]
-where $\varepsilon \sim N(0,\ \sigma ^2)$, then a model for the data can be on the form
-
+where $\varepsilon \sim N(0,\ \sigma ^2)$ and $f$ is some function of a design matrix $X\in R^{n\times p}$, then it is possible by using linear regression to fit a linear model of $p$ degrees with outcome $\hat{Y}$ on the form
 \[
-\hat{Y} = \bm{X}^T\hat{\beta}.
+\hat{Y} = \bm{X}^T\hat{\beta},
 \]
+with $\hat{\beta}$ being a $(p\times 1)$ vector containing linear regression parameters.
 It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, which minimizes the expression
 \begin{equation}
     \hat{\beta}^\text{OLS} = \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_i^n (y_i - X_{i*}^T \beta)^2 \right],
@@ -80,19 +80,18 @@ The Least Absolute Shrinkage and Selection Operator (LASSO) regression minimizes
 \end{equation}
 
 \subsection{Resampling}
-When working with limited amounts of data, 
+Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
 
-
-k-fold cross-validation
 \section{Method}
-Donec elementum tempor eros, in gravida massa scelerisque ut. Vestibulum facilisis metus at ornare commodo. Donec lacus eros, dapibus id nunc id, suscipit ullamcorper justo. In vel felis mauris. Integer ultricies dolor quis vehicula ultricies. Pellentesque mattis elit quis tempus ullamcorper. Donec a nulla orci. Quisque pretium mauris vitae ipsum aliquet, quis malesuada est viverra. Maecenas quis consequat diam, vitae hendrerit tellus. Donec vulputate erat massa, id sollicitudin tellus cursus ut. Aliquam dui justo, interdum ut efficitur suscipit, ullamcorper eget nisi. Ut gravida, tortor at ornare suscipit, lacus tellus malesuada metus, vel lacinia justo lorem in nisl. Donec et sem eget lacus egestas auctor. Integer egestas, lorem eget volutpat malesuada, est nunc efficitur mi, ac pulvinar elit libero quis risus. Aenean convallis aliquam eros, interdum molestie sapien pretium sit amet. Aliquam at aliquam diam.
+ it can be useful to consider the mean squared error (MSE), defined as 
 \begin{equation}
     MSE(\hat{y},\hat{\tilde{y}}) = \frac{1}{n}
     \sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2, 
     \label{eq:MSE}
 \end{equation}
+and the $R^2$ score, defined as 
 \begin{equation}
-    R^2(\hat{y}, \tilde{\hat{y}}) = 1 - \frac{\sum_{i=0}^{n - 1} (y_i - \tilde{y}_i)^2}{\sum_{i=0}^{n - 1} (y_i - \bar{y})^2},
+    R^2(\hat{y}, \tilde{\hat{y}}) = 1 - \frac{\sum_{i=0}^{n - 1} (y_i - \tilde{y}_i)^2}{\sum_{i=0}^{n - 1} (y_i - \bar{y})^2}.
     \label{eq:R2}
 \end{equation}
 
@@ -103,18 +102,18 @@ Donec elementum tempor eros, in gravida massa scelerisque ut. Vestibulum facilis
 
 \end{multicols}
 
-\begin{figure}[t!]
+\begin{figure}[H]
     \includegraphics[scale=1]{figs/biasvariancetradeoff.eps}
     \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression.}
     \label{fig:my_label}
 \end{figure}
     
-\begin{figure}[h]
+\begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_Ridge.eps}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression.}
 \end{figure}    
 
-\begin{figure}[h]
+\begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_LASSO.eps}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression.}
 \end{figure} 
