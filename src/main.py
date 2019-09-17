@@ -253,17 +253,6 @@ class RidgeRegression(RegressionClass):
         super().__init__(degree, stddev, step, terrain_data, filename, path)
         self.lambd = lambd
 
-    #def design_matrix(self, normalize=False):
-    #    """
-    #    Creates the design matrix
-    #    """
-    #    X = np.zeros((2, self.n))
-    #    X[0, :] = self.x - np.mean(self.x) * int(normalize)
-    #    X[1, :] = self.y - np.mean(self.y) * int(normalize)
-    #    X = X.T
-    #    poly = sklpre.PolynomialFeatures(self.degree)
-    #    return poly.fit_transform(X)
-
     def regression_method(self):
         """
         Uses Ridge regression for given data to calculate regression parameters
@@ -317,18 +306,18 @@ class LassoRegression(RidgeRegression):
 
 if __name__ == "__main__":
     #np.random.seed(50)
-
+    """
     ridge = RidgeRegression(
         degree=5,
         stddev=0,
         step=0.05, lambd=0,
-        terrain_data=False,
+        terrain_data=True,
         filename="SRTM_data_Kolnes_Norway3.tif",
         path="datafiles/",
     )
-    ridge.regression_method()
-    ridge.plot_franke()
-
+    # ridge.regression_method()
+    #ridge.plot_franke()
+    
     ols = OrdinaryLeastSquares(
             degree=5,
             stddev=0,
@@ -337,11 +326,12 @@ if __name__ == "__main__":
             filename="SRTM_data_Kolnes_Norway3.tif",
             path="datafiles/",
             )
-    ols.regression_method()
-    ols.plot_franke()
-    print(ridge.beta[0], ols.beta[0])
+    print(ols.k_fold())
+    """
+   
+    #print(ridge.beta[0], ols.beta[0])
     #print(np.mean(ols.z_train), np.mean(ridge.z_train))
-    # print(test.k_fold())
+    #print(ridge.k_fold())
     # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
@@ -353,3 +343,13 @@ if __name__ == "__main__":
     # test3 = LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
     # test3.regression_method()
     # test3.plot_franke()
+    
+    lasso = LassoRegression(
+        degree=5,
+        stddev=0,
+        step=0.05, lambd=0.01,
+        terrain_data=True,
+        filename="SRTM_data_Norway_1.tif",
+        path="datafiles/",
+    )
+    lasso.regression_method()
