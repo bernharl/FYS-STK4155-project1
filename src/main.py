@@ -24,7 +24,7 @@ class RegressionClass:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
-                self.z_meshgrid = (self.read_image_data())[::2]
+                self.z_meshgrid = (self.read_image_data())#[::2]
                 print(self.z_meshgrid.nbytes / 1024**3)
                 #exit()
                 RuntimeWarning(
@@ -100,12 +100,12 @@ class RegressionClass:
         ax = fig.gca(projection="3d")
         # Plot the surface.
         if self.modeled:
-            ax.scatter(self.x[::1], self.y[::1], self.regression_model[::1], s=2, color="black")
+            ax.scatter(self.x[::1000], self.y[::1000], self.regression_model[::1000], s=2, color="black")
             print("Scattered")
         surf = ax.plot_surface(
-            self.x_meshgrid[::1],
-            self.y_meshgrid[::1],
-            self.z_meshgrid[::1],
+            self.x_meshgrid[::1000],
+            self.y_meshgrid[::1000],
+            self.z_meshgrid[::1000],
             cmap=cm.coolwarm,
             linewidth=0,
             antialiased=False,
@@ -242,8 +242,6 @@ class OrdinaryLeastSquares(RegressionClass):
         Calculates ordinary least squares regression and the variance of
         estimated parameters
         """
-        print("HALLO")
-
         X = self.X_train  # [:, 1:]
         XTX = X.T @ X
         XTz = X.T @ self.z_train
@@ -272,10 +270,6 @@ class RidgeRegression(RegressionClass):
         super().__init__(degree, stddev, step, terrain_data, filename, path)
         self.lambd = lambd
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 9852a4db86bdeecb0cb58a9a87de4bfe773c697d
     def regression_method(self):
         """
         Uses Ridge regression for given data to calculate regression parameters
@@ -350,7 +344,7 @@ if __name__ == "__main__":
             )
     print(ols.k_fold())
     """
-    
+
     #print(ridge.beta[0], ols.beta[0])
     #print(np.mean(ols.z_train), np.mean(ridge.z_train))
     #print(ridge.k_fold())
@@ -369,9 +363,10 @@ if __name__ == "__main__":
     lasso = LassoRegression(
         degree=5,
         stddev=0,
-        step=0.05, lambd=0.01,
+        step=0.05, lambd=5000,
         terrain_data=True,
         filename="SRTM_data_Norway_1.tif",
         path="datafiles/",
     )
     lasso.regression_method()
+    lasso.plot_franke()
