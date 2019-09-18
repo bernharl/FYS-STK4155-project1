@@ -15,7 +15,7 @@ fonts = {
 plt.rcParams.update(fonts)
 
 # Prediction error for OLS regression
-degrees = np.arange(0, 11)
+degrees = np.arange(0, 7)
 
 pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)
@@ -25,7 +25,7 @@ for i in degrees:
         degree=i,
         stddev=1,
         terrain_data=True,
-        filename="SRTM_data_Kolnes_Norway.tif",
+        filename="SRTM_data_Kolnes_Norway3.tif",
         path="datafiles/",
     )
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
@@ -65,6 +65,7 @@ ax.legend(loc=3)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff.eps")
 
+exit()
 
 # Prediction error for Ridge regression
 lambda_Ridge = np.linspace(0, 0.1, 100)
