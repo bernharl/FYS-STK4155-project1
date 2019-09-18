@@ -25,17 +25,11 @@ class RegressionClass:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
-<<<<<<< HEAD
-                self.z_meshgrid = (self.read_image_data())#[::2]
-                print(self.z_meshgrid.nbytes / 1024**3)
-                #exit()
-=======
                 self.z_meshgrid = np.asarray(self.read_image_data())#[::1]
                 print(type(self.z_meshgrid))
                 print(self.z_meshgrid.shape)
                 #print(self.z_meshgrid.nbytes / 1024 ** 3)
                 # exit()
->>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
                 RuntimeWarning(
                     "Given standard deviation is ignored and replaced by the image data's deviations"
                 )
@@ -129,19 +123,6 @@ class RegressionClass:
         ax = fig.gca(projection="3d")
         # Plot the surface.
         if self.modeled:
-<<<<<<< HEAD
-            ax.scatter(self.x[::1000], self.y[::1000], self.regression_model[::1000], s=2, color="black")
-            print("Scattered")
-        surf = ax.plot_surface(
-            self.x_meshgrid[::1000],
-            self.y_meshgrid[::1000],
-            self.z_meshgrid[::1000],
-            cmap=cm.coolwarm,
-            linewidth=0,
-            antialiased=False,
-            alpha=0.6,
-        )
-=======
             ax.scatter(
                 self.x[::skip], self.y[::skip], self.regression_model[::skip], s=2, color="black"
             )
@@ -157,7 +138,6 @@ class RegressionClass:
                 alpha=0.2,
             )
             fig.colorbar(surf, shrink=0.5, aspect=5)
->>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
         print("Surfed")
         # Customize the z axis.
         # ax.set_zlim(-0.10, 1.40)
@@ -427,23 +407,6 @@ if __name__ == "__main__":
     )
     ridge.regression_method()
     #ridge.plot_franke()
-<<<<<<< HEAD
-    
-    ols = OrdinaryLeastSquares(
-            degree=5,
-            stddev=0,
-            step=0.05,
-            terrain_data=False,
-            filename="SRTM_data_Kolnes_Norway3.tif",
-            path="datafiles/",
-            )
-    print(ols.k_fold())
-    """
-
-    #print(ridge.beta[0], ols.beta[0])
-    #print(np.mean(ols.z_train), np.mean(ridge.z_train))
-    #print(ridge.k_fold())
-=======
     print(ridge.r_squared)
 
     """ols = OrdinaryLeastSquares(
@@ -462,7 +425,6 @@ if __name__ == "__main__":
     # print(ridge.beta[0], ols.beta[0])
     # print(np.mean(ols.z_train), np.mean(ridge.z_train))
     # print(ridge.k_fold())
->>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
     # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
@@ -478,20 +440,11 @@ if __name__ == "__main__":
     """lasso = LassoRegression(
         degree=5,
         stddev=0,
-<<<<<<< HEAD
-        step=0.05, lambd=5000,
-        terrain_data=True,
-=======
         step=0.05,
         lambd=1,
         terrain_data=False,
->>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
         filename="SRTM_data_Norway_1.tif",
         path="datafiles/",
     )
     lasso.regression_method()
-<<<<<<< HEAD
-    lasso.plot_franke()
-=======
     lasso.plot_franke()"""
->>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
