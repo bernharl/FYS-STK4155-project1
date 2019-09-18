@@ -16,7 +16,7 @@ class RegressionClass:
         self,
         degree=5,
         stddev=1,
-        step=0.05,
+        n_points=20,
         terrain_data=False,
         filename=None,
         path=None,
@@ -33,13 +33,16 @@ class RegressionClass:
 
                 x = np.arange(0, self.z_meshgrid.shape[1], dtype="int")
                 y = np.arange(0, self.z_meshgrid.shape[0], dtype="int")
+
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
                 raise ValueError("filename must be a string")
         else:
             self.stddev = stddev
-            x = np.arange(0, 1, step)
-            y = np.arange(0, 1, step)
+            x = np.linspace(0, 1, n_points, endpoint=True)
+            y = np.linspace(0, 1, n_points, endpoint=True)
+            #x = np.arange(0, 1, step)
+            #y = np.arange(0, 1, step)
             # Generate meshgrid data points.
             self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             self.z_meshgrid = self.noise_function()
@@ -103,7 +106,7 @@ class RegressionClass:
             ax.scatter(
                 self.x[::skip], self.y[::skip], self.regression_model[::skip], s=2, color="black"
             )
-            print("Scattered")
+            #print("Scattered")
         if plot_data:
             surf = ax.plot_surface(
                 self.x_meshgrid[::skip],
@@ -263,13 +266,13 @@ class RidgeRegression(RegressionClass):
         self,
         degree=5,
         stddev=1,
-        step=0.05,
+        n_points=20,
         lambd=0.1,
         terrain_data=False,
         filename=None,
         path=None,
     ):
-        super().__init__(degree, stddev, step, terrain_data, filename, path)
+        super().__init__(degree, stddev, n_points, terrain_data, filename, path)
         self.lambd = lambd
 
     def regression_method(self):
@@ -333,7 +336,7 @@ class LassoRegression(RidgeRegression):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        return self.beta.predict(self.X_test - np.mean(self.X_train, axis=0)) + np.mean(
+        return self.beta.predict(self.X_test[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)) + np.mean(
             self.z_train
         )
 
@@ -350,7 +353,7 @@ class LassoRegression(RidgeRegression):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.beta.predict(
-            self.X_train - np.mean(self.X_train, axis=0)
+            self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
         ) + np.mean(self.z_train)
 
 
@@ -358,19 +361,30 @@ if __name__ == "__main__":
     # np.random.seed(50)
 
     ridge = RidgeRegression(
-        degree=5,
+        degree=11,
         stddev=0.1,
-        step=0.05,
-        lambd=0,
-        terrain_data=True,
+        n_points=20,
+        lambd=0.1,
+        terrain_data=False,
         filename="SRTM_data_Kolnes_Norway3.tif",
         path="datafiles/",
     )
     ridge.regression_method()
-    ridge.plot_franke()
-    print(ridge.k_fold())
-    
+    #ridge.plot_franke()
+    #print(ridge.k_fold())
 
+    lasso = LassoRegression(
+        degree=11,
+        stddev=0.1,
+        n_points=20,
+        lambd=0.1,
+        terrain_data=False,
+        filename="SRTM_data_Kolnes_Norway3.tif",
+        path="datafiles/",
+    )
+    lasso.regression_method()
+    #lasso.plot_franke()
+    print(f"Ridge with degree = {ridge.degree}, lambda = {ridge.lambd}: EPE = {ridge.k_fold()}.\nLasso with degree = {lasso.degree}, lambda = {lasso.lambd}: EPE = {lasso.k_fold()}.")
     """ols = OrdinaryLeastSquares(
         degree=5,
         stddev=0.1,
