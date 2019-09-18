@@ -26,32 +26,19 @@ class RegressionClass:
                 self.filename = filename
                 self.path = path
                 self.z_meshgrid = np.asarray(self.read_image_data())#[::1]
-                print(type(self.z_meshgrid))
-                print(self.z_meshgrid.shape)
-                #print(self.z_meshgrid.nbytes / 1024 ** 3)
-                # exit()
                 RuntimeWarning(
                     "Given standard deviation is ignored and replaced by the image data's deviations"
                 )
                 self.stddev = np.std(self.z_meshgrid)
-                print(self.z_meshgrid.shape[1])
 
                 x = np.arange(0, self.z_meshgrid.shape[1], dtype="int")
-                #print(x.shape)
-                #for i in x:
-                #    print(i)
-                #print(x[0])
-                #exit()
-                # x = sklpre.scale(x, with_std=False)
                 y = np.arange(0, self.z_meshgrid.shape[0], dtype="int")
-                #print(len(x), len(y))
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
                 raise ValueError("filename must be a string")
         else:
             self.stddev = stddev
             x = np.arange(0, 1, step)
-            # x = sklpre.scale(x, with_std=False)
             y = np.arange(0, 1, step)
             # Generate meshgrid data points.
             self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
@@ -60,22 +47,13 @@ class RegressionClass:
         self.x = np.concatenate(self.x_meshgrid)  # .flatten()
         self.y = np.concatenate(self.y_meshgrid)  # .flatten()
         self.z_ = np.concatenate(self.z_meshgrid)  # .flatten()
-        # print(np.mean(self.z_))
         self.n = len(self.x)
         self.degree = degree
         self.X = self.design_matrix(self.x, self.y)
-
-        #print(self.z_meshgrid[0,-1])
-        print(self.z_meshgrid.shape[0] - 1, x[-1])
-        #print(self.X, self.z_, self.z_meshgrid)
-        #exit()
         # Split data into training and test set.
         self.X_train, self.X_test, self.z_train, self.z_test = sklms.train_test_split(
             self.X, self.z_, test_size=0.33, shuffle=True
         )
-        #print(self.z_train.nbytes / 1024 ** 3, self.X.nbytes / 1024 ** 3)
-        # exit()
-        # print(np.mean(self.z_train))
         self.modeled = False
         self.terrain_data = terrain_data
 
@@ -97,7 +75,6 @@ class RegressionClass:
         else:
             file_name_path = self.path + self.filename
         imdata = imageio.imread(file_name_path)
-        print(imdata)
         return imdata
 
     def noise_function(self):
@@ -138,14 +115,9 @@ class RegressionClass:
                 alpha=0.2,
             )
             fig.colorbar(surf, shrink=0.5, aspect=5)
-        print("Surfed")
         # Customize the z axis.
-        # ax.set_zlim(-0.10, 1.40)
         ax.zaxis.set_major_locator(LinearLocator(10))
         ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
-        # Add a color bar which maps values to colors.
-
-        print("Showing")
         plt.show()
 
     def k_fold(self, k=5, calc_train=False):
@@ -279,14 +251,11 @@ class OrdinaryLeastSquares(RegressionClass):
         XTX = X.T @ X
         XTz = X.T @ self.z_train
         # Solve XTXbeta = XTz
-        # beta = np.zeros_like(self.X_train[0])
         beta = np.linalg.solve(XTX, XTz)
-        # beta[0] = np.mean(self.z_train)
         beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
         self.modeled = True
-        print("USAGE JEDNA")
-        #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 ** 3)
+
 
 
 class RidgeRegression(RegressionClass):
@@ -308,13 +277,8 @@ class RidgeRegression(RegressionClass):
         Uses Ridge regression for given data to calculate regression parameters
         """
 
-        # X = self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
-
         I = sp.sparse.identity(len(self.X_train[0]) - 1, dtype="int8")
         beta = np.zeros(len(self.X_train[0]))
-        # beta[0] = np.mean(self.z_train)
-        #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 ** 3)
-        # exit()
 
         beta[1:] = np.linalg.solve(
             (self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)).T
@@ -323,10 +287,8 @@ class RidgeRegression(RegressionClass):
             (self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)).T
             @ (self.z_train - np.mean(self.z_train)),
         )
-        # beta[1:] = np.linalg.solve(X.T @ X + self.lambd * I, X.T @ self.z_train)
         self.beta = beta
         self.modeled = True
-        #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 ** 3)
 
     @property
     def regression_model(self):
@@ -390,7 +352,6 @@ class LassoRegression(RidgeRegression):
         return self.beta.predict(
             self.X_train - np.mean(self.X_train, axis=0)
         ) + np.mean(self.z_train)
-        # return ((self.X_train - np.mean(self.X_train, axis=0)) @ self.beta)  + np.mean(self.z_train)
 
 
 if __name__ == "__main__":
@@ -406,8 +367,9 @@ if __name__ == "__main__":
         path="datafiles/",
     )
     ridge.regression_method()
-    #ridge.plot_franke()
-    print(ridge.r_squared)
+    ridge.plot_franke()
+    print(ridge.k_fold())
+    
 
     """ols = OrdinaryLeastSquares(
         degree=5,
