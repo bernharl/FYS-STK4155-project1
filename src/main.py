@@ -10,6 +10,7 @@ import imageio
 import scipy as sp
 import resource
 
+
 class RegressionClass:
     def __init__(
         self,
@@ -24,17 +25,32 @@ class RegressionClass:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
+<<<<<<< HEAD
                 self.z_meshgrid = (self.read_image_data())#[::2]
                 print(self.z_meshgrid.nbytes / 1024**3)
                 #exit()
+=======
+                self.z_meshgrid = np.asarray(self.read_image_data())#[::1]
+                print(type(self.z_meshgrid))
+                print(self.z_meshgrid.shape)
+                #print(self.z_meshgrid.nbytes / 1024 ** 3)
+                # exit()
+>>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
                 RuntimeWarning(
                     "Given standard deviation is ignored and replaced by the image data's deviations"
                 )
                 self.stddev = np.std(self.z_meshgrid)
-                x = np.arange(0, len(self.z_meshgrid[0, :]), dtype="int8")
+                print(self.z_meshgrid.shape[1])
+
+                x = np.arange(0, self.z_meshgrid.shape[1], dtype="int")
+                #print(x.shape)
+                #for i in x:
+                #    print(i)
+                #print(x[0])
+                #exit()
                 # x = sklpre.scale(x, with_std=False)
-                y = np.arange(0, len(self.z_meshgrid[:, 0]), dtype="int8")
-                print(len(x), len(y))
+                y = np.arange(0, self.z_meshgrid.shape[0], dtype="int")
+                #print(len(x), len(y))
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
                 raise ValueError("filename must be a string")
@@ -47,22 +63,27 @@ class RegressionClass:
             self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             self.z_meshgrid = self.noise_function()
 
-        self.x = np.concatenate(self.x_meshgrid)#.flatten()
-        self.y = np.concatenate(self.y_meshgrid)#.flatten()
-        self.z_ = np.concatenate(self.z_meshgrid)#.flatten()
+        self.x = np.concatenate(self.x_meshgrid)  # .flatten()
+        self.y = np.concatenate(self.y_meshgrid)  # .flatten()
+        self.z_ = np.concatenate(self.z_meshgrid)  # .flatten()
         # print(np.mean(self.z_))
         self.n = len(self.x)
         self.degree = degree
         self.X = self.design_matrix(self.x, self.y)
-        print(self.X.shape)
+
+        #print(self.z_meshgrid[0,-1])
+        print(self.z_meshgrid.shape[0] - 1, x[-1])
+        #print(self.X, self.z_, self.z_meshgrid)
+        #exit()
         # Split data into training and test set.
         self.X_train, self.X_test, self.z_train, self.z_test = sklms.train_test_split(
             self.X, self.z_, test_size=0.33, shuffle=True
         )
-        print(self.z_train.nbytes / 1024**3, self.X.nbytes / 1024**3)
-        #exit()
+        #print(self.z_train.nbytes / 1024 ** 3, self.X.nbytes / 1024 ** 3)
+        # exit()
         # print(np.mean(self.z_train))
         self.modeled = False
+        self.terrain_data = terrain_data
 
     def generate_data(self):
         """
@@ -82,6 +103,7 @@ class RegressionClass:
         else:
             file_name_path = self.path + self.filename
         imdata = imageio.imread(file_name_path)
+        print(imdata)
         return imdata
 
     def noise_function(self):
@@ -92,14 +114,22 @@ class RegressionClass:
         noise = np.random.normal(0, self.stddev, size=f.shape)
         return f + noise
 
-    def plot_franke(self):
+    def plot_franke(self, plot_data=True):
         """
         3D plot of the Franke function and the linear regression model
         """
+        if not plot_data and not self.modeled:
+            raise RuntimeError("Please either plot modeled data, real data or both")
+
+        if self.terrain_data:
+            skip = 1000
+        else:
+            skip=1
         fig = plt.figure()
         ax = fig.gca(projection="3d")
         # Plot the surface.
         if self.modeled:
+<<<<<<< HEAD
             ax.scatter(self.x[::1000], self.y[::1000], self.regression_model[::1000], s=2, color="black")
             print("Scattered")
         surf = ax.plot_surface(
@@ -111,13 +141,30 @@ class RegressionClass:
             antialiased=False,
             alpha=0.6,
         )
+=======
+            ax.scatter(
+                self.x[::skip], self.y[::skip], self.regression_model[::skip], s=2, color="black"
+            )
+            print("Scattered")
+        if plot_data:
+            surf = ax.plot_surface(
+                self.x_meshgrid[::skip],
+                self.y_meshgrid[::skip],
+                self.z_meshgrid[::skip],
+                cmap=cm.coolwarm,
+                linewidth=0,
+                antialiased=False,
+                alpha=0.2,
+            )
+            fig.colorbar(surf, shrink=0.5, aspect=5)
+>>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
         print("Surfed")
         # Customize the z axis.
         # ax.set_zlim(-0.10, 1.40)
         ax.zaxis.set_major_locator(LinearLocator(10))
         ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
         # Add a color bar which maps values to colors.
-        fig.colorbar(surf, shrink=0.5, aspect=5)
+
         print("Showing")
         plt.show()
 
@@ -204,6 +251,12 @@ class RegressionClass:
         return self.X_test @ self.beta
 
     @property
+    def eval_model_train(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return self.X_train @ self.beta
+
+    @property
     def mean_squared_error(self):
         """
         Calculates the MSE for chosen regression model
@@ -216,8 +269,8 @@ class RegressionClass:
     def mean_squared_error_train(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        model_train = self.X_train @ self.beta
-        return np.mean((self.z_train - model_train) ** 2)
+        # model_train = self.X_train @ self.beta
+        return np.mean((self.z_train - self.eval_model_train) ** 2)
 
     @property
     def r_squared(self):
@@ -253,7 +306,7 @@ class OrdinaryLeastSquares(RegressionClass):
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
         self.modeled = True
         print("USAGE JEDNA")
-        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**3)
+        #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 ** 3)
 
 
 class RidgeRegression(RegressionClass):
@@ -275,25 +328,49 @@ class RidgeRegression(RegressionClass):
         Uses Ridge regression for given data to calculate regression parameters
         """
 
-        #X = self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
+        # X = self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
 
         I = sp.sparse.identity(len(self.X_train[0]) - 1, dtype="int8")
         beta = np.zeros(len(self.X_train[0]))
-        beta[0] = np.mean(self.z_train)
-        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**3)
-        #exit()
+        # beta[0] = np.mean(self.z_train)
+        #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 ** 3)
+        # exit()
 
         beta[1:] = np.linalg.solve(
             (self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)).T
             @ (self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0))
             + self.lambd * I,
             (self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)).T
-            @ self.z_train,
+            @ (self.z_train - np.mean(self.z_train)),
         )
-        #beta[1:] = np.linalg.solve(X.T @ X + self.lambd * I, X.T @ self.z_train)
+        # beta[1:] = np.linalg.solve(X.T @ X + self.lambd * I, X.T @ self.z_train)
         self.beta = beta
         self.modeled = True
-        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**3)
+        #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 ** 3)
+
+    @property
+    def regression_model(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return ((self.X - np.mean(self.X_train, axis=0)) @ self.beta) + np.mean(
+            self.z_train
+        )
+
+    @property
+    def eval_model(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return ((self.X_test - np.mean(self.X_train, axis=0)) @ self.beta) + np.mean(
+            self.z_train
+        )
+
+    @property
+    def eval_model_train(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return ((self.X_train - np.mean(self.X_train, axis=0)) @ self.beta) + np.mean(
+            self.z_train
+        )
 
 
 class LassoRegression(RidgeRegression):
@@ -301,7 +378,10 @@ class LassoRegression(RidgeRegression):
         """
         Uses LASSO regression for given data to calculate regression parameters
         """
-        self.beta = skllm.Lasso(alpha=self.lambd).fit(self.X_train, self.z_train)
+        self.beta = skllm.Lasso(alpha=self.lambd, fit_intercept=False).fit(
+            self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0),
+            self.z_train - np.mean(self.z_train, axis=0),
+        )
         self.modeled = True
 
     @property
@@ -311,28 +391,43 @@ class LassoRegression(RidgeRegression):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        return self.beta.predict(self.X_test)
+        return self.beta.predict(self.X_test - np.mean(self.X_train, axis=0)) + np.mean(
+            self.z_train
+        )
 
     @property
     def regression_model(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        return self.beta.predict(self.X)
+        return self.beta.predict(self.X[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)) + np.mean(
+            self.z_train
+        )
+
+    @property
+    def eval_model_train(self):
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return self.beta.predict(
+            self.X_train - np.mean(self.X_train, axis=0)
+        ) + np.mean(self.z_train)
+        # return ((self.X_train - np.mean(self.X_train, axis=0)) @ self.beta)  + np.mean(self.z_train)
 
 
 if __name__ == "__main__":
-    #np.random.seed(50)
-    """
+    # np.random.seed(50)
+
     ridge = RidgeRegression(
         degree=5,
-        stddev=0,
-        step=0.05, lambd=0,
+        stddev=0.1,
+        step=0.05,
+        lambd=0,
         terrain_data=True,
         filename="SRTM_data_Kolnes_Norway3.tif",
         path="datafiles/",
     )
-    # ridge.regression_method()
+    ridge.regression_method()
     #ridge.plot_franke()
+<<<<<<< HEAD
     
     ols = OrdinaryLeastSquares(
             degree=5,
@@ -348,6 +443,26 @@ if __name__ == "__main__":
     #print(ridge.beta[0], ols.beta[0])
     #print(np.mean(ols.z_train), np.mean(ridge.z_train))
     #print(ridge.k_fold())
+=======
+    print(ridge.r_squared)
+
+    """ols = OrdinaryLeastSquares(
+        degree=5,
+        stddev=0.1,
+        step=0.05,
+        terrain_data=True,
+        filename="SRTM_data_Norway_1.tif",
+        path="datafiles/",
+    )
+    ols.regression_method()
+    #ols.plot_franke(False)
+    print(ols.r_squared)"""
+    #print(ols.regression_model - ridge.regression_model)
+
+    # print(ridge.beta[0], ols.beta[0])
+    # print(np.mean(ols.z_train), np.mean(ridge.z_train))
+    # print(ridge.k_fold())
+>>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
     # test.plot_franke()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
@@ -359,14 +474,24 @@ if __name__ == "__main__":
     # test3 = LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
     # test3.regression_method()
     # test3.plot_franke()
-    
-    lasso = LassoRegression(
+
+    """lasso = LassoRegression(
         degree=5,
         stddev=0,
+<<<<<<< HEAD
         step=0.05, lambd=5000,
         terrain_data=True,
+=======
+        step=0.05,
+        lambd=1,
+        terrain_data=False,
+>>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
         filename="SRTM_data_Norway_1.tif",
         path="datafiles/",
     )
     lasso.regression_method()
+<<<<<<< HEAD
     lasso.plot_franke()
+=======
+    lasso.plot_franke()"""
+>>>>>>> 9fcdd54b21d6bca3a9db6a16d6be71292270a34a
