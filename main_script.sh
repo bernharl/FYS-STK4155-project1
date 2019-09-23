@@ -3,7 +3,8 @@
 cd src
 echo "Creating estimated prediction error plots"
 
-python bias_variance_error.py
+python bias_variance_error_terrain.py
+python bias_variance_error_Franke.py
 
 echo "Build report? (y/n)"
 read yn

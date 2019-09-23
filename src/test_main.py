@@ -23,4 +23,3 @@ def test_kfold():
     )
     relative = EPE_test/EPE_scikit
     np.testing.assert_almost_equal(relative, 1,  decimal=1)
-

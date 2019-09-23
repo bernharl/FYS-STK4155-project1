@@ -4,29 +4,25 @@ from main import OrdinaryLeastSquares, RidgeRegression, LassoRegression
 
 
 fonts = {
-        "font.family": "serif",
-        "axes.labelsize": 10,
-        "font.size": 10,
-        "legend.fontsize": 10,
-        "xtick.labelsize": 10,
-        "ytick.labelsize": 10,
+    "font.family": "serif",
+    "axes.labelsize": 10,
+    "font.size": 10,
+    "legend.fontsize": 10,
+    "xtick.labelsize": 10,
+    "ytick.labelsize": 10,
 }
 
 plt.rcParams.update(fonts)
 
 # Prediction error for OLS regression
-degrees = np.arange(0, 7)
+degrees = np.arange(0, 11)
 
 pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)
 
 for i in degrees:
     print(i)
-    OLS = OrdinaryLeastSquares(
-        degree=i,
-        stddev=0.1,
-        terrain_data=False,
-    )
+    OLS = OrdinaryLeastSquares(degree=i, stddev=0.1, terrain_data=False)
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
     del OLS
 pred_log = np.log10(pred_error)
@@ -67,7 +63,7 @@ fig.savefig("../doc/figs/biasvariancetradeoff_ols_Franke.eps")
 
 # Prediction error for Ridge regression
 # lambda_Ridge = np.linspace(1, 0, 100)
-#lambda_Ridge = np.sort(np.random.uniform(0, 1e-5, 100))
+# lambda_Ridge = np.sort(np.random.uniform(0, 1e-5, 100))
 lambda_Ridge = np.logspace(-3, 3, 100)
 pred_error_ridge = np.zeros_like(lambda_Ridge)
 pred_error_train_ridge = np.zeros_like(pred_error_ridge)

@@ -37,7 +37,6 @@ ols_terrain = OrdinaryLeastSquares(
 ols_terrain.regression_method()
 ols_terrain.plot_model()
 print(ols_terrain.r_squared)
-exit()
 x_axis = np.arange(len(ols_terrain.beta))
 fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
