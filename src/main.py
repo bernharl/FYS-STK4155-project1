@@ -25,14 +25,14 @@ class RegressionClass:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
-                self.z_meshgrid = np.asarray(self.read_image_data())#[::1]
+                self.z_meshgrid = np.asarray(self.read_image_data())  # [::1]
                 RuntimeWarning(
                     "Given standard deviation is ignored and replaced by the image data's deviations"
                 )
                 self.stddev = np.std(self.z_meshgrid)
 
-                x = np.arange(0, self.z_meshgrid.shape[1], dtype="int")
-                y = np.arange(0, self.z_meshgrid.shape[0], dtype="int")
+                x = np.arange(0, self.z_meshgrid.shape[1], dtype=np.int32)
+                y = np.arange(0, self.z_meshgrid.shape[0], dtype=np.int32)
 
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
@@ -41,8 +41,8 @@ class RegressionClass:
             self.stddev = stddev
             x = np.linspace(0, 1, n_points, endpoint=True)
             y = np.linspace(0, 1, n_points, endpoint=True)
-            #x = np.arange(0, 1, step)
-            #y = np.arange(0, 1, step)
+            # x = np.arange(0, 1, step)
+            # y = np.arange(0, 1, step)
             # Generate meshgrid data points.
             self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             self.z_meshgrid = self.noise_function()
@@ -96,17 +96,21 @@ class RegressionClass:
             raise RuntimeError("Please either plot modeled data, real data or both")
 
         if self.terrain_data:
-            skip = 1000
+            skip = 1
         else:
-            skip=1
+            skip = 1
         fig = plt.figure()
         ax = fig.gca(projection="3d")
         # Plot the surface.
         if self.modeled:
             ax.scatter(
-                self.x[::skip], self.y[::skip], self.regression_model[::skip], s=2, color="black"
+                self.x[::skip],
+                self.y[::skip],
+                self.regression_model[::skip],
+                s=2,
+                color="black",
             )
-            #print("Scattered")
+            # print("Scattered")
         if plot_data:
             surf = ax.plot_surface(
                 self.x_meshgrid[::skip],
@@ -260,7 +264,6 @@ class OrdinaryLeastSquares(RegressionClass):
         self.modeled = True
 
 
-
 class RidgeRegression(RegressionClass):
     def __init__(
         self,
@@ -336,17 +339,17 @@ class LassoRegression(RidgeRegression):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        return self.beta.predict(self.X_test[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)) + np.mean(
-            self.z_train
-        )
+        return self.beta.predict(
+            self.X_test[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
+        ) + np.mean(self.z_train)
 
     @property
     def regression_model(self):
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        return self.beta.predict(self.X[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)) + np.mean(
-            self.z_train
-        )
+        return self.beta.predict(
+            self.X[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
+        ) + np.mean(self.z_train)
 
     @property
     def eval_model_train(self):
@@ -361,18 +364,18 @@ if __name__ == "__main__":
     # np.random.seed(50)
 
     ridge = RidgeRegression(
-        degree=11,
+        degree=1,
         stddev=0.1,
         n_points=20,
         lambd=0.1,
-        terrain_data=False,
-        filename="SRTM_data_Kolnes_Norway3.tif",
+        terrain_data=True,
+        filename="SRTM_data_Norway_2.tif",
         path="datafiles/",
     )
-    ridge.regression_method()
-    #ridge.plot_franke()
-    #print(ridge.k_fold())
-
+    # ridge.regression_method()
+    ridge.plot_franke()
+    # print(ridge.k_fold())
+    """
     lasso = LassoRegression(
         degree=11,
         stddev=0.1,
@@ -383,8 +386,12 @@ if __name__ == "__main__":
         path="datafiles/",
     )
     lasso.regression_method()
-    #lasso.plot_franke()
-    print(f"Ridge with degree = {ridge.degree}, lambda = {ridge.lambd}: EPE = {ridge.k_fold()}.\nLasso with degree = {lasso.degree}, lambda = {lasso.lambd}: EPE = {lasso.k_fold()}.")
+    # lasso.plot_franke()
+    print(
+        f"Ridge with degree = {ridge.degree}, lambda = {ridge.lambd}: "
+        + f"EPE = {ridge.k_fold()}.\nLasso with degree = {lasso.degree},"
+        + f" lambda = {lasso.lambd}: EPE = {lasso.k_fold()}."
+    )"""
     """ols = OrdinaryLeastSquares(
         degree=5,
         stddev=0.1,
@@ -396,7 +403,7 @@ if __name__ == "__main__":
     ols.regression_method()
     #ols.plot_franke(False)
     print(ols.r_squared)"""
-    #print(ols.regression_model - ridge.regression_model)
+    # print(ols.regression_model - ridge.regression_model)
 
     # print(ridge.beta[0], ols.beta[0])
     # print(np.mean(ols.z_train), np.mean(ridge.z_train))
