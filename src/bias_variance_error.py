@@ -30,6 +30,7 @@ for i in degrees:
         path="datafiles/",
     )
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
+    del OLS
 pred_log = np.log10(pred_error)
 pred_log_train = np.log10(pred_error_train)
 fig, ax = plt.subplots()
