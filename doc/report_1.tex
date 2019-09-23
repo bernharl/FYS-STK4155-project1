@@ -32,16 +32,15 @@
 
 
 \begin{abstract} \noindent
-    this project blah blah blah\\
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et semper nibh, in vehicula sapien. In ultricies mollis enim, non venenatis odio ullamcorper id. Nunc consequat vulputate tempus.
+    We use different methods of linear regression (Ordinary Least Squares, Ridge, Lasso) to fit the Franke Function with added noise, as well as terrain data. We use k-fold cross validation to evaluate the performance of these methods. In both cases Ordinary Least Squares outperforms the other methods, both in $r^2$-score and estimated prediction error. Biased estimators do not seem to be beneficial in this case, and it may be a good idea to consider different methods than linear regression methods altogether.
 \end{abstract}
 
 \begin{multicols}{2}
 \section{Introduction}
 
-Linear regression is a basic, but highly important form of statistical learning. In this project we will apply three important regression methods on synthetic data (The Franke Function.) and real world terrain data. 
+Linear regression is a basic, but highly important form of statistical learning. To many, it is the first step into more advanced machine learning methods. The least squares estimator in particular is remarkably simple, having an easily calculated analytical expression
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et semper nibh, in vehicula sapien. In ultricies mollis enim, non venenatis     odio ullamcorper id. Nunc consequat vulputate tempus. Proin tempus sodales diam. Vestibulum pulvinar, dui et cursus dignissim, est elit placerat metus, sit amet volutpat lacus nisi sed neque. Fusce ullamcorper, sapien sit amet mollis semper, tellus risus luctus mauris, scelerisque blandit justo metus nec dui. Etiam consectetur ex ut elit condimentum, vel dictum mi volutpat. Cras lectus ante, venenatis sit amet nunc sed, auctor convallis lacus. Praesent ut nisi arcu. Morbi blandit ligula non dignissim dapibus. Fusce arcu tellus, sodales at sollicitudin sit amet, rhoncus luctus ex. Integer eget sem quis metus vestibulum accumsan quis vel magna. Integer venenatis pellentesque ex. Aliquam nec semper sapien. Donec tempor vehicula leo, at dictum dui venenatis non.
+ In this project we apply three important regression methods on synthetic data (The Franke Function.) as well as real world terrain data to see how well they compare to each other, and to see if linear regression is a tool powerful enough to properly fit noisy data.
 
 
 \section{Theory}
@@ -144,30 +143,49 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right
 
 
 \section{Results}
-Donec elementum tempor eros, in gravida massa scelerisque ut. Vestibulum facilisis metus at ornare commodo. Donec lacus eros, dapibus id nunc id, suscipit ullamcorper justo. In vel felis mauris. Integer ultricies dolor quis vehicula ultricies. Pellentesque mattis elit quis tempus ullamcorper. Donec a nulla orci. Quisque pretium mauris vitae ipsum aliquet, quis malesuada est viverra. Maecenas quis consequat diam, vitae hendrerit tellus. Donec vulputate erat massa, id sollicitudin tellus cursus ut. Aliquam dui justo, interdum ut efficitur suscipit, ullamcorper eget nisi. Ut gravida, tortor at ornare suscipit, lacus tellus malesuada metus, vel lacinia justo lorem in nisl. Donec et sem eget lacus egestas auctor. Integer egestas, lorem eget volutpat malesuada, est nunc efficitur mi, ac pulvinar elit libero quis risus. Aenean convallis aliquam eros, interdum molestie sapien pretium sit amet. Aliquam at aliquam diam.
-
 
 \end{multicols}
 
 \begin{figure}[H]
-    \includegraphics[scale=1]{figs/biasvariancetradeoff.eps}
-    \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression.}
-    \label{fig:my_label}
+    \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_Franke.eps}
+    \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression fitted on the Franke function.}
+    \label{fig:bias_ols_Franke}
 \end{figure}
     
 \begin{figure}[H]
-    \includegraphics{figs/biasvariancetradeoff_Ridge.eps}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression.}
+    \includegraphics{figs/biasvariancetradeoff_Ridge_Franke.eps}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression fitted on the Franke function}
+    \label{fig:bias_ridge_Franke}
 \end{figure}    
 
 \begin{figure}[H]
-    \includegraphics{figs/biasvariancetradeoff_LASSO.eps}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression.}
+    \includegraphics{figs/biasvariancetradeoff_LASSO_Franke.eps}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression fitted on the Franke function.}
+    \label{fig:bias_lasso_Franke}
 \end{figure} 
+
+\begin{figure}[H]
+    \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_terrain.eps}
+    \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression fitted on terrain data of place we chose XDDD!!!!!}
+    \label{fig:bias_ols_terrain}
+\end{figure}
+    
+\begin{figure}[H]
+    \includegraphics{figs/biasvariancetradeoff_Ridge_terrain.eps}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression fitted on terrain data of PLACEWECHOSE XDDD}
+    \label{fig:bias_ridge_terrain}
+\end{figure}    
+
+\begin{figure}[H]
+   % \includegraphics{figs/biasvariancetradeoff_LASSO_terrain.eps}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression fitted on terrain data of PLACEWECHOSE!.}
+    \label{fig:bias_lasso_terrain}
+\end{figure} 
+
 
 \begin{multicols}{2}
 
-Donec elementum tempor eros, in gravida massa scelerisque ut. Vestibulum facilisis metus at ornare commodo. Donec lacus eros, dapibus id nunc id, suscipit ullamcorper justo. In vel felis mauris. Integer ultricies dolor quis vehicula ultricies. Pellentesque mattis elit quis tempus ullamcorper. Donec a nulla orci. Quisque pretium mauris vitae ipsum aliquet, quis malesuada est viverra. Maecenas quis consequat diam, vitae hendrerit tellus. Donec vulputate erat massa, id sollicitudin tellus cursus ut. Aliquam dui justo, interdum ut efficitur suscipit, ullamcorper eget nisi. Ut gravida, tortor at ornare suscipit, lacus tellus malesuada metus, vel lacinia justo lorem in nisl. Donec et sem eget lacus egestas auctor. Integer egestas, lorem eget volutpat malesuada, est nunc efficitur mi, ac pulvinar elit libero quis risus. Aenean convallis aliquam eros, interdum molestie sapien pretium sit amet. Aliquam at aliquam diam.
+
 
 
 
