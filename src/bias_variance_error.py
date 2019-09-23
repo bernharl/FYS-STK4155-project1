@@ -15,17 +15,18 @@ fonts = {
 plt.rcParams.update(fonts)
 
 # Prediction error for OLS regression
-degrees = np.arange(0, 5)
+degrees = np.arange(0, 7)
 
 pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)
 
 for i in degrees:
+    print(i)
     OLS = OrdinaryLeastSquares(
         degree=i,
         stddev=0.1,
         terrain_data=True,
-        filename="SRTM_data_Kolnes_Norway3.tif",
+        filename="SRTM_data_Norway_2.tif",
         path="datafiles/",
     )
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
