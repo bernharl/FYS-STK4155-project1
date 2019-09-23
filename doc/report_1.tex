@@ -74,7 +74,8 @@ with the analytical optimal regression parameters
     \hat{\beta}^\text{ridge} = (\bm{X}^T\bm{X} +\lambda \bm{I})^{-1} \bm{X}^T \bm{y}.
     \label{eq:beta_ridge}
 \end{equation}
-The Least Absolute Shrinkage and Selection Operator (LASSO) regression minimizes
+$\lambda$ is a parameter 
+The optimal parameters $\hat{\beta}^\text{lasso} $for the Least Absolute Shrinkage and Selection Operator (LASSO) regression method is given by the expression
 \begin{equation}
     \hat{\beta}^\text{lasso} =  \text{argmin}_\beta \left[  \frac{1}{n}\sum_i^n(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right].
     \label{eq:argminbeta_lasso}
