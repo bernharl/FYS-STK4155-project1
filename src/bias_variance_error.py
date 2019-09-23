@@ -15,7 +15,7 @@ fonts = {
 plt.rcParams.update(fonts)
 
 # Prediction error for OLS regression
-degrees = np.arange(0, 6)
+degrees = np.arange(0, 7)
 
 pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)

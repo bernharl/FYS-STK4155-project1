@@ -105,9 +105,13 @@ C(\bm{X},\bm{\beta} ) &= \frac{1}{n}\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2 = \mathb
 \end{align*}
 Using that the variance of $\bm{y}$ is $$\text{Var}[\bm{y}] = \mathbb{E}[\bm{y}^2]-\mathbb{E}[\bm{y}]^2=\sigma^2,$$ it can also be expressed as 
 \begin{align*}
-\mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2] &= \mathbb{E}[\bm{y}^2  -2\bm{y}\bm{\tilde{y}}+ \bm { \tilde{y} } ^2 ] \\
-&= \mathbb{E}[\bm{y}^2]  - 2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]\\
-&= \text{Var}[\bm{y}] + \mathbb{E}[\bm{y}]^2-2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]
+\mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2] =& \mathbb{E}[\bm{y}^2  -2\bm{y}\bm{\tilde{y}}+ \bm { \tilde{y} } ^2 ] \\
+=& \mathbb{E}[\bm{y}^2]  - 2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]\\
+=& \text{Var}[\bm{y}] + \mathbb{E}[\bm{y}]^2-2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]\\
+=& \sigma^2 +  \mathbb{E}[\bm{y}]^2  -2 \mathbb{E}[\bm{y}\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}^2]\\
+=& \sigma^2 +  \mathbb{E}[f(\bm{x}) + \bm{\varepsilon}]^2 \\&- 2 \mathbb{E} [(f(\bm{x})+\varepsilon)\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}^2 ]\\
+=& \sigma^2 +  \mathbb{E}[f(\bm{x})]^2 -2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}] \\
+=&\sigma^2 + f^2(\bm{x})-2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}]\\&+\mathbb{E}[\bm{\tilde{y}}^2] + \mathbb{E}[\bm{\tilde{y}}^2] -2\mathbb{E}[\bm{\tilde{y}}^2]
 \end{align*}
 
 
