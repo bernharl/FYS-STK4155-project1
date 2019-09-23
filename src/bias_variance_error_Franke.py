@@ -80,7 +80,7 @@ fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
 ax.plot(np.log10(lambda_Ridge), pred_log, label="Test", color="r")
 ax.plot(np.log10(lambda_Ridge), pred_log_train, label="Train", color="g")
-ax.set_xlabel("Hyperparameter")
+ax.set_xlabel(r"log$_{10}$Hyperparameter")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
     [
@@ -125,9 +125,9 @@ pred_log_train = np.log10(pred_error_train_lasso)
 
 fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
-ax.plot(lambda_lasso, pred_log, label="Test", color="r")
-ax.plot(lambda_lasso, pred_log_train, label="Train", color="g")
-ax.set_xlabel("Hyperparameter")
+ax.plot(np.log10(lambda_lasso), pred_log, label="Test", color="r")
+ax.plot(np.log10(lambda_lasso), pred_log_train, label="Train", color="g")
+ax.set_xlabel(r"log$_{10}$Hyperparameter")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
     [
