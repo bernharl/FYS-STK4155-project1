@@ -68,8 +68,7 @@ fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_ols_terrain.eps", dpi=1000)
 
 # Prediction error for Ridge regression
-# lambda_Ridge = np.linspace(1, 0, 100)
-# lambda_Ridge = np.sort(np.random.uniform(0, 1e-5, 100))
+
 lambda_Ridge = np.logspace(-3, 3, 10)
 pred_error_ridge = np.zeros_like(lambda_Ridge)
 pred_error_train_ridge = np.zeros_like(pred_error_ridge)
@@ -85,6 +84,7 @@ for j, lamb in enumerate(lambda_Ridge):
     pred_error_ridge[j], pred_error_train_ridge[j] = ridge_reg.k_fold(
         k=5, calc_train=True
     )
+    del ridge_reg
 pred_log = np.log10(pred_error_ridge)
 pred_log_train = np.log10(pred_error_train_ridge)
 
@@ -122,14 +122,17 @@ ax.legend(loc=3)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_Ridge_terrain.eps", dpi=1000)
 
+
 # Prediction error for LASSO regression
-lambda_lasso = np.logspace(-3, 3, 10)
+lambda_lasso = np.logspace(6.7, 13, 7)
 pred_error_lasso = np.zeros_like(lambda_lasso)
 pred_error_train_lasso = np.zeros_like(pred_error_lasso)
 
 for j, lamb in enumerate(lambda_lasso):
-    lasso_reg = RidgeRegression(
+    print(lamb)
+    lasso_reg = LassoRegression(
         lambd=lamb,
+        degree = 3,
         stddev=1,
         terrain_data=True,
         filename="SRTM_data_Norway_2.tif",
@@ -138,6 +141,8 @@ for j, lamb in enumerate(lambda_lasso):
     pred_error_lasso[j], pred_error_train_lasso[j] = lasso_reg.k_fold(
         k=5, calc_train=True
     )
+    del lasso_reg
+
 pred_log = np.log10(pred_error_lasso)
 pred_log_train = np.log10(pred_error_train_lasso)
 
@@ -173,4 +178,5 @@ ax.text(
 
 ax.legend(loc=3)
 fig.tight_layout()
+print('wtf?')
 fig.savefig("../doc/figs/biasvariancetradeoff_LASSO_terrain.eps", dpi=1000)
