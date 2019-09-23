@@ -88,7 +88,7 @@ class RegressionClass:
         noise = np.random.normal(0, self.stddev, size=f.shape)
         return f + noise
 
-    def plot_franke(self, plot_data=True):
+    def plot_model(self, plot_data=True):
         """
         3D plot of the Franke function and the linear regression model
         """
@@ -96,7 +96,7 @@ class RegressionClass:
             raise RuntimeError("Please either plot modeled data, real data or both")
 
         if self.terrain_data:
-            skip = 1
+            skip = 1000
         else:
             skip = 1
         fig = plt.figure()
@@ -113,9 +113,9 @@ class RegressionClass:
             # print("Scattered")
         if plot_data:
             surf = ax.plot_surface(
-                self.x_meshgrid[::skip],
-                self.y_meshgrid[::skip],
-                self.z_meshgrid[::skip],
+                self.x_meshgrid,
+                self.y_meshgrid,
+                self.z_meshgrid,
                 cmap=cm.coolwarm,
                 linewidth=0,
                 antialiased=False,
@@ -372,10 +372,10 @@ if __name__ == "__main__":
         filename="SRTM_data_Norway_2.tif",
         path="datafiles/",
     )
-    # ridge.regression_method()
-    ridge.plot_franke()
-    # print(ridge.k_fold())
-    """
+    ridge.regression_method()
+    #ridge.plot_model()
+    #print(ridge.k_fold())
+
     lasso = LassoRegression(
         degree=11,
         stddev=0.1,
@@ -386,12 +386,8 @@ if __name__ == "__main__":
         path="datafiles/",
     )
     lasso.regression_method()
-    # lasso.plot_franke()
-    print(
-        f"Ridge with degree = {ridge.degree}, lambda = {ridge.lambd}: "
-        + f"EPE = {ridge.k_fold()}.\nLasso with degree = {lasso.degree},"
-        + f" lambda = {lasso.lambd}: EPE = {lasso.k_fold()}."
-    )"""
+    #lasso.plot_model()
+    print(f"Ridge with degree = {ridge.degree}, lambda = {ridge.lambd}: EPE = {ridge.k_fold()}.\nLasso with degree = {lasso.degree}, lambda = {lasso.lambd}: EPE = {lasso.k_fold()}.")
     """ols = OrdinaryLeastSquares(
         degree=5,
         stddev=0.1,
@@ -401,24 +397,24 @@ if __name__ == "__main__":
         path="datafiles/",
     )
     ols.regression_method()
-    #ols.plot_franke(False)
+    #ols.plot_model(False)
     print(ols.r_squared)"""
     # print(ols.regression_model - ridge.regression_model)
 
     # print(ridge.beta[0], ols.beta[0])
     # print(np.mean(ols.z_train), np.mean(ridge.z_train))
     # print(ridge.k_fold())
-    # test.plot_franke()
+    # test.plot_model()
     # print(f"MSE {test.mean_squared_error}")
     # print(f"R2 score {test.r_squared}")
     # print(f"Beta variance {test.beta_variance}")
     # test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05, lambd=0)
     # test2.regression_method()
-    # test2.plot_franke()
+    # test2.plot_model()
 
     # test3 = LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
     # test3.regression_method()
-    # test3.plot_franke()
+    # test3.plot_model()
 
     """lasso = LassoRegression(
         degree=5,
@@ -430,4 +426,4 @@ if __name__ == "__main__":
         path="datafiles/",
     )
     lasso.regression_method()
-    lasso.plot_franke()"""
+    lasso.plot_model()"""
