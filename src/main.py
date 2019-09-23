@@ -25,14 +25,14 @@ class RegressionClass:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
-                self.z_meshgrid = np.asarray(self.read_image_data())  # [::1]
+                self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)  # [::1]
                 RuntimeWarning(
                     "Given standard deviation is ignored and replaced by the image data's deviations"
                 )
                 self.stddev = np.std(self.z_meshgrid)
 
-                x = np.arange(0, self.z_meshgrid.shape[1], dtype=np.int32)
-                y = np.arange(0, self.z_meshgrid.shape[0], dtype=np.int32)
+                x = np.arange(0, self.z_meshgrid.shape[1], dtype=np.int16)
+                y = np.arange(0, self.z_meshgrid.shape[0], dtype=np.int16)
 
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
