@@ -53,10 +53,10 @@ where $\bm{\varepsilon} \sim N(0,\ \sigma ^2)$ and $f$ is some function of a des
 \[
 \bm{\tilde{y}} = \bm{X}\bm{\beta},
 \]
-with $\bm{\beta}$ being a $(p\times 1)$ vector containing the linear regression parameters.
+with $\bm{\beta}$ being a $(p\times 1)$ vector containing the linear regression parameters, $\bm{\beta}^T=[\beta_0,\ \beta_1, \beta_2,\dots,\beta_{p-1}]$, with $\beta_0$ as the intercept. 
 It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, with optimal  parameters $\hat{B}^\text{OLS}$ given by
 \begin{equation}
-    \hat{\beta}^\text{OLS} = \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_i^n (y_i - X_{i*}^T \beta)^2 \right],
+    \hat{\beta}^\text{OLS} = \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_{i=0}^{n-1} (y_i - X_{i*}^T \beta)^2 \right],
     \label{eq:argminbeta_OLS}
 \end{equation}
 giving an analytical expression for the optimal regression parameters
@@ -64,9 +64,9 @@ giving an analytical expression for the optimal regression parameters
     \hat{\beta}^{\text{OLS}} = (\bm{X}^T\bm{X})^{-1} \bm{X}^T \bm{y}.
     \label{eq:beta_OLS}
 \end{equation}
-The optimal regression parameters $\hat{\beta}^\text{ridge}$ for Ridge regression are given by
+The optimal regression parameters $\hat{\beta}^\text{ridge}$ for Ridge regression, which is a penalized regression method, are given by
 \begin{equation}
-    \hat{\beta}^\text{ridge} = \text{argmin}_\beta \left[ \frac{1}{n}\sum_i^n(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right]
+    \hat{\beta}^\text{ridge} = \text{argmin}_\beta \left[ \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right]
     \label{eq:argminbeta_ridge}
 \end{equation}
 with the analytical optimal regression parameters
@@ -74,10 +74,14 @@ with the analytical optimal regression parameters
     \hat{\beta}^\text{ridge} = (\bm{X}^T\bm{X} +\lambda \bm{I})^{-1} \bm{X}^T \bm{y}.
     \label{eq:beta_ridge}
 \end{equation}
-$\lambda$ is a parameter 
-The optimal parameters $\hat{\beta}^\text{lasso} $for the Least Absolute Shrinkage and Selection Operator (LASSO) regression method is given by the expression
+The parameter $\lambda$ is a shrinkage parameter, also known as the hyperparameter. As the name suggests, by tuning $\lambda$ we decide the amount of shrinkage on the regression parameters, with higher values for $\lambda$ corresponding to stronger shrinkage of the parameters. As this hyperparameter imposes a size constraint on the regression parameters, Ridge regression can be an effective tool to counteract correlation between the predictors. This penalty is not imposed on the intercept $\beta_0$, which instead can be approximated by centering the data and taking the mean, 
 \begin{equation}
-    \hat{\beta}^\text{lasso} =  \text{argmin}_\beta \left[  \frac{1}{n}\sum_i^n(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right].
+	\beta_0^\text{ridge}=\frac{1}{n}\sum_{i=0}^{n-1}y_i.
+\end{equation}
+
+The optimal regression parameters $\hat{\beta}^\text{lasso}$ for the Least Absolute Shrinkage and Selection Operator (LASSO) regression method is given by the expression
+\begin{equation}
+    \hat{\beta}^\text{lasso} =  \text{argmin}_\beta \left[  \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right].
     \label{eq:argminbeta_lasso}
 \end{equation}
 
@@ -178,7 +182,7 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right
 \end{figure}    
 
 \begin{figure}[H]
-    \includegraphics{figs/biasvariancetradeoff_LASSO_terrain.eps}
+   % \includegraphics{figs/biasvariancetradeoff_LASSO_terrain.eps}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression fitted on terrain data of PLACEWECHOSE!.}
     \label{fig:bias_lasso_terrain}
 \end{figure} 
