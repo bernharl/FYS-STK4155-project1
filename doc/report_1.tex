@@ -98,7 +98,6 @@ and the $R^2$ score, defined as
 \end{equation}
 where $y$ is the data, $\tilde{y}$ is our fitted data and $\bar{y}$ is the mean of $y$.  The $R^2$ score will lie within the interval $[0,\ 1]$, and is a measure of the variance of our model and how well it fits the data, with 1 being the best possible score. 
 
-
 In order to find the regression parameters $\bm{B}$ for the OLS regression method, you optimize the expression for the MSE. This is called the cost function, 
 \begin{align*}
 C(\bm{X},\bm{\beta} ) &= \frac{1}{n}\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2 = \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2] \\
@@ -111,8 +110,15 @@ Using that the variance of $\bm{y}$ is $$\text{Var}[\bm{y}] = \mathbb{E}[\bm{y}^
 =& \sigma^2 +  \mathbb{E}[\bm{y}]^2  -2 \mathbb{E}[\bm{y}\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}^2]\\
 =& \sigma^2 +  \mathbb{E}[f(\bm{x}) + \bm{\varepsilon}]^2 \\&- 2 \mathbb{E} [(f(\bm{x})+\varepsilon)\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}^2 ]\\
 =& \sigma^2 +  \mathbb{E}[f(\bm{x})]^2 -2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}] \\
-=&\sigma^2 + f^2(\bm{x})-2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}]\\&+\mathbb{E}[\bm{\tilde{y}}^2] + \mathbb{E}[\bm{\tilde{y}}^2] -2\mathbb{E}[\bm{\tilde{y}}^2]
+=&\sigma^2 + f^2(\bm{x})-2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}]\\&+\mathbb{E}[\bm{\tilde{y}}]^2 + \mathbb{E}[\bm{\tilde{y}}]^2 -2\mathbb{E}[\bm{\tilde{y}}]^2\\
+=&  \sigma ^2  + ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2 + \mathbb{E}[\bm{\tilde{y}}^2] \\&+\mathbb{E}[\bm{\tilde{y}}]\mathbb{E}[\bm{\tilde{y}}]  - 2\mathbb{E}[\bm{\tilde{y}}]\mathbb{E}[\bm{\tilde{y}}]\\
+= &  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2   \\&+ \mathbb{E}[\bm{\tilde{y}}^2 + \mathbb{E}[\bm{\tilde{y}}]^2 - 2\bm{\tilde{y}}\mathbb{E}[\bm{\tilde{y}}]]\\
+=&  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2  +\mathbb{E}[(\bm{\tilde{y}} -\mathbb{E}[\bm{\tilde{y}}])^2] \\
 \end{align*}
+\begin{align}
+ \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]  =&\sigma^2 + \frac{1}{n}\sum_i(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2  \nonumber \\
+ &+ \frac{1}{n}\sum_i(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2.
+\end{align}
 
 
 \section{Method}
