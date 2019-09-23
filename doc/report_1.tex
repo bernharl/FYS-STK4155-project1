@@ -19,6 +19,8 @@
 % \renewcommand{\thesubsection}{\alph{subsection})}
 \renewcommand{\thesection}{\arabic{section}}
 
+
+
 %\setlength\parindent{0pt}	
 
 \title{FYS-STK3155/4155 Applied Data Analysis and Machine Learning - Project 1: Regression analysis and resampling methods }
@@ -44,16 +46,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et semper nibh, i
 
 \section{Theory}
 \subsection{Linear regression methods}
-If given a data set $Y$ of $n$ samples and the set is assumed to be on the form
+If given a data set $\mathcal{L}$ consisting of data $\bm{X}_\mathcal{L} = \{(y_j,\ \bm{x}_j),\ j=0,\ \dots,\ n-1\}$, assuming the true data is on the form
 \[
-Y = f(X)+ \varepsilon 
+\bm{y} = f(\bm{x})+ \bm{\varepsilon} ,
 \]
-where $\varepsilon \sim N(0,\ \sigma ^2)$ and $f$ is some function of a design matrix $X\in R^{n\times p}$, then it is possible by using linear regression to fit a linear model of $p$ degrees with outcome $\hat{Y}$ on the form
+where $\bm{\varepsilon} \sim N(0,\ \sigma ^2)$ and $f$ is some function of a design matrix $\bm{X}\in R^{n\times p}$, then it is possible by using linear regression to fit a linear model of $p$ degrees with outcome $\bm{\tilde{y}}$ on the form
 \[
-\hat{Y} = \bm{X}^T\hat{\beta},
+\bm{\tilde{y}} = \bm{X}\bm{\beta},
 \]
-with $\hat{\beta}$ being a $(p\times 1)$ vector containing linear regression parameters.
-It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, which minimizes the expression
+with $\bm{\beta}$ being a $(p\times 1)$ vector containing the linear regression parameters.
+It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, with optimal  parameters $\hat{B}^\text{OLS}$ given by
 \begin{equation}
     \hat{\beta}^\text{OLS} = \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_i^n (y_i - X_{i*}^T \beta)^2 \right],
     \label{eq:argminbeta_OLS}
@@ -82,20 +84,8 @@ The Least Absolute Shrinkage and Selection Operator (LASSO) regression minimizes
 \subsection{Resampling}
 Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
 
-\section{Method}
-Use Franke's function to study how to model a fit for two-dimensional data. The function is given by 
-\begin{align*}
-f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)}\\
- &+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \\
- &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} \\
- &-\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }.
-\end{align*}
- which in this project is defined on $x,\ y \in [0,1]$. 
-
-
-
-
-it can be useful to consider the mean squared error (MSE), defined as 
+\subsection{Bias-variance tradeoff}
+In order to evaluate how our model fits the data, it can be useful to consider the mean squared error (MSE), defined as 
 \begin{equation}
     MSE(\hat{y},\hat{\tilde{y}}) = \frac{1}{n}
     \sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2, 
@@ -106,6 +96,38 @@ and the $R^2$ score, defined as
     R^2(\hat{y}, \tilde{\hat{y}}) = 1 - \frac{\sum_{i=0}^{n - 1} (y_i - \tilde{y}_i)^2}{\sum_{i=0}^{n - 1} (y_i - \bar{y})^2}.
     \label{eq:R2}
 \end{equation}
+where $y$ is the data, $\tilde{y}$ is our fitted data and $\bar{y}$ is the mean of $y$.  The $R^2$ score will lie within the interval $[0,\ 1]$, and is a measure of the variance of our model and how well it fits the data, with 1 being the best possible score. 
+
+
+In order to find the regression parameters $\bm{B}$ for the OLS regression method, you optimize the expression for the MSE. This is called the cost function, 
+\begin{align*}
+C(\bm{X},\bm{\beta} ) &= \frac{1}{n}\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2 = \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2] \\
+\end{align*}
+Using that the variance of $\bm{y}$ is $$\text{Var}[\bm{y}] = \mathbb{E}[\bm{y}^2]-\mathbb{E}[\bm{y}]^2=\sigma^2,$$ it can also be expressed as 
+\begin{align*}
+\mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2] &= \mathbb{E}[\bm{y}^2  -2\bm{y}\bm{\tilde{y}}+ \bm { \tilde{y} } ^2 ] \\
+&= \mathbb{E}[\bm{y}^2]  - 2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]\\
+&= \text{Var}[\bm{y}] + \mathbb{E}[\bm{y}]^2-2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]
+\end{align*}
+
+
+\section{Method}
+Use Franke's function to study how to model a fit for two-dimensional data. The function is given by 
+\begin{align}
+f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)} \nonumber\\
+ &+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \nonumber\\
+ &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} \nonumber\\
+ &-\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }.
+\end{align}
+ which is defined on $x,\ y \in [0,1]$. 
+
+
+
+
+
+
+
+
 
 
 \section{Results}
