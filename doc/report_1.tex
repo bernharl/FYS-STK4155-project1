@@ -98,7 +98,7 @@ Another shrinkage regression method is the  Least Absolute Shrinkage and Selecti
     \label{eq:argminbeta_lasso}\\
     ||\beta||_1 =& \sum_j |\beta_j|.
 \end{align}
-Similar to $\lambda$ for Ridge regression, here $\lambda$ can be used to tune the amount of shrinkage on the regression parameters. One vital difference is that the Lasso method can enforce parameters to be zero, which will eliminate them completely from the model.  As for Ridge regression, the intercept $\beta_0^\text{lasso}$ should not be penalized, but instead approximated as the mean of the centered data.
+Similar to $\lambda$ for Ridge regression, here $\lambda$ can be used to tune the amount of shrinkage on the regression parameters. One vital difference is that the Lasso method can enforce parameters to be zero, which will eliminate them completely from the model.  Equivalently to Ridge regression, the intercept $\beta_0^\text{lasso}$ should not be penalized, but instead approximated as the mean of the centered data, 
 
 \subsection{Bias-variance tradeoff}
 In order to evaluate how our model fits the data, it can be useful to consider the mean squared error (MSE), defined as
