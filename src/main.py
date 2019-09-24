@@ -25,7 +25,9 @@ class RegressionClass:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
-                self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[::4]
+                self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[
+                    ::4
+                ]
                 print(np.min(self.z_meshgrid), np.max(self.z_meshgrid))
                 RuntimeWarning(
                     "Given standard deviation is ignored and replaced by the image data's deviations"
@@ -374,8 +376,8 @@ if __name__ == "__main__":
         path="datafiles/",
     )
     ridge.regression_method()"""
-    #ridge.plot_model()
-    #print(ridge.k_fold())
+    # ridge.plot_model()
+    # print(ridge.k_fold())
 
     """lasso = LassoRegression(
         degree=11,
@@ -400,14 +402,11 @@ if __name__ == "__main__":
     ols.plot_model()
     print(ols.r_squared)"""
     ols = OrdinaryLeastSquares(
-        degree=5,
-        terrain_data=True,
-        filename="SRTM_data_Dead_Sea.tif",
-        path="datafiles/",
+        degree=8, terrain_data=True, filename="SRTM_data_LakeTanganyika_Africa.tif", path="datafiles/"
     )
     #ols.regression_method()
     ols.plot_model()
-    #print(lasso.r_squared)
+    # print(lasso.r_squared)
     # print(ols.regression_model - ridge.regression_model)
 
     # print(ridge.beta[0], ols.beta[0])
