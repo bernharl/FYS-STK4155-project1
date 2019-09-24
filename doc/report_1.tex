@@ -66,7 +66,7 @@ where $\bm{\varepsilon} \sim N(0,\ \sigma ^2)$ and $f$ is some function of a des
 with $\bm{\beta}$ being a $(p\times 1)$ vector containing the linear regression parameters, $\bm{\beta}^T=[\beta_0,\ \beta_1, \beta_2,\dots,\beta_{p-1}]$, with $\beta_0$ as the intercept. 
 It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, with optimal  parameters $\hat{B}^\text{OLS}$ given by
 \begin{align}
-    \hat{\beta}^\text{OLS} =& \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_{i=0}^{n-1} (y_i - X_{i*}^T \beta)^2 \right],
+    \hat{\beta}^\text{OLS} =& \text{ argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_{i=0}^{n-1} (y_i - X_{i*}^T \beta)^2 \right],
     \label{eq:argminbeta_OLS}   \\
         ||\beta||_2 =&  \sqrt{\sum_j \beta_j^2} 
 \end{align}
@@ -77,7 +77,7 @@ giving an analytical expression for the optimal regression parameters
 \end{align}
 The optimal regression parameters $\hat{\beta}^\text{ridge}$ for Ridge regression, which is a penalized regression method, are given by
 \begin{equation}
-    \hat{\beta}^\text{ridge} = \text{argmin}_\beta \left[ \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right],
+    \hat{\beta}^\text{ridge} = \text{ argmin}_\beta \left[ \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right],
     \label{eq:argminbeta_ridge}
 \end{equation}
 with the analytical optimal regression parameters
@@ -93,11 +93,11 @@ The parameter $\lambda$ is a shrinkage parameter, also known as the hyperparamet
 
 Another shrinkage regression method is the  Least Absolute Shrinkage and Selection Operator (Lasso) regression method. The optimal regression parameters $\hat{\beta}^\text{lasso}$ are  given by the expression
 \begin{align}
-    \hat{\beta}^\text{lasso} =&  \text{argmin}_\beta \left[  \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right],
+    \hat{\beta}^\text{lasso} =&  \text{ argmin}_\beta \left[  \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right],
     \label{eq:argminbeta_lasso}\\
     ||\beta||_1 =& \sum_j |\beta_j|.
 \end{align}
-Similar to Ridge regression, $\lambda$ can be used to tune the amount of shrinkage on the regression parameters. One vital difference is that the Lasso method can enforce these parameters to be zero, which will eliminate them completely from the model.  As for Ridge regression, the intercept $\beta_0^\text{lasso}$ should not be penalized, but instead approximated as the mean of the centered data. 
+Similar to $\lambda$ for Ridge regression, here $\lambda$ can be used to tune the amount of shrinkage on the regression parameters. One vital difference is that the Lasso method can enforce parameters to be zero, which will eliminate them completely from the model.  As for Ridge regression, the intercept $\beta_0^\text{lasso}$ should not be penalized, but instead approximated as the mean of the centered data. 
 
 \subsection{Bias-variance tradeoff}
 In order to evaluate how our model fits the data, it can be useful to consider the mean squared error (MSE), defined as 
