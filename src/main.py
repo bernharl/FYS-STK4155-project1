@@ -26,7 +26,7 @@ class RegressionClass:
                 self.filename = filename
                 self.path = path
                 self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[
-                    ::10
+                    ::100,::100
                 ]
                 print(np.min(self.z_meshgrid), np.max(self.z_meshgrid))
                 RuntimeWarning(
