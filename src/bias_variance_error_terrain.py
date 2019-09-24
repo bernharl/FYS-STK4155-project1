@@ -66,17 +66,16 @@ ax.text(
 ax.legend(loc=3)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_ols_terrain.pdf", dpi=1000)
-exit()
+
 # Prediction error for Ridge regression
 
-lambda_Ridge = np.logspace(0, 4, 8)
+lambda_Ridge = np.logspace(-10, 10, 21)
 pred_error_ridge = np.zeros_like(lambda_Ridge)
 pred_error_train_ridge = np.zeros_like(pred_error_ridge)
 
 for j, lamb in enumerate(lambda_Ridge):
     ridge_reg = RidgeRegression(
         lambd=lamb,
-        stddev=1,
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
@@ -132,7 +131,6 @@ for j, lamb in enumerate(lambda_lasso):
     print(lamb)
     lasso_reg = LassoRegression(
         lambd=lamb,
-        stddev=1,
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
@@ -177,5 +175,4 @@ ax.text(
 
 ax.legend(loc=3)
 fig.tight_layout()
-print('wtf?')
 fig.savefig("../doc/figs/biasvariancetradeoff_LASSO_terrain.pdf", dpi=1000)

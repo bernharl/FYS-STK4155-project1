@@ -25,13 +25,15 @@ ax.errorbar(x_axis, ols_franke.beta, yerr=np.sqrt(ols_franke.beta_variance), fmt
 ax.set_xlabel(r"$n$")
 ax.set_ylabel(r"$\beta_n$")
 ax.grid()
+ax.set_xticks(range(len(ols_franke.beta)))
+fig.tight_layout()
 fig.savefig("../doc/figs/beta_variance_ols_Franke.pdf", dpi=1000)
 
 
 ols_terrain = OrdinaryLeastSquares(
-    degree=2,
+    degree=5,
     terrain_data=True,
-    filename="SRTM_data_Norway_2.tif",
+    filename="SRTM_data_LakeTanganyika_Africa.tif",
     path="datafiles/"
 )
 ols_terrain.regression_method()
@@ -42,4 +44,6 @@ ax.errorbar(x_axis, ols_terrain.beta, yerr=np.sqrt(ols_terrain.beta_variance), f
 ax.set_xlabel(r"$n$")
 ax.set_ylabel(r"$\beta_n$")
 ax.grid()
+fig.tight_layout()
+ax.set_xticks(range(len(ols_terrain.beta)))
 fig.savefig("../doc/figs/beta_variance_ols_terrain.pdf", dpi=1000)
