@@ -132,7 +132,6 @@ for j, lamb in enumerate(lambda_lasso):
     print(lamb)
     lasso_reg = LassoRegression(
         lambd=lamb,
-        degree = 3,
         stddev=1,
         terrain_data=True,
         filename="SRTM_data_Norway_2.tif",
