@@ -3,8 +3,8 @@
 \usepackage[a4paper, total={6in, 8.5in}]{geometry}
 
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx} 
-\usepackage{verbatim} 
+\usepackage{graphicx}
+\usepackage{verbatim}
 \usepackage{float}
 \usepackage{xfrac}
 \usepackage{mathpazo}
@@ -31,7 +31,7 @@
   \item\relax}
  {\endlist}
 
-%\setlength\parindent{0pt}	
+%\setlength\parindent{0pt}
 
 \title{FYS-STK3155/4155 Applied Data Analysis and Machine Learning - Project 1: Regression analysis and resampling methods }
 
@@ -48,14 +48,14 @@
 \begin{multicols}{2}
 \section{Introduction}
 
-Linear regression is a basic, but highly important form of statistical learning. To many, it is the first step into more advanced machine learning methods. The least squares estimator in particular is remarkably simple, having an easily calculated analytical expression
+Linear regression is a basic, but highly important form of statistical learning. To many, it is the first step into more advanced machine learning methods. The least squares estimator in particular is remarkably simple, having an easily calculated analytical expression.
 
- In this project we apply three important regression methods on synthetic data (The Franke Function.) as well as real world terrain data to see how well they compare to each other, and to see if linear regression is a tool powerful enough to properly fit two dimensional, noisy terrain data.
+In this project we apply three important regression methods on synthetic data generated using the Franke function, given in Equation (\ref{eq:Franke}), as well as real world terrain data to see how well they correspond with each other and the data, and to examine if linear regression is a sufficiently powerful tool to properly fit a model to two dimensional noisy data.
 
 
 \section{Theory}
 \subsection{Linear regression methods}
-If given a data set $\mathcal{L}$ consisting of data $\bm{X}_\mathcal{L} = \{(y_j,\ \bm{x}_j),\ j=0,\ \dots,\ n-1\}$, assuming the true data is on the form
+If given a data set $\mathcal{L}$ consisting of data $\bm{X}_\mathcal{L} = \{(	,\ \bm{x}_j),\ j=0,\ \dots,\ n-1\}$, assuming the true data is on the form
 \begin{equation}
 \bm{y} = f(\bm{x})+ \bm{\varepsilon} ,
 \end{equation}
@@ -63,21 +63,21 @@ where $\bm{\varepsilon} \sim N(0,\ \sigma ^2)$ and $f$ is some function of a des
 \begin{equation}
 \bm{\tilde{y}} = \bm{X}\bm{\beta}
 \end{equation}
-with $\bm{\beta}$ being a $(p\times 1)$ vector containing the linear regression parameters, $\bm{\beta}^T=[\beta_0,\ \beta_1, \beta_2,\dots,\beta_{p-1}]$, with $\beta_0$ as the intercept. 
+with $\bm{\beta}$ being a $(p\times 1)$ vector containing the linear regression parameters, $\bm{\beta}^T=[\beta_0,\ \beta_1, \beta_2,\dots,\beta_{p-1}]$, with $\beta_0$ as the intercept.
 It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, with optimal  parameters $\hat{B}^\text{OLS}$ given by
 \begin{align}
-    \hat{\beta}^\text{OLS} =& \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_{i=0}^{n-1} (y_i - X_{i*}^T \beta)^2 \right],
+    \hat{\beta}^\text{OLS} =& \text{ argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_{i=0}^{n-1} (y_i - X_{i*}^T \beta)^2 \right],
     \label{eq:argminbeta_OLS}   \\
-        ||\beta||_2 =&  \sqrt{\sum_j \beta_j^2} 
+        ||\beta||_2 =&  \sqrt{\sum_j \beta_j^2}
 \end{align}
 giving an analytical expression for the optimal regression parameters
 \begin{align}
     \hat{\beta}^{\text{OLS}} = (\bm{X}^T\bm{X})^{-1} \bm{X}^T \bm{y}.
-    \label{eq:beta_OLS} 
+    \label{eq:beta_OLS}
 \end{align}
 The optimal regression parameters $\hat{\beta}^\text{ridge}$ for Ridge regression, which is a penalized regression method, are given by
 \begin{equation}
-    \hat{\beta}^\text{ridge} = \text{argmin}_\beta \left[ \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right]
+    \hat{\beta}^\text{ridge} = \text{ argmin}_\beta \left[ \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right],
     \label{eq:argminbeta_ridge}
 \end{equation}
 with the analytical optimal regression parameters
@@ -85,7 +85,7 @@ with the analytical optimal regression parameters
     \hat{\beta}^\text{ridge} = (\bm{X}^T\bm{X} +\lambda \bm{I})^{-1} \bm{X}^T \bm{y}.
     \label{eq:beta_ridge}
 \end{equation}
-The parameter $\lambda$ is a shrinkage parameter, also known as the hyperparameter. As the name suggests, by tuning $\lambda$ we decide the amount of shrinkage on the regression parameters, with higher values for $\lambda$ corresponding to stronger shrinkage of the parameters. As this hyperparameter imposes a size constraint on the regression parameters, Ridge regression can be an effective tool to counteract correlation between the predictors. This penalty is not imposed on the intercept $\beta_0$, which instead can be approximated by centering the data and taking the mean, 
+The parameter $\lambda$ is a shrinkage parameter, also known as the hyperparameter. As the name suggests, by tuning $\lambda$ we decide the amount of shrinkage on the regression parameters, with higher values for $\lambda$ corresponding to stronger shrinkage of the parameters. As this hyperparameter imposes a size constraint on the regression parameters, Ridge regression can be an effective tool to counteract correlation between the predictors and overfitting, as irrelevant coefficients can be shrunk to near zero. This penalty is not imposed on the intercept $\beta_0$, which instead can be approximated by centering the data and taking the mean,
 \begin{equation}
 	\beta_0^\text{ridge}=\frac{1}{n}\sum_{i=0}^{n-1}y_i.
 	\label{eq:beta0_Ridge}
@@ -93,30 +93,31 @@ The parameter $\lambda$ is a shrinkage parameter, also known as the hyperparamet
 
 Another shrinkage regression method is the  Least Absolute Shrinkage and Selection Operator (Lasso) regression method. The optimal regression parameters $\hat{\beta}^\text{lasso}$ are  given by the expression
 \begin{align}
-    \hat{\beta}^\text{lasso} =&  \text{argmin}_\beta \left[  \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right],
+    \hat{\beta}^\text{lasso} =&  \text{ argmin}_\beta \left[  \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right],
     \label{eq:argminbeta_lasso}\\
-    ||\beta||_1 =& \sum_j |\beta_j|
+    ||\beta||_1 =& \sum_j |\beta_j|.
 \end{align}
+Similar to $\lambda$ for Ridge regression, here $\lambda$ can be used to tune the amount of shrinkage on the regression parameters. One vital difference is that the Lasso method can enforce parameters to be zero, which will eliminate them completely from the model.  As for Ridge regression, the intercept $\beta_0^\text{lasso}$ should not be penalized, but instead approximated as the mean of the centered data.
 
 \subsection{Bias-variance tradeoff}
-In order to evaluate how our model fits the data, it can be useful to consider the mean squared error (MSE), defined as 
+In order to evaluate how our model fits the data, it can be useful to consider the mean squared error (MSE), defined as
 \begin{equation}
     MSE(\hat{y},\hat{\tilde{y}}) = \frac{1}{n}
-    \sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2, 
+    \sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2,
     \label{eq:MSE}
 \end{equation}
-and the $R^2$ score, defined as 
+and the $R^2$ score, defined as
 \begin{equation}
     R^2(\hat{y}, \tilde{\hat{y}}) = 1 - \frac{\sum_{i=0}^{n - 1} (y_i - \tilde{y}_i)^2}{\sum_{i=0}^{n - 1} (y_i - \bar{y})^2}.
     \label{eq:R2}
 \end{equation}
-where $y$ is the data, $\tilde{y}$ is our fitted data and $\bar{y}$ is the mean of $y$.  The $R^2$ score will lie within the interval $[0,\ 1]$, and is a measure of the variance of our model and how well it fits the data, with 1 being the best possible score. 
+where $y$ is the data, $\tilde{y}$ is our fitted data and $\bar{y}$ is the mean of $y$.  The $R^2$ score will lie within the interval $[0,\ 1]$, and is a measure of the variance of our model and how well it fits the data, with 1 being the best possible score.
 
-In order to find the regression parameters $\bm{B}$ for the OLS regression method, you optimize the expression for the MSE. This is called the cost function, 
+In order to find the regression parameters $\bm{B}$ for the OLS regression method, you optimize the expression for the MSE. This is called the cost function,
 \begin{align*}
 C(\bm{X},\bm{\beta} ) &= \frac{1}{n}\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2 = \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2],
 \end{align*}
-which can also be bias-variance decomposed into 
+which can also be bias-variance decomposed into
 \begin{align}
  \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]  =&\sigma^2 + \frac{1}{n}\sum_i(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2  \nonumber \\
  &+ \frac{1}{n}\sum_i(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2,
@@ -124,7 +125,7 @@ which can also be bias-variance decomposed into
 \end{align}
 where $\sigma^2$ is the irreducible error,  the $(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the bias and the $(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the variance of the model.
 
-To derive this, we first expand the left-hand side, 
+To derive this, we first expand the left-hand side,
 \begin{align*}
 \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2] =& \mathbb{E}[\bm{y}^2  -2\bm{y}\bm{\tilde{y}}+ \bm { \tilde{y} } ^2 ] \\
 =& \mathbb{E}[\bm{y}^2]  - 2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]
@@ -143,7 +144,7 @@ Because  $\bm{\tilde{y}}$ and $\bm{\varepsilon}$ are uncorrelated and $\mathbb{E
 \begin{align*}
 \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]=& \sigma^2 +  \mathbb{E}[f(\bm{x})]^2 -2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}].
 \end{align*}
-Adding and subtracting $2\mathbb{E}[\bm{\tilde{y}}]^2$ and collecting squares gives us 
+Adding and subtracting $2\mathbb{E}[\bm{\tilde{y}}]^2$ and collecting squares gives us
 \begin{align*}
 \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]=&\sigma^2 + f^2(\bm{x})-2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}]\\&+\mathbb{E}[\bm{\tilde{y}}]^2 + \mathbb{E}[\bm{\tilde{y}}]^2 -2\mathbb{E}[\bm{\tilde{y}}]^2\\
 =&  \sigma ^2  + ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2 + \mathbb{E}[\bm{\tilde{y}}^2] \\&+\mathbb{E}[\bm{\tilde{y}}]\mathbb{E}[\bm{\tilde{y}}]  - 2\mathbb{E}[\bm{\tilde{y}}]\mathbb{E}[\bm{\tilde{y}}]\\
@@ -161,18 +162,18 @@ C(\bm{X},\bm{\beta} ) =  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^
 \subsection{Resampling}
 Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
 
-One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on first splitting the train data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the folds is used as a validation set once. 
+One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on first splitting the train data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the folds is used as a validation set once.
 
 
 
 \section{Method}
-To get an understanding of the three regression methods, we initially use Franke's function to study how to model a fit for two-dimensional data using all three methods. The function is given by 
+To get an understanding of the three regression methods, we initially use Franke's function to study how to model a fit for two-dimensional data using all three methods. The function is given by
 \begin{align}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)} \nonumber\\
  &+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \nonumber\\
  &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} \nonumber\\
- &-\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }.
-\end{align} which is defined on $x,\ y \in [0,1]$. 
+ &-\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }. \label{eq:Franke}
+\end{align} which is defined on $x,\ y \in [0,1]$.
 
 
 
@@ -198,18 +199,18 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right
     \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression of degree 5 fitted on the Franke function.}
     \label{fig:bias_ols_Franke}
 \end{figure}
-    
+
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_Ridge_Franke.eps}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 5 fitted on the Franke function}
     \label{fig:bias_ridge_Franke}
-\end{figure}    
+\end{figure}
 
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_LASSO_Franke.eps}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on the Franke function.}
     \label{fig:bias_lasso_Franke}
-\end{figure} 
+\end{figure}
 Figures \ref{fig:beta_variance_Franke}, \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} are all made with a fifth order polynomial fit. This choice was based on the results shown in figure \ref{fig:bias_ols_Franke}, showing the estimated prediction error for varying polynomial degrees.
 \subsection{Lake Tanganyika data}
 
@@ -225,18 +226,18 @@ Figures \ref{fig:beta_variance_Franke}, \ref{fig:bias_ridge_Franke} and \ref{fig
     \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression of degree 5 fitted on terrain data of the Dead Sea.}
     \label{fig:bias_ols_terrain}
 \end{figure}
-    
+
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_Ridge_terrain.eps}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 5 fitted on terrain data of the Dead Sea.}
     \label{fig:bias_ridge_terrain}
-\end{figure}    
+\end{figure}
 
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_LASSO_terrain.eps}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on terrain data of the Dead Sea.}
     \label{fig:bias_lasso_terrain}
-\end{figure} 
+\end{figure}
 As with the results from fitting the Franke function, figures \ref{fig:beta_variance_terrain}, \ref{fig:bias_ridge_terrain} and \ref{fig:bias_lasso_terrain} are made with a fifth degree polynomial. This choice is based on figure \ref{fig:bias_ols_terrain} and is a compromise between low prediction error and low runtime. In all plots made by analyzing the terrain data from Lake Tanganyika, we only used every 150th point of the data sets to save memory and make the analysis not take too much time to run.
 \begin{multicols}{2}
 
