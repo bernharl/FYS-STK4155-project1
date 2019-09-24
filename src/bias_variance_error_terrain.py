@@ -69,7 +69,7 @@ fig.savefig("../doc/figs/biasvariancetradeoff_ols_terrain.eps", dpi=1000)
 
 # Prediction error for Ridge regression
 
-lambda_Ridge = np.logspace(-7, 1, 8)
+lambda_Ridge = np.logspace(0, 4, 8)
 pred_error_ridge = np.zeros_like(lambda_Ridge)
 pred_error_train_ridge = np.zeros_like(pred_error_ridge)
 
@@ -124,7 +124,7 @@ fig.savefig("../doc/figs/biasvariancetradeoff_Ridge_terrain.eps", dpi=1000)
 
 
 # Prediction error for LASSO regression
-lambda_lasso = np.logspace(-7, 1, 8)
+lambda_lasso = np.logspace(0, 4, 8)
 pred_error_lasso = np.zeros_like(lambda_lasso)
 pred_error_train_lasso = np.zeros_like(pred_error_lasso)
 
