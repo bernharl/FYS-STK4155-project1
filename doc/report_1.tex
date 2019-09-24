@@ -67,19 +67,20 @@ with $\bm{\beta}$ being a $(p\times 1)$ vector containing the linear regression 
 It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, with optimal  parameters $\hat{B}^\text{OLS}$ given by
 \begin{align}
     \hat{\beta}^\text{OLS} =& \text{ argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_{i=0}^{n-1} (y_i - X_{i*}^T \beta)^2 \right],
-    \label{eq:argminbeta_OLS}   \\
-        ||\beta||_2 =&  \sqrt{\sum_j \beta_j^2}
+    \label{eq:argminbeta_OLS} 
 \end{align}
 giving an analytical expression for the optimal regression parameters
 \begin{align}
     \hat{\beta}^{\text{OLS}} = (\bm{X}^T\bm{X})^{-1} \bm{X}^T \bm{y}.
     \label{eq:beta_OLS}
 \end{align}
-The optimal regression parameters $\hat{\beta}^\text{ridge}$ for Ridge regression, which is a penalized regression method, are given by
-\begin{equation}
-    \hat{\beta}^\text{ridge} = \text{ argmin}_\beta \left[ \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right],
-    \label{eq:argminbeta_ridge}
-\end{equation}
+
+The Ridge regression method is another linear regression method. Unlike OLS, it is a penalized regression method, which means that it imposes a shrinkage on the regression parameters. The parameters $\hat{\beta}^\text{ridge}$ for Ridge regression are given by
+\begin{align}
+    \hat{\beta}^\text{ridge} = &\text{ argmin}_\beta \left[ \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right],
+    \label{eq:argminbeta_ridge}\\
+        ||\beta||_2 =&  \sqrt{\sum_j \beta_j^2}
+\end{align}
 with the analytical optimal regression parameters
 \begin{equation}
     \hat{\beta}^\text{ridge} = (\bm{X}^T\bm{X} +\lambda \bm{I})^{-1} \bm{X}^T \bm{y}.
@@ -113,7 +114,7 @@ and the $R^2$ score, defined as
 \end{equation}
 where $y$ is the data, $\tilde{y}$ is our fitted data and $\bar{y}$ is the mean of $y$.  The $R^2$ score will lie within the interval $[0,\ 1]$, and is a measure of the variance of our model and how well it fits the data, with 1 being the best possible score.
 
-In order to find the regression parameters $\bm{B}$ for the OLS regression method, you optimize the expression for the MSE. This is called the cost function,
+In order to find the regression parameters $\bm{\beta}$ for the OLS regression method, you need to  optimize the expression for the MSE. This is called the cost function,
 \begin{align*}
 C(\bm{X},\bm{\beta} ) &= \frac{1}{n}\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2 = \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2],
 \end{align*}
@@ -162,8 +163,7 @@ C(\bm{X},\bm{\beta} ) =  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^
 \subsection{Resampling}
 Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
 
-One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on first splitting the train data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the folds is used as a validation set once.
-
+One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on first splitting the train data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the folds is used as a validation set once. The MSE is calculated for each iteration using Equation (\ref{eq:MSE}). Lastly, the mean of the calculated MSE's is used as the expected prediction error. 
 
 
 \section{Method}
