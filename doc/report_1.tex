@@ -50,7 +50,7 @@
 
 Linear regression is a basic, but highly important form of statistical learning. To many, it is the first step into more advanced machine learning methods. The least squares estimator in particular is remarkably simple, having an easily calculated analytical expression.
 
- In this project we apply three important regression methods on synthetic data generated using the Franke function, given in Equation (\ref{eq:Franke}), as well as real world terrain data to see how well they correspond with each other and the data, and to examine if linear regression is a sufficiently powerful tool to properly fit a model to noisy data.
+In this project we apply three important regression methods on synthetic data generated using the Franke function, given in Equation (\ref{eq:Franke}), as well as real world terrain data to see how well they correspond with each other and the data, and to examine if linear regression is a sufficiently powerful tool to properly fit a model to noisy data.
 
 
 \section{Theory}
@@ -85,9 +85,9 @@ with the analytical optimal regression parameters
     \hat{\beta}^\text{ridge} = (\bm{X}^T\bm{X} +\lambda \bm{I})^{-1} \bm{X}^T \bm{y}.
     \label{eq:beta_ridge}
 \end{equation}
-The parameter $\lambda$ is a shrinkage parameter, also known as the hyperparameter. As the name suggests, by tuning $\lambda$ we decide the amount of shrinkage on the regression parameters, with higher values for $\lambda$ corresponding to stronger shrinkage of the parameters. As this hyperparameter imposes a size constraint on the regression parameters, Ridge regression can be an effective tool to counteract correlation between the predictors. This penalty is not imposed on the intercept $\beta_0$, which instead can be approximated by centering the data and taking the mean, 
+The parameter $\lambda$ is a shrinkage parameter, also known as the hyperparameter. As the name suggests, by tuning $\lambda$ we decide the amount of shrinkage on the regression parameters, with higher values for $\lambda$ corresponding to stronger shrinkage of the parameters. As this hyperparameter imposes a size constraint on the regression parameters, Ridge regression can be an effective tool to counteract correlation between the predictors and overfitting, as irrelevant coefficients can be shrunk to near zero. This penalty is not imposed on the intercept $\beta_0$, which instead can be approximated by centering the data and taking the mean, 
 \begin{equation}
-	\beta_0^\text{ridge}=\frac{1}{n}\sum_{i=0}^{n-1}y_i.'
+	\beta_0^\text{ridge}=\frac{1}{n}\sum_{i=0}^{n-1}y_i.
 	\label{eq:beta0_Ridge}
 \end{equation}
 
@@ -97,6 +97,7 @@ Another shrinkage regression method is the  Least Absolute Shrinkage and Selecti
     \label{eq:argminbeta_lasso}\\
     ||\beta||_1 =& \sum_j |\beta_j|.
 \end{align}
+Similar to Ridge regression, $\lambda$ can be used to tune the amount of shrinkage on the regression parameters. One vital difference is that the Lasso method can enforce these parameters to be zero, which will eliminate them completely from the model.  As for Ridge regression, the intercept $\beta_0^\text{lasso}$ should not be penalized, but instead approximated as the mean of the centered data. 
 
 \subsection{Bias-variance tradeoff}
 In order to evaluate how our model fits the data, it can be useful to consider the mean squared error (MSE), defined as 
