@@ -25,7 +25,7 @@ ax.errorbar(x_axis, ols_franke.beta, yerr=np.sqrt(ols_franke.beta_variance), fmt
 ax.set_xlabel(r"$n$")
 ax.set_ylabel(r"$\beta_n$")
 ax.grid()
-fig.savefig("../doc/figs/beta_variance_ols_Franke.eps", dpi=1000)
+fig.savefig("../doc/figs/beta_variance_ols_Franke.pdf", dpi=1000)
 
 
 ols_terrain = OrdinaryLeastSquares(
@@ -35,8 +35,6 @@ ols_terrain = OrdinaryLeastSquares(
     path="datafiles/"
 )
 ols_terrain.regression_method()
-ols_terrain.plot_model()
-print(ols_terrain.r_squared)
 x_axis = np.arange(len(ols_terrain.beta))
 fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
@@ -44,4 +42,4 @@ ax.errorbar(x_axis, ols_terrain.beta, yerr=np.sqrt(ols_terrain.beta_variance), f
 ax.set_xlabel(r"$n$")
 ax.set_ylabel(r"$\beta_n$")
 ax.grid()
-fig.savefig("../doc/figs/beta_variance_ols_terrain.eps", dpi=1000)
+fig.savefig("../doc/figs/beta_variance_ols_terrain.pdf", dpi=1000)

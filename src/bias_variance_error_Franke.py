@@ -29,8 +29,8 @@ pred_log = np.log10(pred_error)
 pred_log_train = np.log10(pred_error_train)
 fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
-ax.plot(degrees, pred_log, label="Test", color="r")
 ax.plot(degrees, pred_log_train, label="Train", color="g")
+ax.plot(degrees, pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel("Model Complexity [polynomial degree]")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
@@ -38,7 +38,7 @@ ax.set_ylim(
         np.min(pred_log_train) - np.min(np.abs(pred_log_train)) * 0.1,
         np.max(pred_log) + np.max(np.abs(pred_log)) * 0.3,
     ]
-)
+    )
 
 ax.text(
     0.05,
@@ -59,7 +59,7 @@ ax.text(
 
 ax.legend(loc=3)
 fig.tight_layout()
-fig.savefig("../doc/figs/biasvariancetradeoff_ols_Franke.eps", dpi=1000)
+fig.savefig("../doc/figs/biasvariancetradeoff_ols_Franke.pdf", dpi=1000)
 
 # Prediction error for Ridge regression
 # lambda_Ridge = np.linspace(1, 0, 100)
@@ -79,8 +79,8 @@ pred_log_train = np.log10(pred_error_train_ridge)
 
 fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
-ax.plot(np.log10(lambda_Ridge), pred_log, label="Test", color="r")
 ax.plot(np.log10(lambda_Ridge), pred_log_train, label="Train", color="g")
+ax.plot(np.log10(lambda_Ridge), pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel(r"log$_{10}\lambda$")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
@@ -109,7 +109,7 @@ ax.text(
 
 ax.legend(loc=3)
 fig.tight_layout()
-fig.savefig("../doc/figs/biasvariancetradeoff_Ridge_Franke.eps", dpi=1000)
+fig.savefig("../doc/figs/biasvariancetradeoff_Ridge_Franke.pdf", dpi=1000)
 
 # Prediction error for LASSO regression
 lambda_lasso = np.logspace(-7, 1, 8)
@@ -127,8 +127,8 @@ pred_log_train = np.log10(pred_error_train_lasso)
 
 fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
-ax.plot(np.log10(lambda_lasso), pred_log, label="Test", color="r")
 ax.plot(np.log10(lambda_lasso), pred_log_train, label="Train", color="g")
+ax.plot(np.log10(lambda_lasso), pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel(r"log$_{10}\lambda$")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
@@ -157,4 +157,4 @@ ax.text(
 
 ax.legend(loc=3)
 fig.tight_layout()
-fig.savefig("../doc/figs/biasvariancetradeoff_LASSO_Franke.eps", dpi=1000)
+fig.savefig("../doc/figs/biasvariancetradeoff_LASSO_Franke.pdf", dpi=1000)

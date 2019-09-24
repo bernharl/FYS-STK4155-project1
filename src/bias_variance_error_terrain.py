@@ -65,7 +65,7 @@ ax.text(
 
 ax.legend(loc=3)
 fig.tight_layout()
-fig.savefig("../doc/figs/biasvariancetradeoff_ols_terrain.eps", dpi=1000)
+fig.savefig("../doc/figs/biasvariancetradeoff_ols_terrain.pdf", dpi=1000)
 exit()
 # Prediction error for Ridge regression
 
@@ -90,8 +90,8 @@ pred_log_train = np.log10(pred_error_train_ridge)
 
 fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
-ax.plot(np.log10(lambda_Ridge), pred_log, label="Test", color="r")
 ax.plot(np.log10(lambda_Ridge), pred_log_train, label="Train", color="g")
+ax.plot(np.log10(lambda_Ridge), pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel(r"log$_{10}\lambda$")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
@@ -120,7 +120,7 @@ ax.text(
 
 ax.legend(loc=3)
 fig.tight_layout()
-fig.savefig("../doc/figs/biasvariancetradeoff_Ridge_terrain.eps", dpi=1000)
+fig.savefig("../doc/figs/biasvariancetradeoff_Ridge_terrain.pdf", dpi=1000)
 
 
 # Prediction error for LASSO regression
@@ -147,8 +147,8 @@ pred_log_train = np.log10(pred_error_train_lasso)
 
 fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
-ax.plot(np.log10(lambda_lasso), pred_log, label="Test", color="r")
 ax.plot(np.log10(lambda_lasso), pred_log_train, label="Train", color="g")
+ax.plot(np.log10(lambda_lasso), pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel(r"log$_{10}\lambda$")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
@@ -178,4 +178,4 @@ ax.text(
 ax.legend(loc=3)
 fig.tight_layout()
 print('wtf?')
-fig.savefig("../doc/figs/biasvariancetradeoff_LASSO_terrain.eps", dpi=1000)
+fig.savefig("../doc/figs/biasvariancetradeoff_LASSO_terrain.pdf", dpi=1000)
