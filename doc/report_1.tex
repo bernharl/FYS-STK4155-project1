@@ -50,7 +50,7 @@
 
 Linear regression is a basic, but highly important form of statistical learning. To many, it is the first step into more advanced machine learning methods. The least squares estimator in particular is remarkably simple, having an easily calculated analytical expression.
 
-In this project we apply three important regression methods on synthetic data generated using the Franke function, given in Equation (\ref{eq:Franke}), as well as real world terrain data to see how well they correspond with each other and the data, and to examine if linear regression is a sufficiently powerful tool to properly fit a model to two dimensional noisy data.
+In this project we apply three important regression methods on synthetic data generated using the Franke function, given in Equation (\ref{eq:Franke}), as well as real world terrain data to see how well they correspond with each other and the data, and to examine if linear regression is a sufficiently powerful tool to properly fit a model to two-dimensional noisy data.
 
 
 \section{Theory}
@@ -223,19 +223,19 @@ Figures \ref{fig:beta_variance_Franke}, \ref{fig:bias_ridge_Franke} and \ref{fig
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_terrain.eps}
-    \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression of degree 5 fitted on terrain data of the Dead Sea.}
+    \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression of degree 5 fitted on terrain data of Lake Tanganyika, Africa.}
     \label{fig:bias_ols_terrain}
 \end{figure}
 
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_Ridge_terrain.eps}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 5 fitted on terrain data of the Dead Sea.}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 5 fitted on terrain data of Lake Tanganyika.}
     \label{fig:bias_ridge_terrain}
 \end{figure}
 
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_LASSO_terrain.eps}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on terrain data of the Dead Sea.}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on terrain data of Lake Tanganyika.}
     \label{fig:bias_lasso_terrain}
 \end{figure}
 As with the results from fitting the Franke function, figures \ref{fig:beta_variance_terrain}, \ref{fig:bias_ridge_terrain} and \ref{fig:bias_lasso_terrain} are made with a fifth degree polynomial. This choice is based on figure \ref{fig:bias_ols_terrain} and is a compromise between low prediction error and low runtime. In all plots made by analyzing the terrain data from Lake Tanganyika, we only used every 150th point of the data sets to save memory and make the analysis not take too much time to run.
