@@ -26,7 +26,7 @@ class RegressionClass:
                 self.filename = filename
                 self.path = path
                 self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[
-                    ::100,::100
+                    ::150,::150
                 ]
                 print(np.min(self.z_meshgrid), np.max(self.z_meshgrid))
                 RuntimeWarning(
@@ -34,8 +34,8 @@ class RegressionClass:
                 )
                 self.stddev = np.std(self.z_meshgrid)
 
-                x = np.arange(0, self.z_meshgrid.shape[1], dtype=np.int16)
-                y = np.arange(0, self.z_meshgrid.shape[0], dtype=np.int16)
+                x = np.arange(0, self.z_meshgrid.shape[1], dtype=np.int16) / (self.z_meshgrid.shape[1] - 1)
+                y = np.arange(0, self.z_meshgrid.shape[0], dtype=np.int16) / (self.z_meshgrid.shape[0] - 1)
 
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
