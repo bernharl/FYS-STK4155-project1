@@ -25,7 +25,8 @@ class RegressionClass:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
-                self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)  # [::1]
+                self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[::4]
+                print(np.min(self.z_meshgrid), np.max(self.z_meshgrid))
                 RuntimeWarning(
                     "Given standard deviation is ignored and replaced by the image data's deviations"
                 )
@@ -363,7 +364,7 @@ class LassoRegression(RidgeRegression):
 if __name__ == "__main__":
     # np.random.seed(50)
 
-    ridge = RidgeRegression(
+    """ridge = RidgeRegression(
         degree=1,
         stddev=0.1,
         n_points=20,
@@ -372,11 +373,11 @@ if __name__ == "__main__":
         filename="SRTM_data_Norway_2.tif",
         path="datafiles/",
     )
-    ridge.regression_method()
+    ridge.regression_method()"""
     #ridge.plot_model()
     #print(ridge.k_fold())
 
-    lasso = LassoRegression(
+    """lasso = LassoRegression(
         degree=11,
         stddev=0.1,
         n_points=20,
@@ -388,17 +389,25 @@ if __name__ == "__main__":
     lasso.regression_method()
     #lasso.plot_model()
     print(f"Ridge with degree = {ridge.degree}, lambda = {ridge.lambd}: EPE = {ridge.k_fold()}.\nLasso with degree = {lasso.degree}, lambda = {lasso.lambd}: EPE = {lasso.k_fold()}.")
+    """
     """ols = OrdinaryLeastSquares(
         degree=5,
-        stddev=0.1,
-        step=0.05,
         terrain_data=True,
-        filename="SRTM_data_Norway_1.tif",
+        filename="SRTM_data_Norway_2.tif",
         path="datafiles/",
     )
     ols.regression_method()
-    #ols.plot_model(False)
+    ols.plot_model()
     print(ols.r_squared)"""
+    ols = OrdinaryLeastSquares(
+        degree=5,
+        terrain_data=True,
+        filename="SRTM_data_Dead_Sea.tif",
+        path="datafiles/",
+    )
+    #ols.regression_method()
+    ols.plot_model()
+    #print(lasso.r_squared)
     # print(ols.regression_model - ridge.regression_model)
 
     # print(ridge.beta[0], ols.beta[0])

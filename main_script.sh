@@ -5,6 +5,7 @@ echo "Creating estimated prediction error plots"
 
 python bias_variance_error_terrain.py
 python bias_variance_error_Franke.py
+python beta_variance_ols_plot.py
 
 echo "Build report? (y/n)"
 read yn
