@@ -56,24 +56,25 @@ Linear regression is a basic, but highly important form of statistical learning.
 \section{Theory}
 \subsection{Linear regression methods}
 If given a data set $\mathcal{L}$ consisting of data $\bm{X}_\mathcal{L} = \{(y_j,\ \bm{x}_j),\ j=0,\ \dots,\ n-1\}$, assuming the true data is on the form
-\[
+\begin{equation}
 \bm{y} = f(\bm{x})+ \bm{\varepsilon} ,
-\]
+\end{equation}
 where $\bm{\varepsilon} \sim N(0,\ \sigma ^2)$ and $f$ is some function of a design matrix $\bm{X}\in R^{n\times p}$, then it is possible by using linear regression to fit a linear model of $p$ degrees with outcome $\bm{\tilde{y}}$ on the form
-\[
-\bm{\tilde{y}} = \bm{X}\bm{\beta},
-\]
+\begin{equation}
+\bm{\tilde{y}} = \bm{X}\bm{\beta}
+\end{equation}
 with $\bm{\beta}$ being a $(p\times 1)$ vector containing the linear regression parameters, $\bm{\beta}^T=[\beta_0,\ \beta_1, \beta_2,\dots,\beta_{p-1}]$, with $\beta_0$ as the intercept. 
 It is possible to approach this problem using various different regression methods. One of the simplest methods is the Ordinary Least Squares (OLS) regression, with optimal  parameters $\hat{B}^\text{OLS}$ given by
-\begin{equation}
-    \hat{\beta}^\text{OLS} = \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_{i=0}^{n-1} (y_i - X_{i*}^T \beta)^2 \right],
-    \label{eq:argminbeta_OLS}
-\end{equation}
+\begin{align}
+    \hat{\beta}^\text{OLS} =& \text{argmin}_{ {\beta} } \left[ \frac{1}{n} \sum_{i=0}^{n-1} (y_i - X_{i*}^T \beta)^2 \right],
+    \label{eq:argminbeta_OLS}   \\
+        ||\beta||_2 =&  \sqrt{\sum_j \beta_j^2} 
+\end{align}
 giving an analytical expression for the optimal regression parameters
-\begin{equation}
+\begin{align}
     \hat{\beta}^{\text{OLS}} = (\bm{X}^T\bm{X})^{-1} \bm{X}^T \bm{y}.
-    \label{eq:beta_OLS}
-\end{equation}
+    \label{eq:beta_OLS} 
+\end{align}
 The optimal regression parameters $\hat{\beta}^\text{ridge}$ for Ridge regression, which is a penalized regression method, are given by
 \begin{equation}
     \hat{\beta}^\text{ridge} = \text{argmin}_\beta \left[ \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_2^2  \right]
@@ -90,11 +91,12 @@ The parameter $\lambda$ is a shrinkage parameter, also known as the hyperparamet
 	\label{eq:beta0_Ridge}
 \end{equation}
 
-The optimal regression parameters $\hat{\beta}^\text{lasso}$ for the Least Absolute Shrinkage and Selection Operator (LASSO) regression method is given by the expression
-\begin{equation}
-    \hat{\beta}^\text{lasso} =  \text{argmin}_\beta \left[  \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right].
-    \label{eq:argminbeta_lasso}
-\end{equation}
+Another shrinkage regression method is the  Least Absolute Shrinkage and Selection Operator (Lasso) regression method. The optimal regression parameters $\hat{\beta}^\text{lasso}$ are  given by the expression
+\begin{align}
+    \hat{\beta}^\text{lasso} =&  \text{argmin}_\beta \left[  \frac{1}{n}\sum_{i=1}^{n-1}(y_i-X_{i*}^T\beta)^2 + \lambda ||\beta||_1  \right],
+    \label{eq:argminbeta_lasso}\\
+    ||\beta||_1 =& \sum_j |\beta_j|
+\end{align}
 
 \subsection{Bias-variance tradeoff}
 In order to evaluate how our model fits the data, it can be useful to consider the mean squared error (MSE), defined as 
