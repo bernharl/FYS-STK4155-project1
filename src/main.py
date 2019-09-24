@@ -26,7 +26,7 @@ class RegressionClass:
                 self.filename = filename
                 self.path = path
                 self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[
-                    ::4
+                    ::10
                 ]
                 print(np.min(self.z_meshgrid), np.max(self.z_meshgrid))
                 RuntimeWarning(
@@ -402,9 +402,12 @@ if __name__ == "__main__":
     ols.plot_model()
     print(ols.r_squared)"""
     ols = OrdinaryLeastSquares(
-        degree=8, terrain_data=True, filename="SRTM_data_LakeTanganyika_Africa.tif", path="datafiles/"
+        degree=8,
+        terrain_data=True,
+        filename="SRTM_data_LakeTanganyika_Africa.tif",
+        path="datafiles/",
     )
-    #ols.regression_method()
+    ols.regression_method()
     ols.plot_model()
     # print(lasso.r_squared)
     # print(ols.regression_model - ridge.regression_model)

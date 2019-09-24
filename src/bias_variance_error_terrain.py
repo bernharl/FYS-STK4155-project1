@@ -15,7 +15,7 @@ fonts = {
 plt.rcParams.update(fonts)
 
 # Prediction error for OLS regression
-degrees = np.arange(0, 11)
+degrees = np.arange(0, 20)
 
 pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)
@@ -26,7 +26,7 @@ for i in degrees:
         degree=i,
         stddev=0.1,
         terrain_data=True,
-        filename="SRTM_data_Norway_2.tif",
+        filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
     )
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
@@ -35,8 +35,8 @@ pred_log = np.log10(pred_error)
 pred_log_train = np.log10(pred_error_train)
 fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
-ax.plot(degrees, pred_log, label="Test", color="r")
 ax.plot(degrees, pred_log_train, label="Train", color="g")
+ax.plot(degrees, pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel("Model Complexity [polynomial degree]")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
@@ -66,7 +66,7 @@ ax.text(
 ax.legend(loc=3)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_ols_terrain.eps", dpi=1000)
-
+exit()
 # Prediction error for Ridge regression
 
 lambda_Ridge = np.logspace(0, 4, 8)
@@ -78,7 +78,7 @@ for j, lamb in enumerate(lambda_Ridge):
         lambd=lamb,
         stddev=1,
         terrain_data=True,
-        filename="SRTM_data_Norway_2.tif",
+        filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
     )
     pred_error_ridge[j], pred_error_train_ridge[j] = ridge_reg.k_fold(
@@ -92,7 +92,7 @@ fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
 ax.plot(np.log10(lambda_Ridge), pred_log, label="Test", color="r")
 ax.plot(np.log10(lambda_Ridge), pred_log_train, label="Train", color="g")
-ax.set_xlabel(r"log$_{10}$Hyperparameter")
+ax.set_xlabel(r"log$_{10}\lambda$")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
     [
@@ -134,7 +134,7 @@ for j, lamb in enumerate(lambda_lasso):
         lambd=lamb,
         stddev=1,
         terrain_data=True,
-        filename="SRTM_data_Norway_2.tif",
+        filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
     )
     pred_error_lasso[j], pred_error_train_lasso[j] = lasso_reg.k_fold(
@@ -149,7 +149,7 @@ fig, ax = plt.subplots()
 fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
 ax.plot(np.log10(lambda_lasso), pred_log, label="Test", color="r")
 ax.plot(np.log10(lambda_lasso), pred_log_train, label="Train", color="g")
-ax.set_xlabel(r"log$_{10}$Hyperparameter")
+ax.set_xlabel(r"log$_{10}\lambda$")
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
     [
