@@ -34,8 +34,8 @@ class RegressionClass:
                 )
                 self.stddev = np.std(self.z_meshgrid)
 
-                x = np.arange(0, self.z_meshgrid.shape[1], dtype=np.int16) / (self.z_meshgrid.shape[1] - 1)
-                y = np.arange(0, self.z_meshgrid.shape[0], dtype=np.int16) / (self.z_meshgrid.shape[0] - 1)
+                x = np.arange(0, self.z_meshgrid.shape[1]) / (self.z_meshgrid.shape[1] - 1)
+                y = np.arange(0, self.z_meshgrid.shape[0]) / (self.z_meshgrid.shape[0] - 1)
 
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
