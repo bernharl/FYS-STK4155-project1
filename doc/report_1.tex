@@ -50,7 +50,7 @@
 
 Linear regression is a basic, but highly important form of statistical learning. To many, it is the first step into more advanced machine learning methods. The least squares estimator in particular is remarkably simple, having an easily calculated analytical expression
 
- In this project we apply three important regression methods on synthetic data (The Franke Function.) as well as real world terrain data to see how well they compare to each other, and to see if linear regression is a tool powerful enough to properly fit noisy data.
+ In this project we apply three important regression methods on synthetic data (The Franke Function.) as well as real world terrain data to see how well they compare to each other, and to see if linear regression is a tool powerful enough to properly fit two dimensional, noisy terrain data.
 
 
 \section{Theory}
@@ -183,8 +183,15 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right
 
 
 \section{Results}
+\subsection{Franke function data}
 
 \end{multicols}
+
+\begin{figure}[H]
+    \includegraphics[scale=1]{figs/beta_variance_ols_Franke.eps}
+    \caption{Variance of the beta parameters of a fifth order ordinary least squares solution to the Franke function.}
+    \label{fig:beta_variance_Franke}
+\end{figure}
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_Franke.eps}
@@ -203,6 +210,15 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on the Franke function.}
     \label{fig:bias_lasso_Franke}
 \end{figure} 
+Figures \ref{fig:beta_variance_Franke}, \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} are all made with a fifth order polynomial fit. This choice was based on the results shown in figure \ref{fig:bias_ols_Franke}, showing the estimated prediction error for varying polynomial degrees.
+\subsection{Lake Tanganyika data}
+
+\begin{figure}[H]
+    \includegraphics[scale=1]{figs/beta_variance_ols_terrain.eps}
+    \caption{Variance of the beta parameters of a fifth order ordinary least squares fit of terrain data from Lake Tanganyika, Africa.}
+    \label{fig:beta_variance_terrain}
+\end{figure}
+
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_terrain.eps}
@@ -221,8 +237,7 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on terrain data of the Dead Sea.}
     \label{fig:bias_lasso_terrain}
 \end{figure} 
-
-
+As with the results from fitting the Franke function, figures \ref{fig:beta_variance_terrain}, \ref{fig:bias_ridge_terrain} and \ref{fig:bias_lasso_terrain} are made with a fifth degree polynomial. This choice is based on figure \ref{fig:bias_ols_terrain} and is a compromise between low prediction error and low runtime. In all plots made by analyzing the terrain data from Lake Tanganyika, we only used every 150th point of the data sets to save memory and make the analysis not take too much time to run.
 \begin{multicols}{2}
 
 
@@ -230,7 +245,8 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right
 
 
 \section{Discussion}
-Ut egestas eget urna mollis consequat. Pellentesque blandit, leo auctor sodales porttitor, ipsum sapien commodo sapien, non tincidunt augue nunc eget nibh. Nulla ut arcu et ex condimentum placerat vel eget lacus. Quisque rhoncus eget elit vitae ornare. Suspendisse tempor, tortor vitae varius ullamcorper, eros diam tempor quam, vitae dignissim nulla nulla et lectus. Proin placerat vulputate vulputate. Morbi gravida, mauris eu auctor ultrices, turpis lacus elementum sapien, ut mollis nulla velit sed lacus. Aenean non nulla sit amet sapien tempus scelerisque sit amet ac lacus. Quisque eleifend consectetur ante, sit amet suscipit lacus pellentesque in. Suspendisse feugiat euismod risus, eu posuere libero dignissim id. Etiam quis molestie magna. Curabitur nibh nibh, tincidunt at dictum sed, aliquet a ligula. Vestibulum ut imperdiet nisi, a efficitur odio. Suspendisse interdum posuere tellus ut sagittis.
+\subsection{Franke function}
+
 
 \section{Conclusion}
 Duis malesuada sagittis mi ut gravida. Maecenas porta sed mi at malesuada. Nunc et rhoncus nisi, sit amet mattis mauris. Cras lacinia lobortis odio quis ullamcorper. Morbi volutpat turpis est, sit amet efficitur velit viverra ut. Vestibulum eu imperdiet mi. Mauris tincidunt tempor scelerisque. In scelerisque mauris justo, rutrum consectetur tortor cursus in. Vivamus odio diam, interdum eget lobortis ac, vestibulum eu diam. Integer lectus est, pharetra varius ligula et, sodales interdum arcu. Etiam volutpat dolor sit amet justo pharetra, fringilla dictum risus scelerisque.
