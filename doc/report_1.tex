@@ -19,7 +19,17 @@
 % \renewcommand{\thesubsection}{\alph{subsection})}
 \renewcommand{\thesection}{\arabic{section}}
 
-
+\renewenvironment{abstract}
+ {\small
+  \begin{center}
+  \bfseries \abstractname\vspace{-.5em}\vspace{0pt}
+  \end{center}
+  \list{}{%
+    \setlength{\leftmargin}{2.5 cm}% <---------- CHANGE HERE
+    \setlength{\rightmargin}{\leftmargin}%
+  }%
+  \item\relax}
+ {\endlist}
 
 %\setlength\parindent{0pt}	
 
@@ -32,7 +42,7 @@
 
 
 \begin{abstract} \noindent
-    We use different methods of linear regression (Ordinary Least Squares, Ridge, Lasso) to fit the Franke Function with added noise, as well as terrain data. We use k-fold cross validation to evaluate the performance of these methods. In both cases Ordinary Least Squares outperforms the other methods, both in $r^2$-score and estimated prediction error. Biased estimators do not seem to be beneficial in this case, and it may be a good idea to consider different methods than linear regression methods altogether.
+    We use three different methods of linear regression (Ordinary Least Squares, Ridge, Lasso) to fit the Franke Function with added noise, as well as terrain data. We use k-fold cross validation to evaluate the performance of these methods. In both cases Ordinary Least Squares outperforms the other methods, both in $R^2$-score and estimated prediction error. Biased estimators do not seem to be beneficial in this case, and it may be a good idea to consider different methods than linear regression methods altogether.
 \end{abstract}
 
 \begin{multicols}{2}
@@ -77,6 +87,7 @@ with the analytical optimal regression parameters
 The parameter $\lambda$ is a shrinkage parameter, also known as the hyperparameter. As the name suggests, by tuning $\lambda$ we decide the amount of shrinkage on the regression parameters, with higher values for $\lambda$ corresponding to stronger shrinkage of the parameters. As this hyperparameter imposes a size constraint on the regression parameters, Ridge regression can be an effective tool to counteract correlation between the predictors. This penalty is not imposed on the intercept $\beta_0$, which instead can be approximated by centering the data and taking the mean, 
 \begin{equation}
 	\beta_0^\text{ridge}=\frac{1}{n}\sum_{i=0}^{n-1}y_i.
+	\label{eq:beta0_Ridge}
 \end{equation}
 
 The optimal regression parameters $\hat{\beta}^\text{lasso}$ for the Least Absolute Shrinkage and Selection Operator (LASSO) regression method is given by the expression
@@ -101,32 +112,54 @@ where $y$ is the data, $\tilde{y}$ is our fitted data and $\bar{y}$ is the mean 
 
 In order to find the regression parameters $\bm{B}$ for the OLS regression method, you optimize the expression for the MSE. This is called the cost function, 
 \begin{align*}
-C(\bm{X},\bm{\beta} ) &= \frac{1}{n}\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2 = \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2] \\
+C(\bm{X},\bm{\beta} ) &= \frac{1}{n}\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2 = \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2],
 \end{align*}
-Using that the variance of $\bm{y}$ is $$\text{Var}[\bm{y}] = \mathbb{E}[\bm{y}^2]-\mathbb{E}[\bm{y}]^2=\sigma^2,$$ it can also be expressed as 
-\begin{align*}
-\mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2] =& \mathbb{E}[\bm{y}^2  -2\bm{y}\bm{\tilde{y}}+ \bm { \tilde{y} } ^2 ] \\
-=& \mathbb{E}[\bm{y}^2]  - 2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]\\
-=& \text{Var}[\bm{y}] + \mathbb{E}[\bm{y}]^2-2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]\\
-=& \sigma^2 +  \mathbb{E}[\bm{y}]^2  -2 \mathbb{E}[\bm{y}\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}^2]\\
-=& \sigma^2 +  \mathbb{E}[f(\bm{x}) + \bm{\varepsilon}]^2 \\&- 2 \mathbb{E} [(f(\bm{x})+\varepsilon)\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}^2 ]\\
-=& \sigma^2 +  \mathbb{E}[f(\bm{x})]^2 -2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}] \\
-=&\sigma^2 + f^2(\bm{x})-2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}]\\&+\mathbb{E}[\bm{\tilde{y}}]^2 + \mathbb{E}[\bm{\tilde{y}}]^2 -2\mathbb{E}[\bm{\tilde{y}}]^2\\
-=&  \sigma ^2  + ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2 + \mathbb{E}[\bm{\tilde{y}}^2] \\&+\mathbb{E}[\bm{\tilde{y}}]\mathbb{E}[\bm{\tilde{y}}]  - 2\mathbb{E}[\bm{\tilde{y}}]\mathbb{E}[\bm{\tilde{y}}]\\
-= &  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2   \\&+ \mathbb{E}[\bm{\tilde{y}}^2 + \mathbb{E}[\bm{\tilde{y}}]^2 - 2\bm{\tilde{y}}\mathbb{E}[\bm{\tilde{y}}]]\\
-=&  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2  +\mathbb{E}[(\bm{\tilde{y}} -\mathbb{E}[\bm{\tilde{y}}])^2] \\
-\end{align*}
+which can also be bias-variance decomposed into 
 \begin{align}
  \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]  =&\sigma^2 + \frac{1}{n}\sum_i(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2  \nonumber \\
- &+ \frac{1}{n}\sum_i(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2.
+ &+ \frac{1}{n}\sum_i(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2,
+ \label{eq:biasvariance}
 \end{align}
+where $\sigma^2$ is the irreducible error,  the $(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the bias and the $(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the variance of the model.
+
+To derive this, we first expand the left-hand side, 
+\begin{align*}
+\mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2] =& \mathbb{E}[\bm{y}^2  -2\bm{y}\bm{\tilde{y}}+ \bm { \tilde{y} } ^2 ] \\
+=& \mathbb{E}[\bm{y}^2]  - 2\mathbb{E}[\bm{y\tilde{y}}]+\mathbb{E}[\bm{\tilde{y}}^2]
+\end{align*}
+Using the expression for the variance of $\bm{y}$,
+\begin{align}
+\text{Var}[\bm{y}] = \mathbb{E}[\bm{y}^2] - \mathbb{E}[{\bm{y}}]^2 = \sigma^2\\
+\Rightarrow \mathbb{E}[\bm{y}^2] = \sigma^2 + \mathbb{E}[{\bm{y}}]^2,
+\end{align}
+ and then inserting $\bm{y} = f(\bm{x}) + \bm{\varepsilon}$ we get
+\begin{align*}
+\mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]=& \sigma^2 +  \mathbb{E}[\bm{y}]^2  -2 \mathbb{E}[\bm{y}\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}^2]\\
+=& \sigma^2 +  \mathbb{E}[f(\bm{x}) + \bm{\varepsilon}]^2 \\&- 2 \mathbb{E} [(f(\bm{x})+\varepsilon)\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}^2 ].
+\end{align*}
+Because  $\bm{\tilde{y}}$ and $\bm{\varepsilon}$ are uncorrelated and $\mathbb{E}[\bm{\varepsilon}]=0$, then we also have $\mathbb{E}[\bm{\varepsilon\tilde{y}}]=0,$ such that
+\begin{align*}
+\mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]=& \sigma^2 +  \mathbb{E}[f(\bm{x})]^2 -2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}].
+\end{align*}
+Adding and subtracting $2\mathbb{E}[\bm{\tilde{y}}]^2$ and collecting squares gives us 
+\begin{align*}
+\mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]=&\sigma^2 + f^2(\bm{x})-2f(\bm{x}) \mathbb{E}[\bm{\tilde{y}}] +  \mathbb{E}[\bm{\tilde{y}}]\\&+\mathbb{E}[\bm{\tilde{y}}]^2 + \mathbb{E}[\bm{\tilde{y}}]^2 -2\mathbb{E}[\bm{\tilde{y}}]^2\\
+=&  \sigma ^2  + ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2 + \mathbb{E}[\bm{\tilde{y}}^2] \\&+\mathbb{E}[\bm{\tilde{y}}]\mathbb{E}[\bm{\tilde{y}}]  - 2\mathbb{E}[\bm{\tilde{y}}]\mathbb{E}[\bm{\tilde{y}}]\\
+= &  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2   \\&+ \mathbb{E}[\bm{\tilde{y}}^2 + \mathbb{E}[\bm{\tilde{y}}]^2 - 2\bm{\tilde{y}}\mathbb{E}[\bm{\tilde{y}}]],
+\end{align*}
+which leaves us with the same as in Equation (\ref{eq:biasvariance}),
+\begin{equation*}
+C(\bm{X},\bm{\beta} ) =  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2  +\mathbb{E}[(\bm{\tilde{y}} -\mathbb{E}[\bm{\tilde{y}}])^2]. \\
+\end{equation*}
+
+
 
 
 
 \subsection{Resampling}
 Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
 
-One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on first splitting the train data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the $k$ folds is used as a validation set once. 
+One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on first splitting the train data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the folds is used as a validation set once. 
 
 
 
