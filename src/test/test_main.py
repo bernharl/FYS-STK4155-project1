@@ -31,4 +31,13 @@ def test_kfold():
 
 # ------------ test of OLS regression parameters ------------------------
 def test_OLS():
-    pass
+    OLS = OrdinaryLeastSquares()
+
+    OLS_scikit = skllm.LinearRegression().fit(OLS.X_train, OLS.z_train)
+    evalmodel_scikit = OLS_scikit.predict(OLS.X_test)
+
+    OLS.regression_method()
+    evalmodel_test = OLS.eval_model
+
+    np.testing.assert_allclose(evalmodel_scikit, evalmodel_test, rtol=1e-6)
+
