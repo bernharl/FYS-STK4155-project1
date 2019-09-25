@@ -64,7 +64,7 @@ ax.text(
     transform=ax.transAxes,
 )
 
-ax.legend(loc=3)
+ax.legend(loc=6)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_ols_terrain.pdf", dpi=1000)
 
@@ -120,7 +120,7 @@ ax.text(
     transform=ax.transAxes,
 )
 
-ax.legend(loc=3)
+ax.legend(loc=6)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_Ridge_terrain.pdf", dpi=1000)
 
@@ -178,6 +178,6 @@ ax.text(
     transform=ax.transAxes,
 )
 
-ax.legend(loc=3)
+ax.legend(loc=6)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_LASSO_terrain.pdf", dpi=1000)
