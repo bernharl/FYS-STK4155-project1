@@ -113,7 +113,6 @@ class RegressionClass:
                 s=2,
                 color="black",
             )
-            # print("Scattered")
         if plot_data:
             surf = ax.plot_surface(
                 self.x_meshgrid,
@@ -122,7 +121,7 @@ class RegressionClass:
                 cmap=cm.coolwarm,
                 linewidth=0,
                 antialiased=False,
-                alpha=0.2,
+                alpha=0.5,
             )
             fig.colorbar(surf, shrink=0.5, aspect=5)
         # Customize the z axis.
@@ -244,11 +243,18 @@ class RegressionClass:
         z = self.z_test
         return 1 - np.sum((z - self.eval_model) ** 2) / np.sum((z - np.mean(z)) ** 2)
 
-    @property
-    def beta_variance(self):
-        if not self.modeled:
+    @property 
+    def r_squared_train(self):
+        """
+        Calculates R2 on the training set for chosen regression model 
+        """
+        if not self_modeled:
             raise RuntimeError("Run a regression method first!")
-        return self.beta_variance_
+        z = self.z_train
+        return 1 - np.sum((z - self.eval_model_train) ** 2) / np.sum((z - np.mean(z)) ** 2)
+
+
+
 
 
 class OrdinaryLeastSquares(RegressionClass):
@@ -257,7 +263,7 @@ class OrdinaryLeastSquares(RegressionClass):
         Calculates ordinary least squares regression and the variance of
         estimated parameters
         """
-        X = self.X_train  # [:, 1:]
+        X = self.X_train 
         XTX = X.T @ X
         XTz = X.T @ self.z_train
         # Solve XTXbeta = XTz
@@ -265,6 +271,15 @@ class OrdinaryLeastSquares(RegressionClass):
         beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
         self.modeled = True
+
+    @property
+    def beta_variance(self):
+        """
+        Returns the variance of beta from the OLS regression
+        """
+        if not self.modeled:
+            raise RuntimeError("Run a regression method first!")
+        return self.beta_variance_
 
 
 class RidgeRegression(RegressionClass):
