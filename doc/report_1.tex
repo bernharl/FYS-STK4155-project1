@@ -46,7 +46,7 @@
 \end{abstract}
 
 \begin{multicols}{2}
-\section{Introduction}
+m\section{Introduction}
 
 Linear regression is a basic, but highly important form of statistical learning. To many, it is the first step into more advanced machine learning methods. The least squares estimator in particular is remarkably simple, having an easily calculated analytical expression.
 
@@ -223,13 +223,23 @@ We assume that the best polynomial degree for OLS will also be best for Ridge an
 \end{tabular}
 \end{table}
 
-\end{multicols}
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/beta_variance_ols_Franke.pdf}
     \caption{$\bm{\beta}^{\text{OLS}}$  of a fifth order ordinary least squares solution to the Franke function, plotted with $68\%$ confidence intervals.}
     \label{fig:beta_variance_Franke}
 \end{figure}
+
+
+\begin{figure}[H]
+    \includegraphics[scale=1]{figs/beta_variance_ols_terrain.pdf}
+    \caption{Variance of the beta parameters of a fifth order ordinary least squares fit$\bm{\beta}^{\text{OLS}}$  of a fifth order ordinary least squares fit of terrain data from Lake Tanganyika, Africa, plotted with $68\%$ confidence intervals.}
+    \label{fig:beta_variance_terrain}
+\end{figure}
+
+\end{multicols}
+
+
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_Franke.pdf}
@@ -250,12 +260,6 @@ We assume that the best polynomial degree for OLS will also be best for Ridge an
 \end{figure}
 Figures \ref{fig:beta_variance_Franke}, \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} are all made with a fifth order polynomial fit. This choice was based on the results shown in figure \ref{fig:bias_ols_Franke}, showing the estimated prediction error for varying polynomial degrees.
 \subsection{Lake Tanganyika data}
-
-\begin{figure}[H]
-    \includegraphics[scale=1]{figs/beta_variance_ols_terrain.pdf}
-    \caption{Variance of the beta parameters of a fifth order ordinary least squares fit$\bm{\beta}^{\text{OLS}}$  of a fifth order ordinary least squares fit of terrain data from Lake Tanganyika, Africa, plotted with $68\%$ confidence intervals.}
-    \label{fig:beta_variance_terrain}
-\end{figure}
 
 
 \begin{figure}[H]
@@ -289,8 +293,10 @@ As with the results from fitting the Franke's function, figures \ref{fig:beta_va
 
 \section{Conclusion}
 Duis malesuada sagittis mi ut gravida. Maecenas porta sed mi at malesuada. Nunc et rhoncus nisi, sit amet mattis mauris. Cras lacinia lobortis odio quis ullamcorper. Morbi volutpat turpis est, sit amet efficitur velit viverra ut. Vestibulum eu imperdiet mi. Mauris tincidunt tempor scelerisque. In scelerisque mauris justo, rutrum consectetur tortor cursus in. Vivamus odio diam, interdum eget lobortis ac, vestibulum eu diam. Integer lectus est, pharetra varius ligula et, sodales interdum arcu. Etiam volutpat dolor sit amet justo pharetra, fringilla dictum risus scelerisque.
-\end{multicols}
 
+\the\columnwidth
+
+\end{multicols}
 
 
 \end{document}
