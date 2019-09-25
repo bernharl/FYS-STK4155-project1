@@ -57,5 +57,6 @@ R2_train.append(lasso_terrain.r_squared_train)
 R2_test.append(lasso_terrain.r_squared)   
 del lasso_terrain    
 
-print(R2_test)
-    
+
+for i in range(len(R2_test)):
+    print(f"R2 training: {R2_train[i]}, R2 test: {R2_test[i]}")
