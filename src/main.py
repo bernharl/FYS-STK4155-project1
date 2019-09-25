@@ -30,7 +30,6 @@ class RegressionClass:
                 self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[
                     ::skip_y_terrain,::skip_x_terrain
                 ]
-                print(np.min(self.z_meshgrid), np.max(self.z_meshgrid))
                 RuntimeWarning(
                     "Given standard deviation is ignored and replaced by the image data's deviations"
                 )
