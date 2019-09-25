@@ -28,15 +28,19 @@ class RegressionClass:
                 self.filename = filename
                 self.path = path
                 self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[
-                    ::skip_y_terrain,::skip_x_terrain
+                    ::skip_y_terrain, ::skip_x_terrain
                 ]
                 RuntimeWarning(
                     "Given standard deviation is ignored and replaced by the image data's deviations"
                 )
                 self.stddev = np.std(self.z_meshgrid)
 
-                x = np.arange(0, self.z_meshgrid.shape[1]) / (self.z_meshgrid.shape[1] - 1)
-                y = np.arange(0, self.z_meshgrid.shape[0]) / (self.z_meshgrid.shape[0] - 1)
+                x = np.arange(0, self.z_meshgrid.shape[1]) / (
+                    self.z_meshgrid.shape[1] - 1
+                )
+                y = np.arange(0, self.z_meshgrid.shape[0]) / (
+                    self.z_meshgrid.shape[0] - 1
+                )
 
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
@@ -251,10 +255,9 @@ class RegressionClass:
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         z = self.z_train
-        return 1 - np.sum((z - self.eval_model_train) ** 2) / np.sum((z - np.mean(z)) ** 2)
-
-
-
+        return 1 - np.sum((z - self.eval_model_train) ** 2) / np.sum(
+            (z - np.mean(z)) ** 2
+        )
 
 
 class OrdinaryLeastSquares(RegressionClass):
@@ -295,7 +298,16 @@ class RidgeRegression(RegressionClass):
         skip_x_terrain=1,
         skip_y_terrain=1,
     ):
-        super().__init__(degree, stddev, n_points, terrain_data, filename, path, skip_x_terrain, skip_y_terrain)
+        super().__init__(
+            degree,
+            stddev,
+            n_points,
+            terrain_data,
+            filename,
+            path,
+            skip_x_terrain,
+            skip_y_terrain,
+        )
         self.lambd = lambd
 
     def regression_method(self):
@@ -345,7 +357,9 @@ class LassoRegression(RidgeRegression):
         """
         Uses LASSO regression for given data to calculate regression parameters
         """
-        self.beta = skllm.Lasso(alpha=self.lambd, fit_intercept=False).fit(
+        self.beta = skllm.Lasso(
+            alpha=self.lambd, fit_intercept=False, max_iter=20000
+        ).fit(
             self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0),
             self.z_train - np.mean(self.z_train, axis=0),
         )
