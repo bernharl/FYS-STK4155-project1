@@ -34,7 +34,7 @@ for i in degrees:
 pred_log = np.log10(pred_error)
 pred_log_train = np.log10(pred_error_train)
 fig, ax = plt.subplots()
-fig.set_size_inches(2 * 2.9, 2 * 1.81134774961)
+fig.set_size_inches(0.9 * 2 * 2.9, 0.9 * 2 * 1.81134774961)
 ax.plot(degrees, pred_log_train, label="Train", color="g")
 ax.plot(degrees, pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel("Model Complexity [polynomial degree]")
