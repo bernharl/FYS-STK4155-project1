@@ -24,10 +24,11 @@ for i in degrees:
     print(i)
     OLS = OrdinaryLeastSquares(
         degree=i,
-        stddev=0.1,
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
+        skip_x_terrain=150,
+        skip_y_terrain=150,
     )
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
     del OLS
@@ -79,6 +80,8 @@ for j, lamb in enumerate(lambda_Ridge):
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
+        skip_x_terrain=150,
+        skip_y_terrain=150,
     )
     pred_error_ridge[j], pred_error_train_ridge[j] = ridge_reg.k_fold(
         k=5, calc_train=True
@@ -134,6 +137,8 @@ for j, lamb in enumerate(lambda_lasso):
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
+        skip_x_terrain=150,
+        skip_y_terrain=150,        
     )
     pred_error_lasso[j], pred_error_train_lasso[j] = lasso_reg.k_fold(
         k=5, calc_train=True

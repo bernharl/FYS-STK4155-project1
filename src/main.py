@@ -20,13 +20,15 @@ class RegressionClass:
         terrain_data=False,
         filename=None,
         path=None,
+        skip_x_terrain=1,
+        skip_y_terrain=1,
     ):
         if terrain_data:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
                 self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[
-                    ::150,::150
+                    ::skip_y_terrain,::skip_x_terrain
                 ]
                 print(np.min(self.z_meshgrid), np.max(self.z_meshgrid))
                 RuntimeWarning(
@@ -242,10 +244,10 @@ class RegressionClass:
         z = self.z_test
         return 1 - np.sum((z - self.eval_model) ** 2) / np.sum((z - np.mean(z)) ** 2)
 
-    @property 
+    @property
     def r_squared_train(self):
         """
-        Calculates R2 on the training set for chosen regression model 
+        Calculates R2 on the training set for chosen regression model
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
@@ -262,7 +264,7 @@ class OrdinaryLeastSquares(RegressionClass):
         Calculates ordinary least squares regression and the variance of
         estimated parameters
         """
-        X = self.X_train 
+        X = self.X_train
         XTX = X.T @ X
         XTz = X.T @ self.z_train
         # Solve XTXbeta = XTz
@@ -291,8 +293,10 @@ class RidgeRegression(RegressionClass):
         terrain_data=False,
         filename=None,
         path=None,
+        skip_x_terrain=1,
+        skip_y_terrain=1,
     ):
-        super().__init__(degree, stddev, n_points, terrain_data, filename, path)
+        super().__init__(degree, stddev, n_points, terrain_data, filename, path, skip_x_terrain, skip_y_terrain)
         self.lambd = lambd
 
     def regression_method(self):
