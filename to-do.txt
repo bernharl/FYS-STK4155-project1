@@ -1,0 +1,7 @@
+- fix skip in main.py when reading terrain data
+- plot for bias and variance
+- 3d plots of data and model
+- R2 and MSE for all models, test vs. training in table
+- write report 	
+- make two plots fit in one page
+
