@@ -10,10 +10,10 @@
 \usepackage{mathpazo}
 \usepackage{amsmath}
 \usepackage{bm}
-
+\usepackage{multirow}
+\usepackage{makecell}
 \usepackage{multicol}
 \usepackage{sectsty,textcase}
-
 \usepackage{wrapfig,lipsum,booktabs}
 \bibliographystyle{plain}
 % \renewcommand{\thesubsection}{\alph{subsection})}
@@ -187,6 +187,19 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right
 
 \section{Results}
 \subsection{Franke's function data}
+
+\begin{table}[H]
+\caption{Table of the $R^2$ scores for both training and test sets for all three regression methods}
+\begin{tabular}{|l|l|l|l|} \hline
+	Data set & Method & $R^2$ training & $R^2$ test\\ \hline
+	\multirow{3}{*} {\makecell[l]{Franke's  \\function}}&  OLS  &  - & - \\ \cline{2-4}
+																		& Ridge & - & - \\ \cline{2-4}
+																		& Lasso & - & - \\ \hline
+	\multirow{3}{*}{Terrain} 					&  OLS  &  - & - \\ \cline{2-4}
+																		& Ridge & - & - \\ \cline{2-4}
+																		& Lasso & - & - \\ \hline
+\end{tabular}
+\end{table}
 
 \end{multicols}
 
