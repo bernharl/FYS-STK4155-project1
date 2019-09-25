@@ -55,6 +55,7 @@ In this project we apply three important regression methods on synthetic data ge
 
 \section{Theory}
 \subsection{Linear regression methods}
+\label{subsec:LinReg}
 If given a data set $\mathcal{L}$ consisting of data $\bm{X}_\mathcal{L} = \{(	,\ \bm{x}_j),\ j=0,\ \dots,\ n-1\}$, assuming the true data is on the form
 \begin{equation}
 \bm{y} = f(\bm{x})+ \bm{\varepsilon} ,
@@ -158,9 +159,10 @@ which leaves us with the same as in Equation (\ref{eq:biasvariance}),
 C(\bm{X},\bm{\beta} ) =  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2  +\mathbb{E}[(\bm{\tilde{y}} -\mathbb{E}[\bm{\tilde{y}}])^2]. \\
 \end{equation*}
 
+This leaves us with the unavoidable issue of the bias-variance trade-off. To reduce the amount of variance in a model, we have to increase the bias. There is no way around this. It may, however, be beneficial to take control of this. 
+When you have many parameters $\beta_n$, your model may start to not only fit the function that is represented by the training data, but also the noise. This is what is known as overfitting, and is caused by having a model with too high variance. There are many precautions to be taken to avoid overfitting. The first and most obvious it to split our data into training- and test-data. This is so that the regression model has no chance to fit to the noise in the test data, and therefore gives a more accurate error when testing. Another simple method is to avoid using a too large polynomial degree, making it more difficult for the model to fit small, erratic changes created by noise.
 
-
-
+Another way to reduce variance (overfitting), is to apply a penalty to the $\beta_n$-terms, so that they do not grow too large. This will reduce the variance by increasing the bias, which sometimes is a good tradeoff. See Ridge- and LASSO-regression in Section \ref{subsec:LinReg} for the two penalized regression methods we apply in this project.
 
 \subsection{Resampling}
 Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
