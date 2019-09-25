@@ -183,6 +183,9 @@ F(x, y) = f(x, y) + N(0, \sigma) \label{Franke noise}
 \end{equation}
 We can in principle choose whichever value for $\sigma$, we choose $\sigma=0.1$, so that the signal to noise-ratio is still high enough to determine if we have a good fit by eye. 
 
+For OLS, we run k-fold cross-validation several times, on different polynomial degree to get a good estimate of how the EPE varies with model complexity. The best polynomial degree is determined by doing a compromise between EPE and computational cost. We do not necessarily wish to add two polynomial degrees for a minimal gain in the results, if that were to increase the computational cost too much. 
+
+We assume that the best polynomial degree for OLS will also be best for Ridge and Lasso regression. The hyperparameter is decided in the same fashion, although this cannot be assumed to be the same for Ridge and Lasso, and are therefore individually analyzed using cross-validation.
 
 
 
