@@ -13,6 +13,7 @@ fonts = {
 
 plt.rcParams.update(fonts)
 
+# OLS beta variance for Franke function
 ols_franke = OrdinaryLeastSquares(degree=5, stddev=0.1)
 ols_franke.regression_method()
 x_axis = np.arange(len(ols_franke.beta))
@@ -34,7 +35,7 @@ fig.savefig(
     dpi=1000,
 )
 
-
+# OLS beta variance for terrain data
 ols_terrain = OrdinaryLeastSquares(
     degree=5,
     terrain_data=True,
