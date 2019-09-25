@@ -44,8 +44,7 @@ class RegressionClass:
             self.stddev = stddev
             x = np.linspace(0, 1, n_points, endpoint=True)
             y = np.linspace(0, 1, n_points, endpoint=True)
-            # x = np.arange(0, 1, step)
-            # y = np.arange(0, 1, step)
+
             # Generate meshgrid data points.
             self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             self.z_meshgrid = self.noise_function()
@@ -248,7 +247,7 @@ class RegressionClass:
         """
         Calculates R2 on the training set for chosen regression model 
         """
-        if not self_modeled:
+        if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         z = self.z_train
         return 1 - np.sum((z - self.eval_model_train) ** 2) / np.sum((z - np.mean(z)) ** 2)
@@ -300,7 +299,6 @@ class RidgeRegression(RegressionClass):
         """
         Uses Ridge regression for given data to calculate regression parameters
         """
-
         I = sp.sparse.identity(len(self.X_train[0]) - 1, dtype="int8")
         beta = np.zeros(len(self.X_train[0]))
 
@@ -416,14 +414,8 @@ if __name__ == "__main__":
     ols.regression_method()
     ols.plot_model()
     print(ols.r_squared)"""
-    ols = OrdinaryLeastSquares(
-        degree=8,
-        terrain_data=True,
-        filename="SRTM_data_LakeTanganyika_Africa.tif",
-        path="datafiles/",
-    )
-    ols.regression_method()
-    ols.plot_model()
+
+    # ols.plot_model()
     # print(lasso.r_squared)
     # print(ols.regression_model - ridge.regression_model)
 
