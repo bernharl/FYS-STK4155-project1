@@ -16,8 +16,6 @@ plt.rcParams.update(fonts)
 ols_franke = OrdinaryLeastSquares(
     degree=5,
     stddev=0.1,
-    skip_x_terrain=150,
-    skip_y_terrain=150,    
 )
 ols_franke.regression_method()
 x_axis = np.arange(len(ols_franke.beta))
@@ -36,7 +34,9 @@ ols_terrain = OrdinaryLeastSquares(
     degree=5,
     terrain_data=True,
     filename="SRTM_data_LakeTanganyika_Africa.tif",
-    path="datafiles/"
+    path="datafiles/",
+    skip_x_terrain=150,
+    skip_y_terrain=150,
 )
 ols_terrain.regression_method()
 x_axis = np.arange(len(ols_terrain.beta))
