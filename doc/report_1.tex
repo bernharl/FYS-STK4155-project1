@@ -113,7 +113,7 @@ Another shrinkage regression method is the  Least Absolute Shrinkage and Selecti
 Similar to $\lambda$ for Ridge regression, here $\lambda$ can be used to tune the amount of shrinkage on the regression parameters. One vital difference is that the Lasso method can enforce parameters to be zero, which will eliminate them completely from the model.  The intercept $\beta_0^\text{lasso}$ should not be penalized, but instead approximated using the same method as for Ridge regression, i.e. centering the data and taking the mean. 
 
 \subsection{Bias-variance tradeoff}
-In order to evaluate how our model fits the data, it can be useful to consider the mean squared error (MSE), defined as
+In order to evaluate how well our model fits the data, it can be useful to consider the mean squared error (MSE), defined as
 \begin{equation}
     MSE(\hat{y},\hat{\tilde{y}}) = \frac{1}{n}
     \sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2,
@@ -124,7 +124,7 @@ and the $R^2$ score, defined as
     R^2(\hat{y}, \tilde{\hat{y}}) = 1 - \frac{\sum_{i=0}^{n - 1} (y_i - \tilde{y}_i)^2}{\sum_{i=0}^{n - 1} (y_i - \bar{y})^2}.
     \label{eq:R2}
 \end{equation}
-where $y$ is the data, $\tilde{y}$ is our fitted data and $\bar{y}$ is the mean of $y$.  The $R^2$ score will lie within the interval $(\infty-,\ 1]$, and is a measure of the variance of our model and how well it fits the data, with 1 being the best possible score. An $R^2$ score of 0 means that the model is as accurate as the mean of the data and a negative score indicates a very poor model.
+where $y$ is the data, $\tilde{y}$ is our fitted data and $\bar{y}$ is the mean of $y$.  The $R^2$ score will lie within the interval $(\infty-,\ 1]$, and is a measure of the variance of our model, with 1 being the best possible score. An $R^2$ score of 0 means that the model is as accurate as the mean of the data and a negative score indicates a very poor model.
 
 In order to find the regression parameters $\bm{\beta}$ for the OLS regression method, you need to  optimize the expression for the MSE. This is called the cost function,
 \begin{align*}
@@ -132,11 +132,11 @@ C(\bm{X},\bm{\beta} ) &= \frac{1}{n}\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2 = \mathb
 \end{align*}
 which can also be bias-variance decomposed into
 \begin{align}
- \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]  =&\sigma^2 + \frac{1}{n}\sum_i(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2  \nonumber \\
+ \mathbb{E}[	(\bm{y}-\bm{\tilde{y}})^2]  =\sigma^2 &+ \frac{1}{n}\sum_i(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2  \nonumber \\
  &+ \frac{1}{n}\sum_i(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2,
  \label{eq:biasvariance}
 \end{align}
-where $\sigma^2$ is the irreducible error,  the $(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the bias and the $(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the variance of the model.
+where $\sigma^2$ is the irreducible error,  the $(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right(ght])^2$ term is the bias and the $(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the variance of the model.
 
 To derive this, we first expand the left-hand side,
 \begin{align*}
@@ -178,7 +178,7 @@ One method of resampling is called the $k$-fold cross-validation method, which g
 
 
 \section{Method}
-To get an understanding of the three regression methods, we initially use Franke's function to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website\cite{earthexplorer} .  The subscript F pertains to the results and data from the Franke function, while the subscript T pertains to the terrain data and its results.  
+To get an understanding of the three regression methods, we initially use Franke's function to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website \cite{earthexplorer} .  The subscript F pertains to the results and data from the Franke function, while the subscript T pertains to the terrain data and its results.  
 The Franke's function is given by
 \begin{align}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)} \nonumber\\
