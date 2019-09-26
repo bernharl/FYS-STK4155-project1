@@ -105,4 +105,4 @@ reg_type_n = ["OLS", "Ridge", "Lasso"]
 
 print("R2 scores noisy data\n-----------------")
 for i in range(len(R2_test_n)):
-    print(" %s: %.5f    %.5f" % (reg_type_n[i], R2_train_n[i], R2_test_n[i]))
+    print(" %s training: %.5f, %s test: %.5f" % (reg_type_n[i], R2_train_n[i], R2_test_n[i]))
