@@ -1,6 +1,6 @@
 from main import OrdinaryLeastSquares, RidgeRegression, LassoRegression
 
-
+# --------- R2 scores for Franke function stddev=0.1 and terrain data .---------
 R2_train = []
 R2_test = []
 
@@ -77,3 +77,32 @@ reg_type = [
 for i in range(len(R2_test)):
     print(reg_type[i])
     print(f"R2 training: {R2_train[i]:.3f}, R2 test: {R2_test[i]:.3f}")
+
+
+# ---------------------- For noisy data, stddev=1 --------------------
+R2_train_n = []
+R2_test_n = []
+
+ols_franke_n = OrdinaryLeastSquares(stddev=1)
+ols_franke_n.regression_method()
+R2_train_n.append(ols_franke_n.r_squared_train)
+R2_test_n.append(ols_franke_n.r_squared)
+del ols_franke_n
+
+ridge_franke_n = RidgeRegression(stddev=1)
+ridge_franke_n.regression_method()
+R2_train_n.append(ridge_franke_n.r_squared_train)
+R2_test_n.append(ridge_franke_n.r_squared)
+del ridge_franke_n
+
+lasso_franke_n = LassoRegression(stddev=1, lambd=1e-4)
+lasso_franke_n.regression_method()
+R2_train_n.append(lasso_franke_n.r_squared_train)
+R2_test_n.append(lasso_franke_n.r_squared)
+del lasso_franke_n
+
+reg_type_n = ["OLS", "Ridge", "Lasso"]
+
+print("R2 scores noisy data\n-----------------")
+for i in range(len(R2_test_n)):
+    print(" %s: %.5f    %.5f" % (reg_type_n[i], R2_train_n[i], R2_test_n[i]))
