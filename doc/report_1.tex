@@ -167,11 +167,12 @@ Another way to reduce variance (overfitting), is to apply a penalty to the $\bet
 \subsection{Resampling}
 Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
 
-One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on first splitting the train data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the folds is used as a validation set once. The MSE is calculated for each iteration using Equation (\ref{eq:MSE}). Lastly, the mean of the calculated MSE's is used as the expected prediction error. 
+One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on first splitting the train data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the folds is used as a validation set once. The MSE is calculated for each iteration using Equation (\ref{eq:MSE}). Lastly, the mean of the calculated MSE's is used as the expected prediction error (EPE). 
 
 
 \section{Method}
-To get an understanding of the three regression methods, we initially use Franke's function to study how to model a fit for two-dimensional data using all three methods. The function is given by
+To get an understanding of the three regression methods, we initially use Franke's function to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data from USGS EarthExplorer. 
+The Franke's function is given by
 \begin{align}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)} \nonumber\\
  &+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \nonumber\\
@@ -200,9 +201,9 @@ $\bm{X} = \begin{bmatrix}
 \vspace{1pt}
 
 \noindent
-For OLS, we run k-fold cross-validation on increasing polynomial degrees to get a good estimate of how the EPE varies with model complexity, with degrees ranging from 0 to 10. The best polynomial degree is determined by making a compromise between EPE and computational cost, as we do not necessarily wish to increase the polynomial degree, and subsequently the computational cost, for a minimal improvement in the results. This is especially important for larger data sets, such as the terrain data.
+For OLS, we run k-fold cross-validation on increasing polynomial degrees to get a good estimate of how the EPE varies with model complexity, with degrees ranging from 0 to 10. The best polynomial degree is determined by making a compromise between EPE and computational cost, as we do not necessarily wish to increase the polynomial degree, and subsequently the computational cost, for a minimal improvement in the results. This is especially important for larger data sets, such as the terrain data. The EPE for both training and test data is shown in Figure \ref{fig:bias_ols_Franke} for Franke's function and Figure \ref{fig:bias_ols_terrain} for terrain data.
 
-As cross-validation can be computationally expensive, we assume that the optimal polynomial degree for OLS will also be optimal for Ridge and Lasso regression. The hyperparameter $\lambda$ is decided similarly to the polynomial degree; by cross-validating  Ridge and Lasso regression for a range of hyperparameters. However, as the penalty terms for Ridge and Lasso are different, as shown in Equation (\ref{eq:argminbeta_ridge}) and (\ref{eq:argminbeta_lasso}), the shrinkage is not the same for the methods and we need to tune their hyperparameters individually, from now referred to as $\lambda_\text{ridge}$ and $\lambda_\text{lasso}$ respectively.
+As cross-validation can be computationally expensive, we assume that the optimal polynomial degree for OLS will also be optimal for Ridge and Lasso regression. The hyperparameter $\lambda$ is decided similarly to the polynomial degree; by cross-validating  Ridge and Lasso regression for a range of hyperparameters. However, as the penalty terms for Ridge and Lasso are different, as shown in Equation (\ref{eq:argminbeta_ridge}) and (\ref{eq:argminbeta_lasso}), the shrinkage is not the same for the methods and we need to tune their hyperparameters individually, hereon referred to as $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively.
 
 
 
@@ -211,6 +212,7 @@ As cross-validation can be computationally expensive, we assume that the optimal
 
 \begin{table}[H]
 \caption{Table of the $R^2$ scores for both training and test sets for all three regression methods}
+\label{tab:R2}
 \begin{tabular}{|c|c|c|c|} \hline
 	Data set & Method & $R^2$ training & $R^2$ test\\ \hline
 	\multirow{3}{*} {\makecell[l]{Franke's  \\function}}&  OLS  &  0.886 & 0.827 \\ \cline{2-4}
@@ -296,6 +298,9 @@ Duis malesuada sagittis mi ut gravida. Maecenas porta sed mi at malesuada. Nunc 
 \the\columnwidth
 
 \end{multicols}
+
+\bibliographystyle{iEEEtran}
+\bibliography{references}
 
 
 \end{document}
