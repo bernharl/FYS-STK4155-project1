@@ -55,4 +55,4 @@ def test_kfold_OLS():
             n_jobs=-1,
         )
     )
-    np.testing.assert_allclose(EPE_test, EPE_scikit, rtol=0.01)
+    np.testing.assert_allclose(EPE_test, EPE_scikit, rtol=0.05)
