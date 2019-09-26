@@ -21,7 +21,6 @@ pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)
 
 for i in degrees:
-    print(i)
     OLS = OrdinaryLeastSquares(
         degree=i,
         terrain_data=True,
@@ -131,7 +130,6 @@ pred_error_lasso = np.zeros_like(lambda_lasso)
 pred_error_train_lasso = np.zeros_like(pred_error_lasso)
 
 for j, lamb in enumerate(lambda_lasso):
-    print(lamb)
     lasso_reg = LassoRegression(
         lambd=lamb,
         terrain_data=True,
