@@ -76,6 +76,16 @@ giving an analytical expression for the optimal regression parameters
     \hat{\beta}^{\text{OLS}} = (\bm{X}^T\bm{X})^{-1} \bm{X}^T \bm{y}.
     \label{eq:beta_OLS}
 \end{align}
+The variance of the parameter estimates $ \hat{\beta}^{\text{OLS}} $ is given by
+\begin{equation}
+\label{eq:betavariance}
+\text{Var} [\hat{\beta}^{\text{OLS}} ] = (\bm{X}^T\bm{X})^{-1}\sigma^2.\  \cite{hastie}
+\end{equation}
+If the variance $\sigma^2$ is unknown, it can be estimated as 
+\begin{equation}
+\label{eq:variance}
+\hat{\sigma}^2  = \frac{1}{n-p-1}\sum_{i=0}^{n-1}(y_i-\hat{y}_i)^2.
+\end{equation}
 
 The Ridge regression method is another linear regression method. Unlike OLS, it is a penalized regression method, which means that it imposes a shrinkage on the regression parameters. The parameters $\hat{\beta}^\text{ridge}$ for Ridge regression are given by
 \begin{align}
@@ -103,8 +113,6 @@ Another shrinkage regression method is the  Least Absolute Shrinkage and Selecti
 Similar to $\lambda$ for Ridge regression, here $\lambda$ can be used to tune the amount of shrinkage on the regression parameters. One vital difference is that the Lasso method can enforce parameters to be zero, which will eliminate them completely from the model.  The intercept $\beta_0^\text{lasso}$ should not be penalized, but instead approximated using the same method as for Ridge regression, i.e. centering the data and taking the mean. 
 
 \subsection{Bias-variance tradeoff}
-\textbf{EXPLAN WHAT BIAS AND VARIANCE MEANS}
-
 In order to evaluate how our model fits the data, it can be useful to consider the mean squared error (MSE), defined as
 \begin{equation}
     MSE(\hat{y},\hat{\tilde{y}}) = \frac{1}{n}
@@ -311,7 +319,7 @@ As with the results from fitting the Franke's function, Figure \ref{fig:beta_var
 \section{Conclusion}
 Duis malesuada sagittis mi ut gravida. Maecenas porta sed mi at malesuada. Nunc et rhoncus nisi, sit amet mattis mauris. Cras lacinia lobortis odio quis ullamcorper. Morbi volutpat turpis est, sit amet efficitur velit viverra ut. Vestibulum eu imperdiet mi. Mauris tincidunt tempor scelerisque. In scelerisque mauris justo, rutrum consectetur tortor cursus in. Vivamus odio diam, interdum eget lobortis ac, vestibulum eu diam. Integer lectus est, pharetra varius ligula et, sodales interdum arcu. Etiam volutpat dolor sit amet justo pharetra, fringilla dictum risus scelerisque.
 
-\the\columnwidth
+% \the\columnwidth
 
 \end{multicols}
 
