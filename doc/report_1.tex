@@ -15,6 +15,7 @@
 \usepackage{multicol}
 \usepackage{sectsty,textcase}
 \usepackage{wrapfig,lipsum,booktabs}
+\usepackage{hyperref}
 \bibliographystyle{plain}
 % \renewcommand{\thesubsection}{\alph{subsection})}
 \renewcommand{\thesection}{\arabic{section}}
@@ -46,7 +47,7 @@
 \end{abstract}
 
 \begin{multicols}{2}
-m\section{Introduction}
+\section{Introduction}
 
 Linear regression is a basic, but highly important form of statistical learning. To many, it is the first step into more advanced machine learning methods. The least squares estimator in particular is remarkably simple, having an easily calculated analytical expression.
 
@@ -158,11 +159,9 @@ which leaves us with the same as in Equation (\ref{eq:biasvariance}),
 \begin{equation*}
 C(\bm{X},\bm{\beta} ) =  \sigma^2 +  ( f(\bm{x}) -\mathbb{E}[\bm{\tilde{y}}]  )^2  +\mathbb{E}[(\bm{\tilde{y}} -\mathbb{E}[\bm{\tilde{y}}])^2]. \\
 \end{equation*}
-
-This leaves us with the unavoidable issue of the bias-variance trade-off. To reduce the amount of variance in a model, we have to increase the bias. There is no way around this. It may, however, be beneficial to take control of this. 
+This leaves us with the unavoidable issue of the bias-variance tradeoff. Reducing the variance in a model will subsequently increase its bias and vice versa. 
 When you have many parameters $\beta_n$, your model may start to not only fit the function that is represented by the training data, but also the noise. This is what is known as overfitting, and is caused by having a model with too high variance. There are many precautions to be taken to avoid overfitting. The first and most obvious it to split our data into training- and test-data. This is so that the regression model has no chance to fit to the noise in the test data, and therefore gives a more accurate error when testing. Another simple method is to avoid using a too large polynomial degree, making it more difficult for the model to fit small, erratic changes created by noise.
-
-Another way to reduce variance (overfitting), is to apply a penalty to the $\beta_n$-terms, so that they do not grow too large. This will reduce the variance by increasing the bias, which sometimes is a good tradeoff. See Ridge- and LASSO-regression in Section \ref{subsec:LinReg} for the two penalized regression methods we apply in this project.
+Another way to reduce variance (overfitting), is to apply a penalty to the $\beta_n$-terms, so that they do not grow too large. This will reduce the variance by increasing the bias, which sometimes is a good tradeoff. See Ridge- and Lasso-regression in Section \ref{subsec:LinReg} for the two penalized regression methods we apply in this project.
 
 \subsection{Resampling}
 Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
@@ -171,12 +170,12 @@ One method of resampling is called the $k$-fold cross-validation method, which g
 
 
 \section{Method}
-To get an understanding of the three regression methods, we initially use Franke's function to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data from USGS EarthExplorer. 
+To get an understanding of the three regression methods, we initially use Franke's function to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website\cite{earthexplorer} .  The subscript F pertains to the results and data from the Franke function, while the subscript T pertains to the terrain data and its results.  
 The Franke's function is given by
 \begin{align}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)} \nonumber\\
  &+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \nonumber\\
- &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} \nonumber\\
+ &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right()} \nonumber\\
  &-\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }. \label{eq:Franke}
 \end{align} which is defined on $x,\ y \in [0,1]$.
 
@@ -184,7 +183,7 @@ To imitate real data, we add some stochastic noise to the function using a Gauss
 \begin{equation}
 F(x, y) = f(x, y) + \varepsilon \label{eq:Frankenoise},
 \end{equation}
-with $ \varepsilon \sim N(0, \sigma) $. We first choose standard deviation $\sigma=1$ and calculate the $R^2$ scores for the three fits to examine how the noise affects the variance of the models. We expect the scores to be rather poor, as the noise is of the same order as the data.  The results are shown in Table \ref{tab:R2_stddev=1}.For all subsequent simulations using Franke's function, the data is generated using $\sigma=0.1$, as this will probably give us more reasonable data to analyze.
+with $ \varepsilon \sim N(0, \sigma) $. We first choose standard deviation $\sigma=1$ and calculate the $R^2$ scores for the three fits to examine how the noise affects the variance of the models. We expect the scores to be rather poor, as the noise is of the same order as the data.  The results are shown in Table \ref{tab:R2_stddev=1}. For all subsequent simulations using Franke's function, the data is generated using $\sigma=0.1$, as this will probably give us more reasonable data to analyze.
 
 We wish to fit the data to a polynomial model on the form $[x,\ y,\ x^2, xy,\ \ y^2, \dots]$,  giving us a design matrix $\bm{X}$ on the form \\
 
@@ -206,14 +205,13 @@ For OLS, we run k-fold cross-validation on increasing polynomial degrees to get 
 
 As cross-validation can be computationally expensive, we assume that the optimal polynomial degree for OLS will also be optimal for Ridge and Lasso regression. The hyperparameter $\lambda$ is decided similarly to the polynomial degree; by cross-validating  Ridge and Lasso regression for a range of hyperparameters. However, as the penalty terms for Ridge and Lasso are different, as shown in Equation (\ref{eq:argminbeta_ridge}) and (\ref{eq:argminbeta_lasso}), the shrinkage is not the same for the methods and we need to tune their hyperparameters individually, hereon referred to as $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively.
 
-
-
 \section{Results}
 \subsection{Franke's function data}
 
 \begin{table}[H]
 \caption{Table of the $R^2$ scores for training and test sets using the three regression methods on Franke's function with standard deviation $\sigma=1$. As the generated data contains large amounts of stochastic noise, we have included results from three runs.}
 \label{tab:R2_stddev=1}
+\centering
 \begin{tabular}{|c|c|r|} \hline 
 Method & $R^2$ training & $R^2$ test \\ \hline
 \multirow{3}{*}{OLS} & 0.183& $-0.128$\\ 
@@ -245,14 +243,14 @@ Method & $R^2$ training & $R^2$ test \\ \hline
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/beta_variance_ols_Franke.pdf}
-    \caption{$\bm{\beta}^{\text{OLS}}$  of a fifth order ordinary least squares solution to the Franke function, plotted with $68\%$ confidence intervals.}
+    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$  of a fifth order polynomial model  to the Franke function, plotted with $68\%$ confidence intervals.}
     \label{fig:beta_variance_Franke}
 \end{figure}
 
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/beta_variance_ols_terrain.pdf}
-    \caption{Variance of the beta parameters of a fifth order ordinary least squares fit$\bm{\beta}^{\text{OLS}}$  of a fifth order ordinary least squares fit of terrain data from Lake Tanganyika, Africa, plotted with $68\%$ confidence intervals.}
+    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_T$  of a fifth order polynomial model  of the terrain data from Lake Tanganyika, here plotted with $68\%$ confidence intervals.}
     \label{fig:beta_variance_terrain}
 \end{figure}
 
@@ -317,7 +315,7 @@ Duis malesuada sagittis mi ut gravida. Maecenas porta sed mi at malesuada. Nunc 
 
 \end{multicols}
 
-\bibliographystyle{unsrt}
+\bibliographystyle{iEEEtran}
 \bibliography{references}
 
 
