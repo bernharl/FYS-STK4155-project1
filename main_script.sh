@@ -8,7 +8,7 @@ then
   python r2_scores.py
 fi
 
-echo "Creating estimated prediction error plots"
+echo "Creating expected prediction error plots"
 python bias_variance_error_terrain.py
 python bias_variance_error_Franke.py
 python beta_variance_ols_plot.py
