@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd src
-echo "Make table of r2 scores? (y/n)"
+echo "Print r2 scores? (y/n)"
 read yn_r2
 if [ "$yn_r2" == "y" ]
 then
@@ -12,6 +12,7 @@ echo "Creating expected prediction error plots"
 python bias_variance_error_terrain.py
 python bias_variance_error_Franke.py
 python beta_variance_ols_plot.py
+python model_plots.py
 
 echo "Build report? (y/n)"
 read yn

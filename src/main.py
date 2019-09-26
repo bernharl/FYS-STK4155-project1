@@ -1,7 +1,7 @@
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
+from matplotlib.ticker import LinearLocator, FormatStrFormatter, ScalarFormatter
 import numpy as np
 import sklearn.preprocessing as sklpre
 import sklearn.model_selection as sklms
@@ -9,7 +9,7 @@ import sklearn.linear_model as skllm
 import imageio
 import scipy as sp
 import resource
-
+import matplotlib
 
 class RegressionClass:
     def __init__(
@@ -95,7 +95,7 @@ class RegressionClass:
         noise = np.random.normal(0, self.stddev, size=f.shape)
         return f + noise
 
-    def plot_model(self, plot_data=True):
+    def plot_model(self, method, plot_data=True):
         """
         3D plot of the Franke function and the linear regression model
         """
@@ -107,6 +107,8 @@ class RegressionClass:
         else:
             skip = 1
         fig = plt.figure()
+        fig.set_size_inches(2* 2.942, 2*1.818)
+        fig.tight_layout()
         ax = fig.gca(projection="3d")
         # Plot the surface.
         if self.modeled:
@@ -125,13 +127,40 @@ class RegressionClass:
                 cmap=cm.coolwarm,
                 linewidth=0,
                 antialiased=False,
-                alpha=0.5,
+                alpha=0.4,
             )
             fig.colorbar(surf, shrink=0.5, aspect=5)
         # Customize the z axis.
         ax.zaxis.set_major_locator(LinearLocator(10))
-        ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
-        plt.show()
+
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        ax.set_zlabel("z")
+        if self.terrain_data:
+            ax.zaxis.set_major_formatter(FormatStrFormatter("%g"))
+            zticks = np.linspace(np.min(self.z_), np.max(self.z_), 4)
+            ax.set_zticks(zticks)
+            ax.view_init(elev=40, azim=105)
+            fig.savefig(
+                f"../doc/figs/3dmodel_{method}_terrain.pdf",
+                pad_inches=0.2,
+                bbox_inches="tight",
+                dpi=1000,
+            )
+        else:
+            ax.zaxis.set_major_formatter(FormatStrFormatter("%.2g"))
+        
+            zticks = np.linspace(np.min(self.z_), np.max(self.z_), 4)
+            ax.set_zticks(zticks)
+            ax.view_init(elev=20, azim=70)   # good values: 20, 50
+            fig.savefig(
+                f"../doc/figs/3dmodel_{method}_Franke.pdf",
+                pad_inches=0.1,
+                bbox_inches="tight",
+                dpi=1000,
+            )
+
+        plt.close()
 
     def k_fold(self, k=5, calc_train=False):
         """
