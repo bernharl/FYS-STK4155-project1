@@ -20,7 +20,7 @@
 \bibliographystyle{plain}
 % \renewcommand{\thesubsection}{\alph{subsection})}
 \renewcommand{\thesection}{\arabic{section}}
-
+\renewcommand{\baselinestretch}{1.05} 
 \renewenvironment{abstract}
  {\small
   \begin{center}
@@ -179,7 +179,7 @@ One method of resampling is called the $k$-fold cross-validation method, which g
 
 
 \section{Method}
-To get an understanding of the three regression methods, we initially use Franke's function with added noise to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website \cite{earthexplorer} .  The subscript F pertains to the results and data from the Franke function, while the subscript T pertains to the terrain data and its results.  The expressions used to generate the data from the Franke's function and added noise are shown in Equation (\ref{eq:Franke}) and (\ref{eq:Frankenoise}). The generated data set contains 400 data points, whereas the terrain data contains approximately $6.49\cdot 10^6$ points. Analyzing the entire set would require more memory than what is available to us, so we are instead using every 150th data point.
+To get an understanding of the three regression methods, we initially use Franke's function with added noise to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website \cite{earthexplorer} .  The subscript F pertains to the results and data from the Franke function, while the subscript T pertains to the terrain data and its results.  The expressions used to generate the data from the Franke's function and added noise are shown in Equation (\ref{eq:Franke}) and (\ref{eq:Frankenoise}). The generated data set contains 400 data points, whereas the terrain data contains approximately $6.5$ million points. Analyzing the entire set would require more memory than what is available to us, so we are instead using every 150th data point, which is approximately 43 thousand data points.
 
 The Franke's function is given by
 \begin{align}
@@ -236,7 +236,7 @@ $d_\text{T}^\text{OLS}$ & 0 & 19 \\ \hline
 $\lambda^\text{ridge}_\text{F}$  & $10^{-7}$ & 10\\ \hline 
 $\lambda^\text{ridge}_\text{T}$ & $10^{-10}$ & $10^{10}$\\ \hline 
 $\lambda^\text{lasso}_\text{F}$  & $10^{-7}$ & $10$\\ \hline 
-$\lambda^\text{lasso}_\text{T}$ & $10$ & $10^{4}$\\ \hline 
+$\lambda^\text{lasso}_\text{T}$ & $10^{-4}$ & $10^{4}$\\ \hline 
 \end{tabular}}
 \end{table}
 
@@ -267,11 +267,12 @@ Method & $R^2$ training & $R^2$ test \\ \hline
 \end{tabular}
 \end{table}
 
-The Franke's function EPE plotted against various degrees of the OLS regression is shown in Figure \ref{fig:bias_ols_Franke}.  There appears to be a minimum for the test data EPE at polynomial degree = 5, so we have chosen this as the polynomial degree for all models of the Franke's function data. Figure \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} show the EPE for varying $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively, using a fifth order polynomial fit. Due to the variance in the Franke's function from the added  noise, it is not clear which values are optimal to use for the linear fits. 
+The EPE for the OLS regression of the generated Franke's function data is plotted against increasing polynomial degree fits in Figure \ref{fig:bias_ols_Franke}.  The graph for the test data seems to reach a minimum at polynomial degree 4, so we have chosen this as the polynomial degree for all models of the Franke's function data. Figure \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} show the EPE for varying $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively, using a fourth order polynomial fit. Due to the variance in the Franke's function from the added  noise, it is not clear which values are optimal to use for the linear fits. The EPE seems to be at its minimum value at $\lambda_\text{F}=10^{-5}$ for both Ridge and Lasso regression, so we choose $\lambda^\text{ridge}_\text{F} = \lambda^\text{lasso}_\text{F}=10^{-5}$.
 
+The EPE for the OLS regression of the terrain data plotted against increasing polynomial degrees is shown in Figure \ref{fig:bias_ols_terrain}. For the terrain data we decided on using a fifth order polynomial fit for all regression methods, as the EPE for the test data seems to stabilize between degree 5 and 7, and starts increasing at degree 8.  For the shrinkage parameter, by looking at Figure \ref{fig:bias_ridge_terrain} and \ref{fig:bias_ols_terrain}, we decided on the values  $\lambda^\text{ridge}_\textbf{•}ext{T}=10^{-6} $ and $\lambda^\text{lasso}_\text{T}=10^{-3} $.
 
 \begin{table}[H]
-\caption{Table of the $R^2$ scores for both training and test sets for all three regression methods. A fifth order polynomial model was evaluated for the Franke's function data, while a fifth order polynomial was evaluated for the terrain data. \vspace{2 pt}}
+\caption{Table of the $R^2$ scores for both training and test sets for all three regression methods. A fourth order polynomial model was evaluated for the Franke's function data, while a fifth order polynomial was evaluated for the terrain data. \vspace{2 pt}}
 \label{tab:R2}
 \begin{tabular}{|c|c|c|c|} \hline
 	Data set & Method & $R^2$ training & $R^2$ test\\ \hline
@@ -287,7 +288,7 @@ The Franke's function EPE plotted against various degrees of the OLS regression 
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/beta_variance_ols_Franke.pdf}
-    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$  of a fifth order two-dimensional polynomial model  of the generated Franke's function with noise of $\sigma^2=0.1$, plotted with $68\%$ confidence intervals.}
+    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$  of a fourth  order two-dimensional polynomial model  of the generated Franke's function with noise of $\sigma^2=0.1$, plotted with $68\%$ confidence intervals.}
     \label{fig:beta_variance_Franke}
 \end{figure}
 
@@ -302,66 +303,66 @@ The Franke's function EPE plotted against various degrees of the OLS regression 
 
 
 
-\begin{figure}[H]
+\begin{figure}
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_Franke.pdf}
     \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression fitted on the Franke's function with added noise.}
     \label{fig:bias_ols_Franke}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
     \includegraphics{figs/biasvariancetradeoff_Ridge_Franke.pdf}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 5 fitted on the Franke's function}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 4 fitted on the Franke's function}
     \label{fig:bias_ridge_Franke}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
     \includegraphics{figs/biasvariancetradeoff_LASSO_Franke.pdf}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on the Franke's function.}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 4 fitted on the Franke's function.}
     \label{fig:bias_lasso_Franke}
 \end{figure}
 
 \subsection{Lake Tanganyika data}
 
 
-\begin{figure}[H]
+\begin{figure}
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_terrain.pdf}
     \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression of degree 5 fitted on terrain data of Lake Tanganyika, Africa.}
     \label{fig:bias_ols_terrain}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
     \includegraphics{figs/biasvariancetradeoff_Ridge_terrain.pdf}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 5 fitted on terrain data of Lake Tanganyika.}
     \label{fig:bias_ridge_terrain}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
     \includegraphics{figs/biasvariancetradeoff_LASSO_terrain.pdf}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on terrain data of Lake Tanganyika.}
     \label{fig:bias_lasso_terrain}
 \end{figure}
 
 
-\newpage
-\begin{figure}[H]
+
+\begin{figure}
 	\includegraphics[scale=1]{figs/3dmodel_OLS_Franke.pdf}
 	\label{fig:3d_OLS_Franke}
 	\caption{3D plot of the OLS model (dotted) with the generated Franke's function and added noise.}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
 	\includegraphics[scale=1]{figs/3dmodel_OLS_terrain.pdf}
 	\label{fig:3d_OLS_terrain}
 	\caption{3D plot of the OLS model (dotted) and the terrain data of Lake Tanganyika.}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
 	\includegraphics[scale=1]{figs/3dmodel_Ridge_Franke.pdf}
 	\label{fig:3d_Ridge_Franke}
 	\caption{3D plot of the Ridge model (dotted) with the generated Franke's function with  added noise.}	
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
 	\includegraphics[scale=1]{figs/3dmodel_Ridge_terrain.pdf}
 	\label{fig:3d_OLS_terrain}
 	\caption{3D plot of the Ridge model (dotted) and the terrain data of Lake Tanganyika.}
@@ -369,13 +370,13 @@ The Franke's function EPE plotted against various degrees of the OLS regression 
 
 
 
-\begin{figure}[H]
+\begin{figure}
 	\includegraphics[scale=1]{figs/3dmodel_Lasso_Franke.pdf}
 	\label{fig:3d_Ridge_Franke}
 	\caption{3D plot of the Lasso model (dotted) and the generated Franke's function with  added noise.}	
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
 	\includegraphics[scale=1]{figs/3dmodel_Lasso_terrain.pdf}
 	\label{fig:3d_Ridge_Franke}
 	\caption{3D plot of the Lasso model (dotted) and the terrain data of Lake Tanganyika.}	
