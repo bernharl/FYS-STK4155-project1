@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{verbatim}
 \usepackage{float}
+\usepackage{array}
 \usepackage{xfrac}
 \usepackage{mathpazo}
 \usepackage{amsmath}
@@ -174,7 +175,7 @@ Another way to reduce variance (overfitting), is to apply a penalty to the $\bet
 \subsection{Resampling}
 Finding a proper estimated fit for the given data can be challenging when the amount of available samples is limited. To evaluate the validity of the fitted model, resampling proves to be a powerful tool. Several methods for resampling exist, but the general idea of resampling is based on gaining additional information by repeatedly drawing arbitrary samples from the training set and refitting a model on each sample set. It is then possible to compare these new fits and examine how well they correspond to one another.
 
-One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on first splitting the train data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the folds is used as a validation set once. The MSE is calculated for each iteration using Equation (\ref{eq:MSE}). Lastly, the mean of the calculated MSE's is used as the expected prediction error (EPE). 
+One method of resampling is called the $k$-fold cross-validation method, which gives us an estimate of the prediction error of our fitted model. $k$-fold cross-validation is based on arbitrarily splitting the training data into $k$ approximately equal-sized sets.  We then run our regression method on $k-1$ of the $k$ folds, keeping one fold as the validation set, with the $k-1$ remaining folds as the training data. This is iterated $k$ times in a way that ensures that each of the folds is used as a validation set once. The MSE is calculated for each iteration using Equation (\ref{eq:MSE}). Lastly, the mean of the calculated MSE's is used as the expected prediction error (EPE).  Common values for $k$ are 5 and 10. 
 
 
 \section{Method}
@@ -183,7 +184,7 @@ The Franke's function is given by
 \begin{align}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)} \nonumber\\
  &+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \nonumber\\
- &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right()} \nonumber\\
+ &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} \nonumber\\
  &-\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }. \label{eq:Franke}
 \end{align} which is defined on $x,\ y \in [0,1]$.
 
@@ -207,43 +208,73 @@ $\bm{X} = \begin{bmatrix}
 }
 \vspace{1pt}
 
+\noindent
+We implement OLS and Ridge regression by writing a Python script that solves Equation (\ref{eq:beta_OLS}) and (\ref{eq:beta_ridge}) respectively using \texttt{numpy}. The Lasso method, however, does not have an analytical solution for $\hat{\beta}^\text{lasso}$ and needs to be solved using for example gradient descent. Instead of writing our own code for solving this type of regression, we use \texttt{scikit-learn}'s built-in functionality to solve Equation (\ref{eq:argminbeta_ridge}) and find the regression parameters.
 
 \noindent
-For OLS, we run k-fold cross-validation on increasing polynomial degrees to get a good estimate of how the EPE varies with model complexity, with degrees ranging from 0 to 10. The best polynomial degree is determined by making a compromise between EPE and computational cost, as we do not necessarily wish to increase the polynomial degree, and subsequently the computational cost, for a minimal improvement in the results. This is especially important for larger data sets, such as the terrain data. The EPE for both training and test data is shown in Figure \ref{fig:bias_ols_Franke} for Franke's function and Figure \ref{fig:bias_ols_terrain} for terrain data.
+For OLS, we run k-fold cross-validation with $k=5$ on increasing polynomial degrees $d$ to get a good estimate of how the EPE varies with model complexity. the optimal polynomial degree is determined by making a compromise between EPE and computational cost, as we do not necessarily wish to increase the polynomial degree, and subsequently the computational cost, for a minimal improvement in the results. This is especially important for larger data sets, such as the terrain data. The EPE as a function of polynomial degree for both training and test data is shown in Figure \ref{fig:bias_ols_Franke} for Franke's function and Figure \ref{fig:bias_ols_terrain} for terrain data. The polynomial degrees $d$ used can be found in Table \ref{tab:parameters_kfold}.
 
-As cross-validation can be computationally expensive, we assume that the optimal polynomial degree for OLS will also be optimal for Ridge and Lasso regression. The hyperparameter $\lambda$ is decided similarly to the polynomial degree; by cross-validating  Ridge and Lasso regression for a range of hyperparameters. However, as the penalty terms for Ridge and Lasso are different, as shown in Equation (\ref{eq:argminbeta_ridge}) and (\ref{eq:argminbeta_lasso}), the shrinkage is not the same for the methods and we need to tune their hyperparameters individually, hereon referred to as $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively.
+As cross-validation can be computationally expensive, we assume that the optimal polynomial degree for OLS will also be optimal for Ridge and Lasso regression. The hyperparameter $\lambda$ is decided similarly to the polynomial degree; by cross-validating  Ridge and Lasso regression using $k=5$ folds for a range of hyperparameters and looking at the resulting EPE. However, as the penalty terms for Ridge and Lasso are different, as shown in Equation (\ref{eq:argminbeta_ridge}) and (\ref{eq:argminbeta_lasso}), the shrinkage is not the same for the methods and we need to tune their hyperparameters individually, hereon referred to as $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively. The ranges for both data sets  are shown in Table \ref{tab:parameters_kfold}.  
+
+\begin{table}[H]
+\caption{Table of the ranges with which we varied the different parameters when using $k$-fold cross-validation, starting from minimum and stopping at maximum. As stated previously, subscript F and T refer  to parameters pertaining to Frankes function and terrain data respectively.}
+\label{tab:parameters_kfold}
+\centering
+{\setlength{\extrarowheight}{4pt}
+\begin{tabular}{| c | c | c |} \hline
+Parameter & Minimum & Maximum  \\ \hline
+$d_\text{F}^\text{OLS}$ & 0 & 10 \\ \hline 
+$d_\text{T}^\text{OLS}$ & 0 & 19 \\ \hline 
+$\lambda^\text{ridge}_\text{F}$  & $10^{-7}$ & 10\\ \hline 
+$\lambda^\text{ridge}_\text{T}$ & $10^{-10}$ & $10^{10}$\\ \hline 
+$\lambda^\text{lasso}_\text{F}$  & $10^{-7}$ & $10$\\ \hline 
+$\lambda^\text{lasso}_\text{T}$ & $10$ & $10^{4}$\\ \hline 
+\end{tabular}}
+\end{table}
+
+
+To summarize, we do the following steps to find the optimal model for both data sets:
+\begin{enumerate}
+\item Decide polynomial degree by running $k$-fold cross-validation on OLS regression.
+\item Decide hyperparameters for Ridge and Lasso regression through cross-validation, using the optimal polynomial degree found for OLS.
+\item Consider the $R^2$ scores for each regression method in combination with the EPE to evaluate the different models and find the best fit. 
+\end{enumerate}
+
+
 
 \section{Results}
 \subsection{Franke's function data}
+Table \ref{tab:R2_stddev=1} contains the $R^2$ scores for the regression models of the Franke's function data with added Gaussian noise with variance $\sigma^2 = 1$. The $R^2$ scores for both training and test data are quite low, with the highest training data score being 0.168 and test data score 0.105. The test scores do not correspond well with the scores for the training data.
 
 \begin{table}[H]
-\caption{Table of the $R^2$ scores for training and test sets using the three regression methods on Franke's function with standard deviation $\sigma=1$. As the generated data contains large amounts of stochastic noise, we have included results from three runs.}
+\caption{Table of the $R^2$ scores for training and test sets from fourth order polynomial estimates from  the three linear regression methods on Franke's function with standard deviation $\sigma=1$. As the generated function contains large amounts of stochastic noise, we have included results from three runs.\vspace{2pt}}
+
 \label{tab:R2_stddev=1}
 \centering
 \begin{tabular}{|c|c|r|} \hline 
 Method & $R^2$ training & $R^2$ test \\ \hline
-\multirow{3}{*}{OLS} & 0.183& $-0.128$\\ 
-											& 0.126 & $-0.102$ \\ 
-											& 0.158   & 0.106\\ \cline{1-3}
-\multirow{3}{*}{Ridge} & 0.0762& 0.0839\\ 
-											& 0.151  & 0.0568 \\ 
-											& 0.0977& 0.0965 \\ \cline{1-3}
-\multirow{3}{*}{Lasso} & 0.0582& 0.0992\\ 
-											& 0.175   & $-0.0914$ \\ 
-											& 0.143  & 0.0229 \\ \cline{1-3}
+\multirow{3}{*}{OLS} & -0.152& $-0.124$\\ 
+											& 0.105 & $-0.00372$ \\ 
+											& 0.119   & 0.00766\\ \cline{1-3}
+\multirow{3}{*}{Ridge} & 0.0896 & 0.0188\\ 
+											& 0.0921   & 0.0111 \\ 
+											& 0.168      & $-0.0727$\\ \cline{1-3}
+\multirow{3}{*}{Lasso} & 0.117& 0.105\\ 
+											& 0.0879   & 0.0664 \\ 
+											& 0.0459 & 0.0627\\ \cline{1-3}
 \end{tabular}
 \end{table}
 
 \begin{table}[H]
-\caption{Table of the $R^2$ scores for both training and test sets for all three regression methods}
+\caption{Table of the $R^2$ scores for both training and test sets for all three regression methods. A fourth order polynomial model was evaluated for the Franke's function data, while a fifth order polynomial was evaluated for the terrain data. \vspace{2 pt}}
 \label{tab:R2}
 \begin{tabular}{|c|c|c|c|} \hline
 	Data set & Method & $R^2$ training & $R^2$ test\\ \hline
-	\multirow{3}{*} {\makecell[l]{Franke's  \\function}}&  OLS  &  0.886 & 0.827 \\ \cline{2-4}
-																		& Ridge & 0.773 &  0.693 \\ \cline{2-4}
-																		& Lasso & 0.789 & 0.808 \\ \hline
+	\multirow{3}{*} {\makecell[l]{Franke's  \\function}}&  OLS  &  0.833 & 0.872 \\ \cline{2-4}
+																		& Ridge & 0.771 &  0.765 \\ \cline{2-4}
+																		& Lasso & 0.805 & 0.761 \\ \hline
 	\multirow{3}{*}{Terrain} 					&  OLS  &  0.752 & 0.752 \\ \cline{2-4}
-																		& Ridge & 0.750 & 0.750 \\ \cline{2-4}
+																		& Ridge & 0.750 & 0.749 \\ \cline{2-4}
 																		& Lasso & 0.665 & 0.664 \\ \hline
 \end{tabular}
 \end{table}
@@ -251,14 +282,14 @@ Method & $R^2$ training & $R^2$ test \\ \hline
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/beta_variance_ols_Franke.pdf}
-    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$  of a fifth order polynomial model  to the Franke function, plotted with $68\%$ confidence intervals.}
+    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$  of a fourth order two-dimensional polynomial model  of the generated Franke's function with noise of $\sigma^2=0.1$, plotted with $68\%$ confidence intervals.}
     \label{fig:beta_variance_Franke}
 \end{figure}
 
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/beta_variance_ols_terrain.pdf}
-    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_T$  of a fifth order polynomial model  of the terrain data from Lake Tanganyika, here plotted with $68\%$ confidence intervals.}
+    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_T$  of a fifth order two-dimensional polynomial model  of the terrain data from Lake Tanganyika, here plotted with $68\%$ confidence intervals.}
     \label{fig:beta_variance_terrain}
 \end{figure}
 
@@ -268,22 +299,22 @@ Method & $R^2$ training & $R^2$ test \\ \hline
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_Franke.pdf}
-    \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression of degree 5 fitted on the Franke's function.}
+    \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression of degree 4 fitted on the Franke's function.}
     \label{fig:bias_ols_Franke}
 \end{figure}
 
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_Ridge_Franke.pdf}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 5 fitted on the Franke's function}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 4 fitted on the Franke's function}
     \label{fig:bias_ridge_Franke}
 \end{figure}
 
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_LASSO_Franke.pdf}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on the Franke's function.}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 4 fitted on the Franke's function.}
     \label{fig:bias_lasso_Franke}
 \end{figure}
-Figures \ref{fig:beta_variance_Franke}, \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} are all made with a fifth order polynomial fit. This choice was based on the results shown in figure \ref{fig:bias_ols_Franke}, showing the estimated prediction error for varying polynomial degrees.
+
 \subsection{Lake Tanganyika data}
 
 
@@ -305,8 +336,47 @@ Figures \ref{fig:beta_variance_Franke}, \ref{fig:bias_ridge_Franke} and \ref{fig
     \label{fig:bias_lasso_terrain}
 \end{figure}
 As with the results from fitting the Franke's function, Figure \ref{fig:beta_variance_terrain}, \ref{fig:bias_ridge_terrain} and \ref{fig:bias_lasso_terrain} are made with a fifth degree polynomial. This choice is based on figure \ref{fig:bias_ols_terrain} and is a compromise between low prediction error and low runtime. In all plots made by analyzing the terrain data from Lake Tanganyika, we only used every 150th point of the data sets to save memory and make the analysis not take too much time to run.
-\begin{multicols}{2}
 
+\newpage
+\begin{figure}[H]
+	\includegraphics[scale=1]{figs/3dmodel_OLS_Franke.pdf}
+	\label{fig:3d_OLS_Franke}
+	\caption{3D plot of the OLS model (dotted) with the generated Franke's function and added noise.}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[scale=1]{figs/3dmodel_OLS_terrain.pdf}
+	\label{fig:3d_OLS_terrain}
+	\caption{3D plot of the OLS model (dotted) and the terrain data of Lake Tanganyika.}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[scale=1]{figs/3dmodel_Ridge_Franke.pdf}
+	\label{fig:3d_Ridge_Franke}
+	\caption{3D plot of the Ridge model (dotted) with the generated Franke's function with  added noise.}	
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[scale=1]{figs/3dmodel_Ridge_terrain.pdf}
+	\label{fig:3d_OLS_terrain}
+	\caption{3D plot of the Ridge model (dotted) and the terrain data of Lake Tanganyika.}
+\end{figure}
+
+
+
+\begin{figure}[H]
+	\includegraphics[scale=1]{figs/3dmodel_Lasso_Franke.pdf}
+	\label{fig:3d_Ridge_Franke}
+	\caption{3D plot of the Lasso model (dotted) and the generated Franke's function with  added noise.}	
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[scale=1]{figs/3dmodel_Lasso_terrain.pdf}
+	\label{fig:3d_Ridge_Franke}
+	\caption{3D plot of the Lasso model (dotted) and the terrain data of Lake Tanganyika.}	
+\end{figure}
+
+\begin{multicols}{2}
 
 
 
