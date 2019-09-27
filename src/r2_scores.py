@@ -4,15 +4,15 @@ from main import OrdinaryLeastSquares, RidgeRegression, LassoRegression
 R2_train = []
 R2_test = []
 
-ols_franke = OrdinaryLeastSquares(stddev=0.1, degree=4)
+ols_franke = OrdinaryLeastSquares(stddev=0.1, degree=5)
 ols_franke.regression_method()
 R2_train.append(ols_franke.r_squared_train)
 R2_test.append(ols_franke.r_squared)
 del ols_franke
 
 ols_terrain = OrdinaryLeastSquares(
-    skip_x_terrain=4,
-    skip_y_terrain=4,
+    skip_x_terrain=150,
+    skip_y_terrain=150,
     degree=5,
     terrain_data=True,
     filename="SRTM_data_LakeTanganyika_Africa.tif",
@@ -23,15 +23,15 @@ R2_train.append(ols_terrain.r_squared_train)
 R2_test.append(ols_terrain.r_squared)
 del ols_terrain
 
-ridge_franke = RidgeRegression(stddev=0.1, degree=4)
+ridge_franke = RidgeRegression(stddev=0.1, degree=5)
 ridge_franke.regression_method()
 R2_train.append(ridge_franke.r_squared_train)
 R2_test.append(ridge_franke.r_squared)
 del ridge_franke
 
 ridge_terrain = RidgeRegression(
-    skip_x_terrain=4,
-    skip_y_terrain=4, 
+    skip_x_terrain=150,
+    skip_y_terrain=150, 
     stddev=0.1, 
     degree=5,
     terrain_data=True,
@@ -44,15 +44,15 @@ R2_test.append(ridge_terrain.r_squared)
 del ridge_terrain
 
 
-lasso_franke = LassoRegression(stddev=0.1, degree=4, lambd=1e-4)
+lasso_franke = LassoRegression(stddev=0.1, degree=5, lambd=1e-4)
 lasso_franke.regression_method()
 R2_train.append(lasso_franke.r_squared_train)
 R2_test.append(lasso_franke.r_squared)
 del lasso_franke
 
 lasso_terrain = LassoRegression(
-    skip_x_terrain=4,
-    skip_y_terrain=4,
+    skip_x_terrain=150,
+    skip_y_terrain=150,
     stddev=0.1,
     degree=5,
     terrain_data=True,
@@ -82,19 +82,19 @@ for i in range(len(R2_test)):
 R2_train_n = []
 R2_test_n = []
 
-ols_franke_n = OrdinaryLeastSquares(stddev=1,degree=4)
+ols_franke_n = OrdinaryLeastSquares(stddev=1,degree=5)
 ols_franke_n.regression_method()
 R2_train_n.append(ols_franke_n.r_squared_train)
 R2_test_n.append(ols_franke_n.r_squared)
 del ols_franke_n
 
-ridge_franke_n = RidgeRegression(stddev=1, degree=4, lambd=1e-4)
+ridge_franke_n = RidgeRegression(stddev=1, degree=5, lambd=1e-4)
 ridge_franke_n.regression_method()
 R2_train_n.append(ridge_franke_n.r_squared_train)
 R2_test_n.append(ridge_franke_n.r_squared)
 del ridge_franke_n
 
-lasso_franke_n = LassoRegression(stddev=1, degree=4, lambd=1e-4)
+lasso_franke_n = LassoRegression(stddev=1, degree=5, lambd=1e-4)
 lasso_franke_n.regression_method()
 R2_train_n.append(lasso_franke_n.r_squared_train)
 R2_test_n.append(lasso_franke_n.r_squared)
