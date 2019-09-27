@@ -38,6 +38,7 @@ fig.set_size_inches(0.9 * 2 * 2.9, 0.9 * 2 * 1.81134774961)
 ax.plot(degrees, pred_log_train, label="Train", color="g")
 ax.plot(degrees, pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel("Model Complexity [polynomial degree]")
+ax.set_xticks(degrees)
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
     [
@@ -136,7 +137,7 @@ for j, lamb in enumerate(lambda_lasso):
         filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
         skip_x_terrain=150,
-        skip_y_terrain=150,        
+        skip_y_terrain=150,
     )
     pred_error_lasso[j], pred_error_train_lasso[j] = lasso_reg.k_fold(
         k=5, calc_train=True

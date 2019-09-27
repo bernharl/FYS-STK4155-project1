@@ -32,6 +32,7 @@ fig.set_size_inches(0.9 * 2 * 2.9, 0.9 * 2 * 1.81134774961)
 ax.plot(degrees, pred_log_train, label="Train", color="g")
 ax.plot(degrees, pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel("Model Complexity [polynomial degree]")
+ax.set_xticks(degrees)
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
     [
@@ -60,7 +61,6 @@ ax.text(
 ax.legend(loc=3)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_ols_Franke.pdf", dpi=1000)
-
 # Prediction error for Ridge regression
 
 lambda_Ridge = np.logspace(-7, 1, 80)
