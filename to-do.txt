@@ -1,5 +1,7 @@
 - plot for bias and variance
-- 3d plots of data and model
 - write report 	
 - bias and variance for number of data points 
+- generate all new plots and R2 scores for degree = 5 because we're dumb 
+- decide which figures to include in the report
+- decide on lambda values for ridge and lasso for both data sets 
 
