@@ -32,7 +32,7 @@ fig.set_size_inches(0.9 * 2 * 2.9, 0.9 * 2 * 1.81134774961)
 ax.plot(degrees, pred_log_train, label="Train", color="g")
 ax.plot(degrees, pred_log, linestyle="--", label="Test", color="r")
 ax.set_xlabel("Model Complexity [polynomial degree]")
-ax.set_xticks(degrees)
+ax.set_xticks(degrees[::2])
 ax.set_ylabel(r"log$_{10}$(Prediction Error)")
 ax.set_ylim(
     [
