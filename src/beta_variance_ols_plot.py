@@ -14,7 +14,7 @@ fonts = {
 plt.rcParams.update(fonts)
 
 # OLS beta variance for Franke function
-ols_franke = OrdinaryLeastSquares(degree=5, stddev=0.1)
+ols_franke = OrdinaryLeastSquares(degree=4, stddev=0.1)
 ols_franke.regression_method()
 x_axis = np.arange(len(ols_franke.beta))
 fig, ax = plt.subplots()

@@ -68,7 +68,7 @@ pred_error_ridge = np.zeros_like(lambda_Ridge)
 pred_error_train_ridge = np.zeros_like(pred_error_ridge)
 
 for j, lamb in enumerate(lambda_Ridge):
-    ridge_reg = RidgeRegression(lambd=lamb, stddev=0.1, degree=5, terrain_data=False)
+    ridge_reg = RidgeRegression(lambd=lamb, stddev=0.1, degree=4, terrain_data=False)
     pred_error_ridge[j], pred_error_train_ridge[j] = ridge_reg.k_fold(
         k=5, calc_train=True
     )
@@ -116,7 +116,7 @@ pred_error_lasso = np.zeros_like(lambda_lasso)
 pred_error_train_lasso = np.zeros_like(pred_error_lasso)
 
 for j, lamb in enumerate(lambda_lasso):
-    lasso_reg = LassoRegression(lambd=lamb, stddev=0.1, degree=5, terrain_data=False)
+    lasso_reg = LassoRegression(lambd=lamb, stddev=0.1, degree=4, terrain_data=False)
     pred_error_lasso[j], pred_error_train_lasso[j] = lasso_reg.k_fold(
         k=5, calc_train=True
     )
