@@ -11,9 +11,9 @@ R2_test.append(ols_franke.r_squared)
 del ols_franke
 
 ols_terrain = OrdinaryLeastSquares(
-    skip_x_terrain=150,
-    skip_y_terrain=150,
-    degree=5,
+    skip_x_terrain=4,
+    skip_y_terrain=4,
+    degree=10,
     terrain_data=True,
     filename="SRTM_data_LakeTanganyika_Africa.tif",
     path="datafiles/",
@@ -30,11 +30,11 @@ R2_test.append(ridge_franke.r_squared)
 del ridge_franke
 
 ridge_terrain = RidgeRegression(
-    skip_x_terrain=150,
-    skip_y_terrain=150,
+    skip_x_terrain=4,
+    skip_y_terrain=4,
     stddev=0.1,
-    degree=5,
-    lambd=1e-6,
+    degree=10,
+    lambd=1e-10,
     terrain_data=True,
     filename="SRTM_data_LakeTanganyika_Africa.tif",
     path="datafiles/",
@@ -52,11 +52,11 @@ R2_test.append(lasso_franke.r_squared)
 del lasso_franke
 
 lasso_terrain = LassoRegression(
-    skip_x_terrain=150,
-    skip_y_terrain=150,
+    skip_x_terrain=4,
+    skip_y_terrain=4,
     stddev=0.1,
-    degree=5,
-    lambd=1e-3,
+    degree=10,
+    lambd=1e-4,
     terrain_data=True,
     filename="SRTM_data_LakeTanganyika_Africa.tif",
     path="datafiles/",
