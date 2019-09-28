@@ -14,7 +14,7 @@ fonts = {
     "ytick.labelsize": 10,
 }
 plt.rcParams.update(fonts)
-
+"""
 # Degrees to test OLS with.
 degrees = np.arange(0, 15)
 
@@ -70,7 +70,7 @@ ax.text(
 ax.legend(loc=6)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_ols_terrain.pdf", dpi=1000)
-
+"""
 # Prediction error for Ridge regression
 
 lambda_Ridge = np.logspace(-10, 10, 21)
@@ -79,7 +79,7 @@ pred_error_train_ridge = np.zeros_like(pred_error_ridge)
 
 for j, lamb in enumerate(lambda_Ridge):
     ridge_reg = RidgeRegression(
-        degree=8,
+        degree=10,
         lambd=lamb,
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
@@ -128,7 +128,6 @@ ax.legend(loc=6)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_Ridge_terrain.pdf", dpi=1000)
 
-
 # Prediction error for LASSO regression
 lambda_lasso = np.logspace(-4, 4, 10)
 pred_error_lasso = np.zeros_like(lambda_lasso)
@@ -136,7 +135,7 @@ pred_error_train_lasso = np.zeros_like(pred_error_lasso)
 
 for j, lamb in enumerate(lambda_lasso):
     lasso_reg = LassoRegression(
-        degree=8,
+        degree=10,
         lambd=lamb,
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
