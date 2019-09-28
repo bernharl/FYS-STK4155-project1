@@ -204,7 +204,7 @@ $\bm{X} = \begin{bmatrix}
 1 & x_0 & y_0 & x_0^2 & x_0 y_0 & y_0^2 & x_0^3 & \dots \\
 \\
 1 & x_1 & y_1  & y_1^2 & x_1 y_1   &  y_1^2  & x_1^3   & \dots \\
-\vdots & \ddots \\
+\vdots & \vdots \\
 1 & x_{n-1} & y_{n-1} & x_{n-1}^2 & x_{n-1} y_{n-1} & y_{n-1}^2 & x_{n-1}^3 & \dots \\ \end{bmatrix}.$
 }
 \vspace{1pt}
@@ -269,27 +269,23 @@ Method & $R^2$ training & $R^2$ test \\ \hline
 
 The EPE for the OLS regression of the generated Franke's function data is plotted against increasing polynomial degree fits in Figure \ref{fig:bias_ols_Franke}.  The graph for the test data seems to reach a minimum at polynomial degree 4, so we have chosen this as the polynomial degree for all models of the Franke's function data. Figure \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} show the EPE for varying $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively, using a fourth order polynomial fit. Due to the variance in Franke's function from the added  noise, it is not clear which values are optimal to use for the linear fits. The EPE seems to be at its minimum value at $\lambda_\text{F}=10^{-5}$ for both Ridge and Lasso regression, so we choose $\lambda^\text{ridge}_\text{F} = \lambda^\text{lasso}_\text{F}=10^{-5}$.
 
-
-
-
-
 \end{multicols}
 
 
 
-\begin{figure}
+\begin{figure}[H]
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_Franke.pdf}
     \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression fitted on Franke's function with added noise. The total data set contained 400 points.}
     \label{fig:bias_ols_Franke}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_Ridge_Franke.pdf}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 4 fitted on Franke's function. The total data set contained 400 points.}
     \label{fig:bias_ridge_Franke}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_LASSO_Franke.pdf}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 4 fitted on Franke's function. The total data set contained 400 points.}
     \label{fig:bias_lasso_Franke}
@@ -298,7 +294,24 @@ The EPE for the OLS regression of the generated Franke's function data is plotte
 
 \begin{multicols}{2}
 \noindent
+
+
+\begin{figure}[H]
+    \includegraphics[scale=1]{figs/beta_variance_ols_Franke.pdf}
+    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$ of the generated Franke's function data plotted with $68\%$ confidence intervals. The total data set contained 400 points.}
+    \label{fig:beta_variance_Franke}
+\end{figure}
 Table \ref{tab:R2} contains the $R^2$ scores for the three regression methods using a fourth order polynomial fit and $\lambda^\text{ridge}_\text{F} = \lambda^\text{lasso}_\text{F}=10^{-5}$. Looking at the EPE graphs in Figure \ref{fig:bias_ols_Franke}, \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke}  and the $R^2$ scores, we decided that the optimal model  for the generated Franke's function data was the fourth order two-dimensional polynomial fit using OLS regression.  We have included the plot for the regression parameters $\bm{\hat{\beta}^\text{OLS}}_\text{F}$  in Figure \ref{fig:beta_variance_Franke}. To illustrate how the model fits the data, the 3D plot of the model and generated data is shown in Figure \ref{fig:3d_OLS_Franke}.
+\end{multicols}
+
+
+
+\begin{figure}[H]
+	\includegraphics[scale=1]{figs/3dmodel_OLS_Franke.pdf}
+	\label{fig:3d_OLS_Franke}
+	\caption{3D plot of the polynomial fit with the generated Franke's function data and added noise. The fit was modeled using a fourth order two-dimensional polynomial fit with OLS regression. The total data set contained 400 points.}
+\end{figure}
+
 
 \begin{table}[H]
 \caption{Table of the $R^2$ scores for both training and test sets for all three regression methods. A fourth order polynomial model was evaluated for the Franke's function data, while a 10th order polynomial was evaluated for the terrain data. \vspace{2 pt}}
@@ -313,23 +326,6 @@ Table \ref{tab:R2} contains the $R^2$ scores for the three regression methods us
 																		& Lasso & 0.778 & 0.778 \\ \hline
 \end{tabular}
 \end{table}
-\begin{figure}[H]
-    \includegraphics[scale=1]{figs/beta_variance_ols_Franke.pdf}
-    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$ of the generated Franke's function data plotted with $68\%$ confidence intervals. The total data set contained 400 points.}
-    \label{fig:beta_variance_Franke}
-\end{figure}
-\end{multicols}
-
-
-
-\begin{figure}[H]
-	\includegraphics[scale=1]{figs/3dmodel_OLS_Franke.pdf}
-	\label{fig:3d_OLS_Franke}
-	\caption{3D plot of the polynomial fit with the generated Franke's function data and added noise. The fit was modeled using a fourth order two-dimensional polynomial fit with OLS regression. The total data set contained 400 points.}
-\end{figure}
-
-
-
 
 \subsection{Lake Tanganyika terrain data}
 
@@ -382,10 +378,14 @@ From the $R^2$ scores for the particularly noisy ($\sigma^2 = 1$) Franke's funct
 
 It appears from Table \ref{tab:R2} that the method that gives the best fit of both the Franke's function data with $\sigma=0.1$ is the OLS regression, as the $R^2$ scores are the highest for both training and test data. As the generated data only contained 400 points, the $R^2$ training scores do not correspond as well to the test scores. The $R^2$ scores for both sets will likely approach one another as the amount of data increases.
 
-Looking at Figure \ref{fig:bias_ols_Franke}, the choice of using a polynomial fit of the fourth order seems reasonable, as the test set EPE seems to stabilize at that point. From degree 4 and onwards, the difference in the training and test EPE gradually increases with  the model complexity, indicating that using a higher order fit than 4 would likely lead to overfitting of the data. However, we only used 400 data points generated using a function with added random noise, so this could likely vary for different runs of the code depending on the noise.  We are not certain if the optimal polynomial order for the OLS would be the same for the Ridge and Lasso regression, even though this was assumed in this project. Using a lower order would probably not improve the Ridge and Lasso models, but it could be interesting to examine the cases for higher orders, as the hyperparameter $\lambda$ would theoretically be able to counteract overfitting to some extent by shrinking the regression parameters.  For our results using a fourth order polynomial fit, it does seem from Figure \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} that the EPE is at its lowest for lower values of $\lambda_\text{F}$, suggesting that the optimal model is the OLS without any shrinkage of the parameters. It is hard to identify exactly which value of $\lambda_\text{F}$ is the optimal one within the given ranges due to the variations in these graphs. Again, using more data points would likely improve our models and smoothen the graphs.  Regardless, we are able to observe that the EPE increases sharply for higher values of $\lambda$ before plateauing in Figure \ref{fig:bias_lasso_Franke}. This suits our expectations of the way the hyperparameter $\lambda$ imposes a higher bias in exchange for lower variance. At the plateau, the regression parameters are shrunk to the extent that our model estimates the data as the intercept, as it is the only term exempt from the penalization. Ridge regression will force coefficients to be near-zero for sufficiently high $\lambda$, so we can thus assume the EPE for the Ridge method would behave similarly  if we increased the $\lambda$ range for which we ran cross-validation, though not as extreme as for the Lasso.
+Looking at Figure \ref{fig:bias_ols_Franke}, the choice of using a polynomial fit of the fourth order seems reasonable, as the test set EPE seems to stabilize at that point. From degree 4 and onwards, the difference in the training and test EPE gradually increases with  the model complexity, indicating that using a higher order fit than 4 would likely lead to overfitting of the data. However, we only used 400 data points generated using a function with added random noise, so this could likely vary for different runs of the code depending on the noise.  We are not certain if the optimal polynomial order for the OLS would be the same for the Ridge and Lasso regression, even though this was assumed in this project. Using a lower order would probably not improve the Ridge and Lasso models, but it could be interesting to examine the cases for higher orders, as the hyperparameter $\lambda$ would theoretically be able to counteract overfitting to some extent by shrinking the regression parameters.  For our results using a fourth order polynomial fit, it does seem from Figure \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} that the EPE is at its lowest for lower values of $\lambda_\text{F}$, suggesting that the optimal model is the OLS without any shrinkage of the parameters. It is hard to identify exactly which value of $\lambda_\text{F}$ is the optimal one within the given ranges due to the variations in these graphs. Again, using more data points would likely improve our models and smoothen the graphs.  Regardless, we are able to observe that the EPE increases sharply for higher values of $\lambda$ before plateauing in Figure \ref{fig:bias_lasso_Franke}, while the difference between the EPE for training and test data decreases. This suits our expectations of the way the hyperparameter $\lambda$ imposes a higher bias in exchange for lower variance. At the plateau, the regression parameters are shrunk to the extent that our model estimates the data as the intercept, as it is the only term exempt from the penalization. Ridge regression will force coefficients to be near-zero for sufficiently high $\lambda$, so we can thus assume the EPE for the Ridge method would behave similarly  if we increased the $\lambda$ range for which we ran cross-validation, though not as extreme as for the Lasso.
 
+The OLS regression parameters $\bm{\hat{\beta ^\text{OLS}}}$ shown in Figure \ref{fig:beta_variance_Franke} and its  corresponding 3D plot in Figure \ref{fig:3d_OLS_Franke} seem to be the optimal model of the three. The variance of the parameters appears to be sufficiently small, and with the EPE for polynomial degree 4 being near the order of $10^{-1.8}\approx 0.016$, which seems sufficient for Franke's function, which has values of orders between  $10^{{-2}}$ and $1$. This is not a perfect fit, which is also reflected in the $R^2$ score in Table \ref{tab:R2}, but a score of 0.822 for the test data seems satisfactory considering the simplicity of the OLS estimator. From the 3D plot, we can observe that the model is able to eliminate most of the noise from the Franke's function data, at the cost of being able to model the smaller variations in Franke's function. 
 
 \subsection{Lake Tanganyika terrain data}
+
+
+
 
 \section{Conclusion}
 concluuuusioooooooon
