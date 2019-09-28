@@ -489,9 +489,13 @@ class LassoRegression(RidgeRegression):
         """
         Centers inputs and data, then performs LASSO regression using Scikit-Learn.
         """
-        self.beta = skllm.Lasso(
-            alpha=self.lambd, fit_intercept=False, max_iter=20000, selection="random"
-        ).fit(
+        #self.beta = skllm.Lasso(
+        #    alpha=self.lambd, fit_intercept=False, max_iter=20000, selection="random"
+        #).fit(
+        #    self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0),
+        #    self.z_train - np.mean(self.z_train, axis=0),
+        #)
+        self.beta=skllm.SGDRegressor(penalty="l1", l1_ratio=1, alpha=self.lambd, fit_intercept=False).fit(
             self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0),
             self.z_train - np.mean(self.z_train, axis=0),
         )
