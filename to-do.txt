@@ -5,3 +5,12 @@
 - decide which figures to include in the report
 - decide on lambda values for ridge and lasso for both data sets 
 
+
+
+SKIP POINT PROBLEM 
+
+need to change: 
+- name of existing terrain figures where the skip=150
+- bias_variance terrain plots for skip=4
+- r2 scores terrain for skip=4
+- beta_variance terrain plot for skip=4
