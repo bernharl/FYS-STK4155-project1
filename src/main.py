@@ -132,13 +132,13 @@ class RegressionClass:
 
     def plot_model(self, method="", plot_data=True):
         """
-        3D plot of the data used and (optional) the regression model fit to it.
+        3D plot of the regression model, also (optional) plots the data used.
 
         Parameters:
 
         method(str, default ""): Part of filename for saved plots.
 
-        plot_data(bool, default True): Whether to plot the regression model.
+        plot_data(bool, default True): Whether to plot the data used.
         """
         if not plot_data and not self.modeled:
             raise RuntimeError("Please either plot modeled data, real data or both")
@@ -375,7 +375,7 @@ class OrdinaryLeastSquares(RegressionClass):
         XTz = X.T @ self.z_train
         # Solve XTXbeta = XTz
         # Using np.linalg.solve instead of inverting matrix directly, should
-        # be more stable.        
+        # be more stable.
         beta = np.linalg.solve(XTX, XTz)
         beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
