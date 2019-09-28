@@ -195,7 +195,7 @@ F(x, y) = f(x, y) + \varepsilon \label{eq:Frankenoise},
 \end{equation}
 with $ \varepsilon \sim N(0, \sigma) $. We first choose standard deviation $\sigma=1$ and calculate the $R^2$ scores for the three fits to examine how the noise affects the variance of the models. We expect the scores to be rather poor, as the noise is of the same order as the data.  The results are shown in Table \ref{tab:R2_stddev=1}. For all subsequent simulations using Franke's function, the data is generated using $\sigma=0.1$, as this will probably give us more reasonable data to analyze. 
 
-We wish to fit Franke's function data and terrain data to a two-dimensional polynomial model on the form $[x,\ y,\ x^2, xy,\ \ y^2, \dots]$,  giving us a design matrix $\bm{X}$ on the form \\
+We wish to fit the Franke's function data and the terrain data to a two-dimensional polynomial model on the form $[x,\ y,\ x^2, xy,\ \ y^2, \dots]$,  giving us a design matrix $\bm{X}$ on the form \\
 
 \setlength{\arraycolsep}{1.5pt}
 \noindent
@@ -225,7 +225,7 @@ To summarize, we do the following steps to find the optimal model for both data 
 \end{enumerate}
 
 \begin{table}[H]
-\caption{Table of the ranges with which we varied the different parameters when using $k$-fold cross-validation, starting from minimum and stopping at maximum. As stated previously, subscript F and T refer  to parameters pertaining to Frankes function and terrain data respectively.}
+\caption{Table of the ranges with which we vary the different parameters when using $k$-fold cross-validation, starting from minimum and stopping at maximum. As stated previously, subscript F and T refer  to parameters pertaining to Franke's function and terrain data respectively.}
 \label{tab:parameters_kfold}
 \centering
 {\setlength{\extrarowheight}{4pt}
@@ -269,7 +269,7 @@ Method & $R^2$ training & $R^2$ test \\ \hline
 
 The EPE for the OLS regression of the generated Franke's function data is plotted against increasing polynomial degree fits in Figure \ref{fig:bias_ols_Franke}.  The graph for the test data seems to reach a minimum at polynomial degree 4, so we have chosen this as the polynomial degree for all models of the Franke's function data. Figure \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} show the EPE for varying $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively, using a fourth order polynomial fit. Due to the variance in Franke's function from the added  noise, it is not clear which values are optimal to use for the linear fits. The EPE seems to be at its minimum value at $\lambda_\text{F}=10^{-5}$ for both Ridge and Lasso regression, so we choose $\lambda^\text{ridge}_\text{F} = \lambda^\text{lasso}_\text{F}=10^{-5}$.
 
-The EPE for the OLS regression of the terrain data plotted against increasing polynomial degrees is shown in Figure \ref{fig:bias_ols_terrain}. For the terrain data we decided on using a fifth order polynomial fit for all regression methods, as the EPE for the test data seems to stabilize between degree 5 and 7, and starts increasing at degree 8.  For the shrinkage parameter, by looking at Figure \ref{fig:bias_ridge_terrain} and \ref{fig:bias_ols_terrain}, we decided on the values  $\lambda^\text{ridge}_\textbf{•}ext{T}=10^{-6} $ and $\lambda^\text{lasso}_\text{T}=10^{-3} $.
+The EPE for the OLS regression of the terrain data plotted against increasing polynomial degrees is shown in Figure \ref{fig:bias_ols_terrain}. For the terrain data we decided on using a fifth order polynomial fit for all regression methods, as the EPE for the test data seems to stabilize between degree 5 and 7, and starts increasing at degree 8.  For the shrinkage parameters, by looking at Figure \ref{fig:bias_ridge_terrain} and \ref{fig:bias_ols_terrain}, we decided on the values  $\lambda^\text{ridge}_\text{T}=10^{-6} $ and $\lambda^\text{lasso}_\text{T}=10^{-3} $.
 
 \begin{table}[H]
 \caption{Table of the $R^2$ scores for both training and test sets for all three regression methods. A fourth order polynomial model was evaluated for the Franke's function data, while a fifth order polynomial was evaluated for the terrain data. \vspace{2 pt}}
@@ -288,7 +288,7 @@ The EPE for the OLS regression of the terrain data plotted against increasing po
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/beta_variance_ols_Franke.pdf}
-    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$  of a fourth  order two-dimensional polynomial model  of the generated Franke's function with noise of $\sigma^2=0.1$, plotted with $68\%$ confidence intervals.}
+    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$  of a fourth  order two-dimensional polynomial model  of the generated Franke's function with noise of $\sigma=0.1$, plotted with $68\%$ confidence intervals.}
     \label{fig:beta_variance_Franke}
 \end{figure}
 
