@@ -231,7 +231,7 @@ To summarize, we do the following steps to find the optimal model for both data 
 \begin{tabular}{| c | c | c |} \hline
 Parameter & Minimum & Maximum  \\ \hline
 $d_\text{F}^\text{OLS}$ & 0 & 10 \\ \hline 
-$d_\text{T}^\text{OLS}$ & 0 & 19 \\ \hline 
+$d_\text{T}^\text{OLS}$ & 0 & 14 \\ \hline 
 $\lambda^\text{ridge}_\text{F}$  & $10^{-7}$ & 10\\ \hline 
 $\lambda^\text{ridge}_\text{T}$ & $10^{-10}$ & $10^{10}$\\ \hline 
 $\lambda^\text{lasso}_\text{F}$  & $10^{-7}$ & $10$\\ \hline 
@@ -300,7 +300,7 @@ The EPE for the OLS regression of the generated Franke's function data is plotte
 
 
 \begin{table}[H]
-\caption{Table of the $R^2$ scores for both training and test sets for all three regression methods. A fourth order polynomial model was evaluated for the Franke's function data, while a fifth order polynomial was evaluated for the terrain data. \vspace{2 pt}}
+\caption{Table of the $R^2$ scores for both training and test sets for all three regression methods. A fourth order polynomial model was evaluated for the Franke's function data, while a 10th order polynomial was evaluated for the terrain data. \vspace{2 pt}}
 \label{tab:R2}
 \begin{tabular}{|c|c|c|c|} \hline
 	Data set & Method & $R^2$ training & $R^2$ test\\ \hline
@@ -338,25 +338,25 @@ Table \ref{tab:R2} contains the $R^2$ scores for the three regression methods us
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_terrain.pdf}
-    \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression of degree 5 fitted on terrain data of Lake Tanganyika, Africa.}
+    \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression  fitted on terrain data of Lake Tanganyika, Africa.}
     \label{fig:bias_ols_terrain}
 \end{figure}
 
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_Ridge_terrain.pdf}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 5 fitted on terrain data of Lake Tanganyika.}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 10 fitted on terrain data of Lake Tanganyika.}
     \label{fig:bias_ridge_terrain}
 \end{figure}
 
 \begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_LASSO_terrain.pdf}
-    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on terrain data of Lake Tanganyika.}
+    \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 10 fitted on terrain data of Lake Tanganyika.}
     \label{fig:bias_lasso_terrain}
 \end{figure}
 
 \begin{multicols}{2}
 \noindent
-For the Lake Tanganyika  terrain data, the EPE for the OLS regression model plotted against increasing polynomial degrees is shown in Figure \ref{fig:bias_ols_terrain}. For the terrain data we decided on using a fifth order polynomial fit for all regression methods, as the EPE for the test data seems to stabilize between degree 5 and 7, and starts increasing at degree 8.  For the shrinkage parameters, by looking at Figure \ref{fig:bias_ridge_terrain} and \ref{fig:bias_ols_terrain}, we decided on the values  $\lambda^\text{ridge}_\text{T}=10^{-6} $ and $\lambda^\text{lasso}_\text{T}=10^{-3} $. 
+For the Lake Tanganyika  terrain data, the EPE for the OLS regression model plotted against increasing polynomial degrees is shown in Figure \ref{fig:bias_ols_terrain}. For the terrain data we decided on using a tenth order polynomial fit for all regression methods, as the EPE for the test data seems to stabilize between degree 10 and 12, and starts increasing at degree 13.  For the shrinkage parameters, by looking at Figure \ref{fig:bias_ridge_terrain} and \ref{fig:bias_ols_terrain}, we decided on the values  $\lambda^\text{ridge}_\text{T}=10^{-10} $ and $\lambda^\text{lasso}_\text{T}=10^{-4} $. 
 The $R^2$ scores for the regression models using are shown in Figure \ref{tab:R2}. Considering the graphs in Figure \ref{fig:bias_ols_terrain}, \ref{fig:bias_ridge_terrain} and \ref{fig:bias_lasso_terrain} for the EPE  and the $R^2$ scores for the OLS, Ridge and Lasso regression methods, we decided that the OLS model was the best fit for our terrain.  The regression parameters $\bm{\hat{\beta}^\text{OLS}}_\text{T}$ are shown in Figure \ref{fig:beta_variance_terrain}. The 3D plot of the OLS model with the terrain data is shown in Figure \ref{fig:3d_OLS_terrain}.
 
 \begin{figure}[H]
