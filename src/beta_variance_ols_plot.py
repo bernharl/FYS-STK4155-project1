@@ -37,12 +37,12 @@ fig.savefig(
 
 # OLS beta variance for terrain data
 ols_terrain = OrdinaryLeastSquares(
-    degree=5,
+    degree=10,
     terrain_data=True,
     filename="SRTM_data_LakeTanganyika_Africa.tif",
     path="datafiles/",
-    skip_x_terrain=150,
-    skip_y_terrain=150,
+    skip_x_terrain=4,
+    skip_y_terrain=4,
 )
 ols_terrain.regression_method()
 x_axis = np.arange(len(ols_terrain.beta))
