@@ -356,8 +356,8 @@ Table \ref{tab:R2} contains the $R^2$ scores for the three regression methods us
 
 \begin{multicols}{2}
 \noindent
-For the Lake Tanganyika  terrain data, the EPE for the OLS regression model plotted against increasing polynomial degrees is shown in Figure \ref{fig:bias_ols_terrain}. For the terrain data we decided on using a tenth order polynomial fit for all regression methods, as the EPE for the test data seems to stabilize between degree 10 and 12, and starts increasing at degree 13.  For the shrinkage parameters, by looking at Figure \ref{fig:bias_ridge_terrain} and \ref{fig:bias_ols_terrain}, we decided on the values  $\lambda^\text{ridge}_\text{T}=10^{-10} $ and $\lambda^\text{lasso}_\text{T}=10^{-4} $. 
-The $R^2$ scores for the regression models using are shown in Figure \ref{tab:R2}. Considering the graphs in Figure \ref{fig:bias_ols_terrain}, \ref{fig:bias_ridge_terrain} and \ref{fig:bias_lasso_terrain} for the EPE  and the $R^2$ scores for the OLS, Ridge and Lasso regression methods, we decided that the OLS model was the best fit for our terrain.  The regression parameters $\bm{\hat{\beta}^\text{OLS}}_\text{T}$ are shown in Figure \ref{fig:beta_variance_terrain}. The 3D plot of the OLS model with the terrain data is shown in Figure \ref{fig:3d_OLS_terrain}.
+For the Lake Tanganyika  terrain data, the EPE for the OLS regression model plotted against increasing polynomial degrees is shown in Figure \ref{fig:bias_ols_terrain}. For the terrain data we decided on using a tenth order polynomial fit for all regression methods, as the EPE for the test data seems to stabilize between degree 10 and 12, and starts increasing after.  For the shrinkage parameters, by looking at Figure \ref{fig:bias_ridge_terrain} and \ref{fig:bias_ols_terrain}, we decided on the values  $\lambda^\text{ridge}_\text{T}=10^{-10} $ and $\lambda^\text{lasso}_\text{T}=10^{-4} $. 
+The $R^2$ scores for the regression models  are shown in Figure \ref{tab:R2}. Considering the graphs in Figure \ref{fig:bias_ols_terrain}, \ref{fig:bias_ridge_terrain} and \ref{fig:bias_lasso_terrain} for the EPE  and the $R^2$ scores for the OLS, Ridge and Lasso regression methods, we decided that the OLS model was the best fit for our terrain.  The regression parameters $\bm{\hat{\beta}^\text{OLS}}_\text{T}$ are shown in Figure \ref{fig:beta_variance_terrain}. The 3D plot of the OLS model with the terrain data is shown in Figure \ref{fig:3d_OLS_terrain}.
 
 \begin{figure}[H]
     \includegraphics[scale=1]{figs/beta_variance_ols_terrain.pdf}
@@ -379,13 +379,15 @@ The $R^2$ scores for the regression models using are shown in Figure \ref{tab:R2
 
 \section{Discussion}
 \subsection{Franke's function}
-It appears from Table \ref{tab:R2} that the method that gives the best fit of both the Franke's function data and terrain data is the OLS regression, as the $R^2$ scores are the highest for both training and test data. As the generated data used only contained 400 points, the $R^2$ training scores do not correspond as well to the test scores as the $R^2$ scores for  the terrain data set. 
+From the $R^2$ scores for the particularly noisy ($\sigma^2 = 1$) Franke's function data in Table \ref{tab:R2_stddev=1}, it is clear that neither of the linear regression methods are sufficient for modelling this situation. As the variance of the noise is of the same order as Franke's function itself, the regression methods will also try to fit a polynomial to stochastic noise. This explains why the training and test set $R^2$ scores in this case correspond poorly to each other, as both contain large amounts of stochastic noise. Due to the stochastic nature of these data, the performances of the regression methods seem to be arbitrary as well, i.e. none of the regression methods seem to be better than the others. Comparing these values to the $R^2$ scores in Table \ref{tab:R2}, where the standard deviation of the noise is $\sigma=0.1$, it seems lowering the variance was sufficient to significantly improve the $R^2$ scores of all of the polynomial fits.
+
+
+It appears from Table \ref{tab:R2} that the method that gives the best fit of both the Franke's function data and terrain data is the OLS regression, as the $R^2$ scores are the highest for both training and test data. As the generated data used only contained 400 points, the $R^2$ training scores do not correspond as well to the test scores. The $R^2$ scores for both sets will likely approach one another as the amount of data increases. 
 
 \subsection{Terrain data}
 
 \section{Conclusion}
-Duis malesuada sagittis mi ut gravida. Maecenas porta sed mi at malesuada. Nunc et rhoncus nisi, sit amet mattis mauris. Cras lacinia lobortis odio quis ullamcorper. Morbi volutpat turpis est, sit amet efficitur velit viverra ut. Vestibulum eu imperdiet mi. Mauris tincidunt tempor scelerisque. In scelerisque mauris justo, rutrum consectetur tortor cursus in. Vivamus odio diam, interdum eget lobortis ac, vestibulum eu diam. Integer lectus est, pharetra varius ligula et, sodales interdum arcu. Etiam volutpat dolor sit amet justo pharetra, fringilla dictum risus scelerisque.
-
+concluuuusioooooooon
 % \the\columnwidth
 
 \bibliographystyle{iEEEtran}
