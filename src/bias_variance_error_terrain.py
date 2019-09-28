@@ -79,6 +79,7 @@ pred_error_train_ridge = np.zeros_like(pred_error_ridge)
 
 for j, lamb in enumerate(lambda_Ridge):
     ridge_reg = RidgeRegression(
+        degree=8,
         lambd=lamb,
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
@@ -135,6 +136,7 @@ pred_error_train_lasso = np.zeros_like(pred_error_lasso)
 
 for j, lamb in enumerate(lambda_lasso):
     lasso_reg = LassoRegression(
+        degree=8,
         lambd=lamb,
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
