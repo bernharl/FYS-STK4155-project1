@@ -179,7 +179,8 @@ One method of resampling is called the $k$-fold cross-validation method, which g
 
 
 \section{Method}
-To get an understanding of the three regression methods, we initially use Franke's function with added noise to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website \cite{earthexplorer} .  The subscript F pertains to the results and data from Franke's function, while the subscript T pertains to the terrain data and its results.  The expressions used to generate the data from Franke's function and added noise are shown in Equation (\ref{eq:Franke}) and (\ref{eq:Frankenoise}). The generated data set contains 400 data points, whereas the terrain data contains approximately $6.5$ million points. Analyzing the entire set would require more memory than what is available to us, so we are instead using every 4th data point in both directions, leaving us with approximately 800 thousand points. 
+To get an understanding of the three regression methods, we initially use Franke's function with added noise to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website \cite{earthexplorer} .  The subscript F pertains to the results and data from Franke's function, while the subscript T pertains to the terrain data and its results.  The expressions used to generate the data from Franke's function and added noise are shown in Equation (\ref{eq:Franke}) and (\ref{eq:Frankenoise}). The generated data set contains 400 data points, whereas the terrain data contains approximately $6.5$ million points. Analyzing the entire set would require more memory than what is available to us, so we are instead using every 4th data point in both directions, leaving us with approximately 800 thousand points.  For both data sets we used a third of the data as test data and the remainder as training data.
+
 Franke's function is given by
 \begin{align}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)} \nonumber\\
@@ -248,7 +249,7 @@ $\lambda^\text{lasso}_\text{T}$ & $10^{-4}$ & $10^{4}$\\ \hline
 Table \ref{tab:R2_stddev=1} contains the $R^2$ scores for the regression models of the Franke's function data with added Gaussian noise with variance $\sigma^2 = 1$. The $R^2$ scores for both training and test data are quite low, with the highest training data score being 0.168 and test data score 0.105. The test scores do not correspond well with the scores for the training data.
 
 \begin{table}[H]
-\caption{Table of the $R^2$ scores for training and test sets from fifth order polynomial estimates from  the three linear regression methods on Franke's function with standard deviation $\sigma=1$. As the generated function contains large amounts of stochastic noise, we have included results from three runs.\vspace{2pt}}
+\caption{Table of the $R^2$ scores for training and test sets from fourth order polynomial estimates from  the three linear regression methods on Franke's function with standard deviation $\sigma=1$. As the generated function contains large amounts of stochastic noise, we have included results from three runs.\vspace{2pt}}
 
 \label{tab:R2_stddev=1}
 \centering
@@ -307,9 +308,9 @@ The EPE for the OLS regression of the generated Franke's function data is plotte
 	\multirow{3}{*} {\makecell[l]{Franke's  \\function}}&  OLS  &  0.868 & 0.822 \\ \cline{2-4}
 																		& Ridge & 0.844 &  0.819 \\ \cline{2-4}
 																		& Lasso & 0.858 & 0.830 \\ \hline
-	\multirow{3}{*}{Terrain} 					&  OLS  &  0.747 & 0.749 \\ \cline{2-4}
-																		& Ridge & 0.741 & 0.754 \\ \cline{2-4}
-																		& Lasso & 0.738 & 0.748 \\ \hline
+	\multirow{3}{*}{Terrain} 					&  OLS  &  0.869 & 0.868 \\ \cline{2-4}
+																		& Ridge & 0.868 & 0.869 \\ \cline{2-4}
+																		& Lasso & 0.778 & 0.778 \\ \hline
 \end{tabular}
 \end{table}
 \noindent
@@ -369,8 +370,9 @@ The $R^2$ scores for the regression models  are shown in Figure \ref{tab:R2}. Co
 
 \begin{figure}[H]
 	\includegraphics[scale=1]{figs/3dmodel_OLS_terrain.pdf}
+	\caption{3D plot of the OLS model (dotted) and the terrain data of Lake Tanganyika. Here we have only plotted every 100th point in the $x$-direction. }
 	\label{fig:3d_OLS_terrain}
-	\caption{3D plot of the OLS model (dotted) and the terrain data of Lake Tanganyika. Here we have only plotted every Xth point }
+
 \end{figure}
 
 
@@ -381,8 +383,10 @@ The $R^2$ scores for the regression models  are shown in Figure \ref{tab:R2}. Co
 \subsection{Franke's function}
 From the $R^2$ scores for the particularly noisy ($\sigma^2 = 1$) Franke's function data in Table \ref{tab:R2_stddev=1}, it is clear that neither of the linear regression methods are sufficient for modelling this situation. As the variance of the noise is of the same order as Franke's function itself, the regression methods will also try to fit a polynomial to stochastic noise. This explains why the training and test set $R^2$ scores in this case correspond poorly to each other, as both contain large amounts of stochastic noise. Due to the stochastic nature of these data, the performances of the regression methods seem to be arbitrary as well, i.e. none of the regression methods seem to be better than the others. Comparing these values to the $R^2$ scores in Table \ref{tab:R2}, where the standard deviation of the noise is $\sigma=0.1$, it seems lowering the variance was sufficient to significantly improve the $R^2$ scores of all of the polynomial fits.
 
+It appears from Table \ref{tab:R2} that the method that gives the best fit of both the Franke's function data with $\sigma=0.1$ and terrain data is the OLS regression, as the $R^2$ scores are the highest for both training and test data. As the generated data used only contained 400 points, the $R^2$ training scores do not correspond as well to the test scores. The $R^2$ scores for both sets will likely approach one another as the amount of data increases. 
 
-It appears from Table \ref{tab:R2} that the method that gives the best fit of both the Franke's function data and terrain data is the OLS regression, as the $R^2$ scores are the highest for both training and test data. As the generated data used only contained 400 points, the $R^2$ training scores do not correspond as well to the test scores. The $R^2$ scores for both sets will likely approach one another as the amount of data increases. 
+Looking at Figure \ref{fig:bias_ols_Franke}, the choice of using a polynomial fit of the fourth order seems reasonable, as the test set EPE seems to stabilize at that point. From degree 4 and onwards, the difference in the training and test EPE gradually increases with  the model complexity, indicating that using a higher order fit than 4 would likely lead to overfitting of the data. However, we only used 400 data points generated using a function with added random noise, so this could likely vary for different runs of the code depending on the noise.  We are not certain if the optimal polynomial order for the OLS would be the same for the Ridge and Lasso regression, even though this was assumed in this project. Using a lower order would probably not improve the Ridge and Lasso models, but it could be interesting to examine the cases for higher orders, as the hyperparameter $\lambda$ would theoretically be able to counteract overfitting to some extent by shrinking the regression parameters.  For our results using a fourth order polynomial fit, it does seem from Figure \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} that the lowest EPE 
+
 
 \subsection{Terrain data}
 
