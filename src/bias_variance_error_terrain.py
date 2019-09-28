@@ -16,7 +16,7 @@ fonts = {
 plt.rcParams.update(fonts)
 
 # Degrees to test OLS with.
-degrees = np.arange(0, 9)
+degrees = np.arange(0, 15)
 
 # Empty arrays for storing train and test errors.
 pred_error = np.zeros_like(degrees, dtype=float)
