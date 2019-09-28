@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from main import OrdinaryLeastSquares, RidgeRegression, LassoRegression
 
 
+
+# Making fonts fit with LateX document.
 fonts = {
     "font.family": "serif",
     "axes.labelsize": 10,
@@ -11,23 +13,24 @@ fonts = {
     "xtick.labelsize": 10,
     "ytick.labelsize": 10,
 }
-
 plt.rcParams.update(fonts)
 
-# Prediction error for OLS regression
-degrees = np.arange(0, 20)
+# Degrees to test OLS with.
+degrees = np.arange(0, 9)
 
+# Empty arrays for storing train and test errors.
 pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)
 
 for i in degrees:
+    print(i)
     OLS = OrdinaryLeastSquares(
         degree=i,
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
-        skip_x_terrain=150,
-        skip_y_terrain=150,
+        skip_x_terrain=4,
+        skip_y_terrain=4,
     )
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
     del OLS
@@ -80,8 +83,8 @@ for j, lamb in enumerate(lambda_Ridge):
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
-        skip_x_terrain=150,
-        skip_y_terrain=150,
+        skip_x_terrain=4,
+        skip_y_terrain=4,
     )
     pred_error_ridge[j], pred_error_train_ridge[j] = ridge_reg.k_fold(
         k=5, calc_train=True
@@ -136,8 +139,8 @@ for j, lamb in enumerate(lambda_lasso):
         terrain_data=True,
         filename="SRTM_data_LakeTanganyika_Africa.tif",
         path="datafiles/",
-        skip_x_terrain=150,
-        skip_y_terrain=150,
+        skip_x_terrain=4,
+        skip_y_terrain=4,
     )
     pred_error_lasso[j], pred_error_train_lasso[j] = lasso_reg.k_fold(
         k=5, calc_train=True
