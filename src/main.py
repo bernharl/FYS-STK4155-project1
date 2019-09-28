@@ -11,6 +11,7 @@ import scipy as sp
 import resource
 import matplotlib
 
+
 class RegressionClass:
     def __init__(
         self,
@@ -23,6 +24,36 @@ class RegressionClass:
         skip_x_terrain=1,
         skip_y_terrain=1,
     ):
+        """
+        Base class for all regression methods. Please do not call on its own, as it
+        does not contain any regression methods by itself.
+
+        Parameters:
+
+        input(int, default 5): What polynomial degree to run linear regression with.
+
+        stddev(float, default 1): What standard deviation to apply to the synthetic
+                    noise added to Franke's function. Ignored if terrain_data==True.
+
+        n_points(int, default 20): How many x- and y-points used to generate Franke's
+                                   function data. Total data points will be n^2.
+
+        terrain_data(bool, default False): If True, then custom terrain data is used
+                                           instead of Franke's function.
+
+        filename(str, default None): Filename of terrain data,
+                                     only used if terrain_data==True.
+
+        path(str, default None): Path of terrain data, only used if terrain_data==True.
+
+        skip_x_terrain(int, default 1): Defines how many points to skip in terrain
+                                        data in the x-direction, only used if
+                                        terrain_data==True.
+
+        skip_y_terrain(int, default 1): Defines how many points to skip in terrain
+                                        data in the y-direction, only used if
+                                        terrain_data==True.
+        """
         if terrain_data:
             if isinstance(filename, str):
                 self.filename = filename
@@ -54,9 +85,9 @@ class RegressionClass:
             self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             self.z_meshgrid = self.noise_function()
 
-        self.x = np.concatenate(self.x_meshgrid)  # .flatten()
-        self.y = np.concatenate(self.y_meshgrid)  # .flatten()
-        self.z_ = np.concatenate(self.z_meshgrid)  # .flatten()
+        self.x = np.concatenate(self.x_meshgrid)
+        self.y = np.concatenate(self.y_meshgrid)
+        self.z_ = np.concatenate(self.z_meshgrid)
         self.n = len(self.x)
         self.degree = degree
         self.X = self.design_matrix(self.x, self.y)
@@ -69,7 +100,7 @@ class RegressionClass:
 
     def generate_data(self):
         """
-        Generates data using the Franke function
+        Generates data using Franke's function.
         """
         x = self.x_meshgrid
         y = self.y_meshgrid
@@ -80,6 +111,9 @@ class RegressionClass:
         return term1 + term2 + term3 + term4
 
     def read_image_data(self):
+        """
+        Reads terrain data from file. Only used if self.terrain_data==False.
+        """
         if self.path == None:
             file_name_path = self.filename
         else:
@@ -89,15 +123,22 @@ class RegressionClass:
 
     def noise_function(self):
         """
-        Adds Gaussian noise with mean zero to the generated data
+        Adds Gaussian noise with mean zero to
+         the data generated with Franke's function.
         """
         f = self.generate_data()
         noise = np.random.normal(0, self.stddev, size=f.shape)
         return f + noise
 
-    def plot_model(self, method, plot_data=True):
+    def plot_model(self, method="", plot_data=True):
         """
-        3D plot of the Franke function and the linear regression model
+        3D plot of the data used and (optional) the regression model fit to it.
+
+        Parameters:
+
+        method(str, default ""): Part of filename for saved plots.
+
+        plot_data(bool, default True): Whether to plot the regression model.
         """
         if not plot_data and not self.modeled:
             raise RuntimeError("Please either plot modeled data, real data or both")
@@ -107,7 +148,7 @@ class RegressionClass:
         else:
             skip = 1
         fig = plt.figure()
-        fig.set_size_inches(2* 2.942, 2*1.818)
+        fig.set_size_inches(2 * 2.942, 2 * 1.818)
         fig.tight_layout()
         ax = fig.gca(projection="3d")
         # Plot the surface.
@@ -149,10 +190,10 @@ class RegressionClass:
             )
         else:
             ax.zaxis.set_major_formatter(FormatStrFormatter("%.2g"))
-        
+
             zticks = np.linspace(np.min(self.z_), np.max(self.z_), 4)
             ax.set_zticks(zticks)
-            ax.view_init(elev=20, azim=70)   # good values: 20, 50
+            ax.view_init(elev=20, azim=70)  # good values: 20, 50
             fig.savefig(
                 f"../doc/figs/3dmodel_{method}_Franke.pdf",
                 pad_inches=0.1,
@@ -164,7 +205,24 @@ class RegressionClass:
 
     def k_fold(self, k=5, calc_train=False):
         """
-        Calculates k-fold cross-validation for our data
+        Performs k-fold cross validation for the defined training data.
+
+
+        Parameters:
+
+        k(int, default 5): What k to use in k-fold cross validation.
+
+        calc_train(bool, default False): Whether to returrn the average training
+                                         error in addition to the EPE.
+
+
+        Returns:
+
+        mse(float): The average test MSE of the folds. Also known as the
+                    Expected Prediction Error, EPE.
+
+        mse_train(float): The average training error of the folds, only returned
+                          if calc_train==True.
         """
         already_modeled = self.modeled
         X_train_old, X_test_old, z_train_old, z_test_old = (
@@ -218,7 +276,9 @@ class RegressionClass:
 
     def design_matrix(self, x, y):
         """
-        Creates the design matrix
+        Creates the design matrix using Scikit-Learn's PolynomialFeatures.
+
+        returns(numpy.ndarray): Design matrix of inputs.
         """
         if len(x) != len(y):
             raise ValueError("x and y must have the same length")
@@ -230,22 +290,34 @@ class RegressionClass:
         return poly.fit_transform(X)
 
     def regression_method(self):
+        """
+        Empty method to make sure the user does not use this class directly.
+        """
         raise RuntimeError("Please do not use this class directly!")
 
     @property
     def regression_model(self):
+        """
+        Returns the entire regression model. Is for instance used in plotting.
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.X @ self.beta
 
     @property
     def eval_model(self):
+        """
+        Returns the model applied to the test inputs.
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.X_test @ self.beta
 
     @property
     def eval_model_train(self):
+        """
+        Returns the model applied to the training inputs.
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.X_train @ self.beta
@@ -253,7 +325,7 @@ class RegressionClass:
     @property
     def mean_squared_error(self):
         """
-        Calculates the MSE for chosen regression model
+        Returns the MSE for the regression model using test data.
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
@@ -261,6 +333,9 @@ class RegressionClass:
 
     @property
     def mean_squared_error_train(self):
+        """
+        Returns the training error of the model.
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         # model_train = self.X_train @ self.beta
@@ -269,7 +344,7 @@ class RegressionClass:
     @property
     def r_squared(self):
         """
-        Calculates R2 score for chosen regression model
+        Returns the R2 score for the regression model using the test data.
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
@@ -279,7 +354,7 @@ class RegressionClass:
     @property
     def r_squared_train(self):
         """
-        Calculates R2 on the training set for chosen regression model
+        Returns the R2 score for the regression model using the train data.
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
@@ -292,13 +367,15 @@ class RegressionClass:
 class OrdinaryLeastSquares(RegressionClass):
     def regression_method(self):
         """
-        Calculates ordinary least squares regression and the variance of
-        estimated parameters
+        Performs the OLS method using inputs and data defined in the class instance.
+        Also calculates the variance of the parameters beta.
         """
         X = self.X_train
         XTX = X.T @ X
         XTz = X.T @ self.z_train
         # Solve XTXbeta = XTz
+        # Using np.linalg.solve instead of inverting matrix directly, should
+        # be more stable.        
         beta = np.linalg.solve(XTX, XTz)
         beta_variance = self.stddev ** 2 * np.linalg.inv(XTX)
         self.beta, self.beta_variance_ = beta, np.diag(beta_variance)
@@ -307,7 +384,7 @@ class OrdinaryLeastSquares(RegressionClass):
     @property
     def beta_variance(self):
         """
-        Returns the variance of beta from the OLS regression
+        Returns the variance of beta for the OLS regression.
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
@@ -327,6 +404,15 @@ class RidgeRegression(RegressionClass):
         skip_x_terrain=1,
         skip_y_terrain=1,
     ):
+        """
+        Class for running Ridge Regression. Inherits from RegressionClass.
+
+        Parameters:
+
+        lambda(float, default 0.1): The hyperparameter Lambda.
+
+        For all other parameters, see RegressionClass.
+        """
         super().__init__(
             degree,
             stddev,
@@ -341,11 +427,13 @@ class RidgeRegression(RegressionClass):
 
     def regression_method(self):
         """
-        Uses Ridge regression for given data to calculate regression parameters
+        Centers inputs and data, then performs Ridge regression.
         """
         I = sp.sparse.identity(len(self.X_train[0]) - 1, dtype="int8")
         beta = np.zeros(len(self.X_train[0]))
 
+        # Using np.linalg.solve instead of inverting matrix directly, should
+        # be more stable.
         beta[1:] = np.linalg.solve(
             (self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)).T
             @ (self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0))
@@ -358,6 +446,11 @@ class RidgeRegression(RegressionClass):
 
     @property
     def regression_model(self):
+        """
+        Returns the entire regression model. Is for instance used in plotting.
+        This has to be defined separately for Ridge because Ridge needs centered
+        inputs.
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return ((self.X - np.mean(self.X_train, axis=0)) @ self.beta) + np.mean(
@@ -366,6 +459,11 @@ class RidgeRegression(RegressionClass):
 
     @property
     def eval_model(self):
+        """
+        Returns the model applied to the test inputs.
+        This has to be defined separately for Ridge because Ridge needs centered
+        inputs.
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return ((self.X_test - np.mean(self.X_train, axis=0)) @ self.beta) + np.mean(
@@ -374,6 +472,11 @@ class RidgeRegression(RegressionClass):
 
     @property
     def eval_model_train(self):
+        """
+        Returns the model applied to the training inputs.
+        This has to be defined separately for Ridge because Ridge needs centered
+        inputs.
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return ((self.X_train - np.mean(self.X_train, axis=0)) @ self.beta) + np.mean(
@@ -384,7 +487,7 @@ class RidgeRegression(RegressionClass):
 class LassoRegression(RidgeRegression):
     def regression_method(self):
         """
-        Uses LASSO regression for given data to calculate regression parameters
+        Centers inputs and data, then performs LASSO regression using Scikit-Learn.
         """
         self.beta = skllm.Lasso(
             alpha=self.lambd, fit_intercept=False, max_iter=20000
@@ -397,7 +500,9 @@ class LassoRegression(RidgeRegression):
     @property
     def eval_model(self):
         """
-        Returns model data using the design matrix and estimated regression parameters
+        Returns the model applied to the test inputs.
+        This has to be defined separately for LASSO because uses Scikit-Learn's
+        method.
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
@@ -407,6 +512,11 @@ class LassoRegression(RidgeRegression):
 
     @property
     def regression_model(self):
+        """
+        Returns the entire regression model. Is for instance used in plotting.
+        This has to be defined separately for LASSO because uses Scikit-Learn's
+        method.
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.beta.predict(
@@ -415,79 +525,13 @@ class LassoRegression(RidgeRegression):
 
     @property
     def eval_model_train(self):
+        """
+        Returns the model applied to the training inputs.
+        This has to be defined separately for LASSO because uses Scikit-Learn's
+        method.
+        """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
         return self.beta.predict(
             self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
         ) + np.mean(self.z_train)
-
-
-if __name__ == "__main__":
-    # np.random.seed(50)
-
-    """ridge = RidgeRegression(
-        degree=1,
-        stddev=0.1,
-        n_points=20,
-        lambd=0.1,
-        terrain_data=True,
-        filename="SRTM_data_Norway_2.tif",
-        path="datafiles/",
-    )
-    ridge.regression_method()"""
-    # ridge.plot_model()
-    # print(ridge.k_fold())
-
-    """lasso = LassoRegression(
-        degree=11,
-        stddev=0.1,
-        n_points=20,
-        lambd=0.1,
-        terrain_data=False,
-        filename="SRTM_data_Kolnes_Norway3.tif",
-        path="datafiles/",
-    )
-    lasso.regression_method()
-    #lasso.plot_model()
-    print(f"Ridge with degree = {ridge.degree}, lambda = {ridge.lambd}: EPE = {ridge.k_fold()}.\nLasso with degree = {lasso.degree}, lambda = {lasso.lambd}: EPE = {lasso.k_fold()}.")
-    """
-    """ols = OrdinaryLeastSquares(
-        degree=5,
-        terrain_data=True,
-        filename="SRTM_data_Norway_2.tif",
-        path="datafiles/",
-    )
-    ols.regression_method()
-    ols.plot_model()
-    print(ols.r_squared)"""
-
-    # ols.plot_model()
-    # print(lasso.r_squared)
-    # print(ols.regression_model - ridge.regression_model)
-
-    # print(ridge.beta[0], ols.beta[0])
-    # print(np.mean(ols.z_train), np.mean(ridge.z_train))
-    # print(ridge.k_fold())
-    # test.plot_model()
-    # print(f"MSE {test.mean_squared_error}")
-    # print(f"R2 score {test.r_squared}")
-    # print(f"Beta variance {test.beta_variance}")
-    # test2 = RidgeRegression(degree=5, stddev=0.1, step=0.05, lambd=0)
-    # test2.regression_method()
-    # test2.plot_model()
-
-    # test3 = LassoRegression(degree=5, stddev=0.1, step=0.05, lambd=0.001)
-    # test3.regression_method()
-    # test3.plot_model()
-
-    """lasso = LassoRegression(
-        degree=5,
-        stddev=0,
-        step=0.05,
-        lambd=1,
-        terrain_data=False,
-        filename="SRTM_data_Norway_1.tif",
-        path="datafiles/",
-    )
-    lasso.regression_method()
-    lasso.plot_model()"""

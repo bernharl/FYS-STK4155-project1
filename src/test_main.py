@@ -4,14 +4,18 @@ import sklearn.model_selection as sklms
 import sklearn.linear_model as skllm
 from main import OrdinaryLeastSquares, RidgeRegression, LassoRegression
 
-"""
-Test of our OLS and Ridge regression methods from main.py, as well as the k-fold 
-cross validation method. These are all tested using the artificial data from the
-Franke function
-"""
+
+#Test of our OLS and Ridge regression methods from main.py, as well as the k-fold
+#cross validation method. These are all tested using the artificial data from the
+#Franke function
+
 
 # -------------------- test of OLS regression -----------------------------
 def test_OLS():
+    """
+    Testing that our OLS implementation works the same as Scikit-Learn's within
+    a relative tolerance 1e-5.
+    """
     OLS = OrdinaryLeastSquares()
     # scikit-learn method:
     OLS_scikit = skllm.LinearRegression().fit(OLS.X_train, OLS.z_train)
@@ -25,6 +29,10 @@ def test_OLS():
 
 # -------------------- test of Ridge regression --------------------------
 def test_ridge():
+    """
+    Testing that our Ridge implementation works the same as Scikit-Learn's within
+    a relative tolerance 1e-5.
+    """
     ridge = RidgeRegression()
     # scikit-learn method:
     ridge_scikit = skllm.Ridge(alpha=ridge.lambd).fit(ridge.X_train, ridge.z_train)
@@ -38,6 +46,10 @@ def test_ridge():
 
 # --------------- k-fold cross validation test -----------------------
 def test_kfold_OLS():
+    """
+    Testing that our kfold implementation with OLS works the same as Scikit-Learn's
+    within a relative tolerance 1e-2 (Higher tolerance because of stochasticity).
+    """
     k = 5
     # our method:
     OLS_test = OrdinaryLeastSquares(stddev=0, n_points=100)
