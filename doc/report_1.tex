@@ -85,7 +85,7 @@ The variance of the parameter estimates $ \hat{\beta}^{\text{OLS}} $ is given by
 If the variance $\sigma^2$ is unknown, it can be estimated as 
 \begin{equation}
 \label{eq:variance}
-\hat{\sigma}^2  = \frac{1}{n-p-1}\sum_{i=0}^{n-1}(y_i-\hat{y}_i)^2.
+\hat{\sigma}^2  = \frac{1}{n-p-1}\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2.
 \end{equation}
 
 The Ridge regression method is another linear regression method. Unlike OLS, it is a penalized regression method, which means that it imposes a shrinkage on the regression parameters. The parameters $\hat{\beta}^\text{ridge}$ for Ridge regression are given by
@@ -137,7 +137,7 @@ which can also be bias-variance decomposed into
  &+ \frac{1}{n}\sum_i(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2,
  \label{eq:biasvariance}
 \end{align}
-where $\sigma^2$ is the irreducible error,  the $(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right(ght])^2$ term is the bias and the $(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the variance of the model.
+where $\sigma^2$ is the irreducible error,  the $(f_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the bias and the $(\tilde{y}_i-\mathbb{E}\left[\bm{\tilde{y}}\right])^2$ term is the variance of the model.
 
 To derive this, we first expand the left-hand side,
 \begin{align*}
@@ -179,8 +179,7 @@ One method of resampling is called the $k$-fold cross-validation method, which g
 
 
 \section{Method}
-To get an understanding of the three regression methods, we initially use Franke's function with added noise to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website \cite{earthexplorer} .  The subscript F pertains to the results and data from Franke's function, while the subscript T pertains to the terrain data and its results.  The expressions used to generate the data from Franke's function and added noise are shown in Equation (\ref{eq:Franke}) and (\ref{eq:Frankenoise}). The generated data set contains 400 data points, whereas the terrain data contains approximately $6.5$ million points. Analyzing the entire set would require more memory than what is available to us, so we are instead using every 150th data point, which is approximately 43 thousand data points.
-
+To get an understanding of the three regression methods, we initially use Franke's function with added noise to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website \cite{earthexplorer} .  The subscript F pertains to the results and data from Franke's function, while the subscript T pertains to the terrain data and its results.  The expressions used to generate the data from Franke's function and added noise are shown in Equation (\ref{eq:Franke}) and (\ref{eq:Frankenoise}). The generated data set contains 400 data points, whereas the terrain data contains approximately $6.5$ million points. Analyzing the entire set would require more memory than what is available to us, so we are instead using every 10th data point in both directions.
 Franke's function is given by
 \begin{align}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)} \nonumber\\
@@ -213,7 +212,7 @@ $\bm{X} = \begin{bmatrix}
 To find the coefficients $\bm{\beta}$ such that $\bm{ z} = \bm{X \beta} $, where $\bm{z}$ is the data set we wish to fit a model to, we use the OLS, Ridge and Lasso regression methods. 
 We implement OLS and Ridge regression by writing a Python script that solves Equation (\ref{eq:beta_OLS}) and (\ref{eq:beta_ridge}) using \texttt{numpy}. The Lasso method, however, does not have an analytical solution for $\hat{\beta}^\text{lasso}$ and needs to be solved using for example gradient descent. Instead of writing our own code for solving this type of regression, we use \texttt{scikit-learn}'s built-in functionality to solve Equation (\ref{eq:argminbeta_ridge}) and find the regression parameters.
 \noindent
-For OLS, we run k-fold cross-validation with $k=5$ on increasing polynomial degrees $d$ to get a good estimate of how the EPE varies with model complexity. the optimal polynomial degree is determined by making a compromise between EPE and computational cost, as we do not necessarily wish to increase the polynomial degree, and subsequently the computational cost, for a minimal improvement in the results. This is especially important for larger data sets, such as the terrain data. The EPE as a function of polynomial degree for both training and test data is shown in Figure \ref{fig:bias_ols_Franke} for Franke's function and Figure \ref{fig:bias_ols_terrain} for terrain data. The polynomial degrees $d$ used can be found in Table \ref{tab:parameters_kfold}.
+For OLS, we run k-fold cross-validation with $k=5$ on increasing polynomial degrees $d$ to get a good estimate of how the EPE varies with model complexity. The optimal polynomial degree is determined by making a compromise between EPE and computational cost, as we do not necessarily wish to increase the polynomial degree, and subsequently the computational cost, for a minimal improvement in the results. This is especially important for larger data sets, such as the terrain data. The EPE as a function of polynomial degree for both training and test data is shown in Figure \ref{fig:bias_ols_Franke} for Franke's function and Figure \ref{fig:bias_ols_terrain} for terrain data. The polynomial degrees $d$ used can be found in Table \ref{tab:parameters_kfold}.
 
 As cross-validation can be computationally expensive, we assume that the optimal polynomial degree for OLS will also be optimal for Ridge and Lasso regression. The hyperparameter $\lambda$ is decided similarly to the polynomial degree; by cross-validating  Ridge and Lasso regression using $k=5$ folds for a range of hyperparameters and looking at the resulting EPE. However, as the penalty terms for Ridge and Lasso are different, as shown in Equation (\ref{eq:argminbeta_ridge}) and (\ref{eq:argminbeta_lasso}), the shrinkage is not the same for the methods and we need to tune their hyperparameters individually, hereon referred to as $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively. The ranges for both data sets  are shown in Table \ref{tab:parameters_kfold}.  
 
@@ -269,35 +268,9 @@ Method & $R^2$ training & $R^2$ test \\ \hline
 
 The EPE for the OLS regression of the generated Franke's function data is plotted against increasing polynomial degree fits in Figure \ref{fig:bias_ols_Franke}.  The graph for the test data seems to reach a minimum at polynomial degree 4, so we have chosen this as the polynomial degree for all models of the Franke's function data. Figure \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke} show the EPE for varying $\lambda^\text{ridge}$ and $\lambda^\text{lasso}$ respectively, using a fourth order polynomial fit. Due to the variance in Franke's function from the added  noise, it is not clear which values are optimal to use for the linear fits. The EPE seems to be at its minimum value at $\lambda_\text{F}=10^{-5}$ for both Ridge and Lasso regression, so we choose $\lambda^\text{ridge}_\text{F} = \lambda^\text{lasso}_\text{F}=10^{-5}$.
 
-The EPE for the OLS regression of the terrain data plotted against increasing polynomial degrees is shown in Figure \ref{fig:bias_ols_terrain}. For the terrain data we decided on using a fifth order polynomial fit for all regression methods, as the EPE for the test data seems to stabilize between degree 5 and 7, and starts increasing at degree 8.  For the shrinkage parameters, by looking at Figure \ref{fig:bias_ridge_terrain} and \ref{fig:bias_ols_terrain}, we decided on the values  $\lambda^\text{ridge}_\text{T}=10^{-6} $ and $\lambda^\text{lasso}_\text{T}=10^{-3} $.
-
-\begin{table}[H]
-\caption{Table of the $R^2$ scores for both training and test sets for all three regression methods. A fourth order polynomial model was evaluated for the Franke's function data, while a fifth order polynomial was evaluated for the terrain data. \vspace{2 pt}}
-\label{tab:R2}
-\begin{tabular}{|c|c|c|c|} \hline
-	Data set & Method & $R^2$ training & $R^2$ test\\ \hline
-	\multirow{3}{*} {\makecell[l]{Franke's  \\function}}&  OLS  &  0.833 & 0.872 \\ \cline{2-4}
-																		& Ridge & 0.771 &  0.765 \\ \cline{2-4}
-																		& Lasso & 0.805 & 0.761 \\ \hline
-	\multirow{3}{*}{Terrain} 					&  OLS  &  0.752 & 0.752 \\ \cline{2-4}
-																		& Ridge & 0.750 & 0.749 \\ \cline{2-4}
-																		& Lasso & 0.665 & 0.664 \\ \hline
-\end{tabular}
-\end{table}
 
 
-\begin{figure}[H]
-    \includegraphics[scale=1]{figs/beta_variance_ols_Franke.pdf}
-    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$  of a fourth  order two-dimensional polynomial model  of the generated Franke's function with noise of $\sigma=0.1$, plotted with $68\%$ confidence intervals.}
-    \label{fig:beta_variance_Franke}
-\end{figure}
 
-
-\begin{figure}[H]
-    \includegraphics[scale=1]{figs/beta_variance_ols_terrain.pdf}
-    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_T$  of a fifth order two-dimensional polynomial model  of the terrain data from Lake Tanganyika, here plotted with $68\%$ confidence intervals.}
-    \label{fig:beta_variance_terrain}
-\end{figure}
 
 \end{multicols}
 
@@ -321,70 +294,87 @@ The EPE for the OLS regression of the terrain data plotted against increasing po
     \label{fig:bias_lasso_Franke}
 \end{figure}
 
-\subsection{Lake Tanganyika data}
+
+\begin{multicols}{2}
 
 
-\begin{figure}
+
+\begin{table}[H]
+\caption{Table of the $R^2$ scores for both training and test sets for all three regression methods. A fourth order polynomial model was evaluated for the Franke's function data, while a fifth order polynomial was evaluated for the terrain data. \vspace{2 pt}}
+\label{tab:R2}
+\begin{tabular}{|c|c|c|c|} \hline
+	Data set & Method & $R^2$ training & $R^2$ test\\ \hline
+	\multirow{3}{*} {\makecell[l]{Franke's  \\function}}&  OLS  &  0.868 & 0.822 \\ \cline{2-4}
+																		& Ridge & 0.844 &  0.819 \\ \cline{2-4}
+																		& Lasso & 0.858 & 0.830 \\ \hline
+	\multirow{3}{*}{Terrain} 					&  OLS  &  0.747 & 0.749 \\ \cline{2-4}
+																		& Ridge & 0.741 & 0.754 \\ \cline{2-4}
+																		& Lasso & 0.738 & 0.748 \\ \hline
+\end{tabular}
+\end{table}
+\noindent
+Table \ref{tab:R2} contains the $R^2$ scores for the three regression methods using a fourth order polynomial fit and $\lambda^\text{ridge}_\text{F} = \lambda^\text{lasso}_\text{F}=10^{-5}$. Looking at the EPE graphs in Figure \ref{fig:bias_ols_Franke}, \ref{fig:bias_ridge_Franke} and \ref{fig:bias_lasso_Franke}  and the $R^2$ scores, we decided that the optimal model  for the generated Franke's function data was the fourth order two-dimensional polynomial fit using OLS regression.  We have included the plot for the regression parameters $\bm{\hat{\beta}^\text{OLS}}_\text{F}$  in Figure \ref{fig:beta_variance_Franke}. To illustrate how the model fits the data, the 3D plot of the model and generated data is shown in Figure \ref{fig:3d_OLS_Franke}.
+
+\begin{figure}[H]
+    \includegraphics[scale=1]{figs/beta_variance_ols_Franke.pdf}
+    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_F$ of the generated Franke's function data plotted with $68\%$ confidence intervals.}
+    \label{fig:beta_variance_Franke}
+\end{figure}
+\end{multicols}
+
+
+
+\begin{figure}[H]
+	\includegraphics[scale=1]{figs/3dmodel_OLS_Franke.pdf}
+	\label{fig:3d_OLS_Franke}
+	\caption{3D plot of the polynomial fit with the generated Franke's function data and added noise. The fit was modeled using a fourth order two-dimensional polynomial fit with OLS regression }
+\end{figure}
+
+
+
+
+\subsection{Lake Tanganyika terrain data}
+
+
+\begin{figure}[H]
     \includegraphics[scale=1]{figs/biasvariancetradeoff_ols_terrain.pdf}
     \caption{Prediction error of training and test set plotted as a function of model complexity (polynomial degree) for the ordinary least squares regression of degree 5 fitted on terrain data of Lake Tanganyika, Africa.}
     \label{fig:bias_ols_terrain}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_Ridge_terrain.pdf}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Ridge regression of degree 5 fitted on terrain data of Lake Tanganyika.}
     \label{fig:bias_ridge_terrain}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
     \includegraphics{figs/biasvariancetradeoff_LASSO_terrain.pdf}
     \caption{Prediction error of training and test set plotted as a function of the hyperparameter $\lambda$ for Lasso regression of degree 5 fitted on terrain data of Lake Tanganyika.}
     \label{fig:bias_lasso_terrain}
 \end{figure}
 
+\begin{multicols}{2}
+\noindent
+For the Lake Tanganyika  terrain data, the EPE for the OLS regression model plotted against increasing polynomial degrees is shown in Figure \ref{fig:bias_ols_terrain}. For the terrain data we decided on using a fifth order polynomial fit for all regression methods, as the EPE for the test data seems to stabilize between degree 5 and 7, and starts increasing at degree 8.  For the shrinkage parameters, by looking at Figure \ref{fig:bias_ridge_terrain} and \ref{fig:bias_ols_terrain}, we decided on the values  $\lambda^\text{ridge}_\text{T}=10^{-6} $ and $\lambda^\text{lasso}_\text{T}=10^{-3} $. 
+The $R^2$ scores for the regression models using are shown in Figure \ref{tab:R2}. Considering the graphs in Figure \ref{fig:bias_ols_terrain}, \ref{fig:bias_ridge_terrain} and \ref{fig:bias_lasso_terrain} for the EPE  and the $R^2$ scores for the OLS, Ridge and Lasso regression methods, we decided that the OLS model was the best fit for our terrain.  The regression parameters $\bm{\hat{\beta}^\text{OLS}}_\text{T}$ are shown in Figure \ref{fig:beta_variance_terrain}. The 3D plot of the OLS model with the terrain data is shown in Figure \ref{fig:3d_OLS_terrain}.
 
-
-\begin{figure}
-	\includegraphics[scale=1]{figs/3dmodel_OLS_Franke.pdf}
-	\label{fig:3d_OLS_Franke}
-	\caption{3D plot of the OLS model (dotted) with the generated Franke's function data and added noise.}
+\begin{figure}[H]
+    \includegraphics[scale=1]{figs/beta_variance_ols_terrain.pdf}
+    \caption{OLS regression parameters $\bm{\hat{\beta}}^{\text{OLS}}_T$  of a fifth order two-dimensional polynomial model  of the terrain data from Lake Tanganyika, here plotted with $68\%$ confidence intervals.}
+    \label{fig:beta_variance_terrain}
 \end{figure}
 
-\begin{figure}
+\end{multicols}
+
+\begin{figure}[H]
 	\includegraphics[scale=1]{figs/3dmodel_OLS_terrain.pdf}
 	\label{fig:3d_OLS_terrain}
-	\caption{3D plot of the OLS model (dotted) and the terrain data of Lake Tanganyika.}
+	\caption{3D plot of the OLS model (dotted) and the terrain data of Lake Tanganyika. Here we have only plotted every Xth point }
 \end{figure}
 
-\begin{figure}
-	\includegraphics[scale=1]{figs/3dmodel_Ridge_Franke.pdf}
-	\label{fig:3d_Ridge_Franke}
-	\caption{3D plot of the Ridge model (dotted) with the generated Franke's function data with  added noise.}	
-\end{figure}
-
-\begin{figure}
-	\includegraphics[scale=1]{figs/3dmodel_Ridge_terrain.pdf}
-	\label{fig:3d_OLS_terrain}
-	\caption{3D plot of the Ridge model (dotted) and the terrain data of Lake Tanganyika.}
-\end{figure}
-
-
-
-\begin{figure}
-	\includegraphics[scale=1]{figs/3dmodel_Lasso_Franke.pdf}
-	\label{fig:3d_Ridge_Franke}
-	\caption{3D plot of the Lasso model (dotted) and the generated Franke's function data with  added noise.}	
-\end{figure}
-
-\begin{figure}
-	\includegraphics[scale=1]{figs/3dmodel_Lasso_terrain.pdf}
-	\label{fig:3d_Ridge_Franke}
-	\caption{3D plot of the Lasso model (dotted) and the terrain data of Lake Tanganyika.}	
-\end{figure}
 
 \begin{multicols}{2}
-
-
 
 
 \section{Discussion}
@@ -398,10 +388,10 @@ Duis malesuada sagittis mi ut gravida. Maecenas porta sed mi at malesuada. Nunc 
 
 % \the\columnwidth
 
-\end{multicols}
-
 \bibliographystyle{iEEEtran}
 \bibliography{references}
 
+
+\end{multicols}
 
 \end{document}
