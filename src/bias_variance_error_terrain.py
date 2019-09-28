@@ -14,7 +14,7 @@ fonts = {
     "ytick.labelsize": 10,
 }
 plt.rcParams.update(fonts)
-"""
+
 # Degrees to test OLS with.
 degrees = np.arange(0, 15)
 
@@ -70,7 +70,8 @@ ax.text(
 ax.legend(loc=6)
 fig.tight_layout()
 fig.savefig("../doc/figs/biasvariancetradeoff_ols_terrain.pdf", dpi=1000)
-"""
+
+
 # Prediction error for Ridge regression
 
 lambda_Ridge = np.logspace(-10, 10, 21)
