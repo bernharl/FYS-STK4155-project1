@@ -12,4 +12,4 @@ in combination with our own implementation of k-fold cross-validation in order t
 To run all test functions, generate data and plots used in the report, please run main_script.sh.
 
 ## 3D plot of Franke's function fit with Ridge regression
-As mentioned in section 5.1 in the report, the 3D plot of the Ridge fit of Franke's function can be found [here](/doc/figs/3dmodel_Ridge_terrain.pdf).
+As mentioned in section 5.1 in the report, the 3D plot of the Ridge fit of Franke's function can be found [here](/doc/figs/3dmodel_Ridge_Franke.pdf).
