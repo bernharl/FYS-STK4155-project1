@@ -8,6 +8,7 @@ ols_franke = OrdinaryLeastSquares(stddev=0.1, degree=4)
 ols_franke.regression_method()
 R2_train.append(ols_franke.r_squared_train)
 R2_test.append(ols_franke.r_squared)
+# Trying to save memory
 del ols_franke
 
 ols_terrain = OrdinaryLeastSquares(
@@ -21,12 +22,14 @@ ols_terrain = OrdinaryLeastSquares(
 ols_terrain.regression_method()
 R2_train.append(ols_terrain.r_squared_train)
 R2_test.append(ols_terrain.r_squared)
+# Trying to save memory
 del ols_terrain
 
 ridge_franke = RidgeRegression(stddev=0.1, degree=4, lambd=1e-5)
 ridge_franke.regression_method()
 R2_train.append(ridge_franke.r_squared_train)
 R2_test.append(ridge_franke.r_squared)
+# Trying to save memory
 del ridge_franke
 
 ridge_terrain = RidgeRegression(
@@ -42,6 +45,7 @@ ridge_terrain = RidgeRegression(
 ridge_terrain.regression_method()
 R2_train.append(ridge_terrain.r_squared_train)
 R2_test.append(ridge_terrain.r_squared)
+# Trying to save memory
 del ridge_terrain
 
 
@@ -49,6 +53,7 @@ lasso_franke = LassoRegression(stddev=0.1, degree=4, lambd=1e-5)
 lasso_franke.regression_method()
 R2_train.append(lasso_franke.r_squared_train)
 R2_test.append(lasso_franke.r_squared)
+# Trying to save memory
 del lasso_franke
 
 lasso_terrain = LassoRegression(
@@ -64,6 +69,7 @@ lasso_terrain = LassoRegression(
 lasso_terrain.regression_method()
 R2_train.append(lasso_terrain.r_squared_train)
 R2_test.append(lasso_terrain.r_squared)
+# Trying to save memory
 del lasso_terrain
 
 
@@ -88,18 +94,21 @@ ols_franke_n = OrdinaryLeastSquares(stddev=1, degree=4)
 ols_franke_n.regression_method()
 R2_train_n.append(ols_franke_n.r_squared_train)
 R2_test_n.append(ols_franke_n.r_squared)
+# Trying to save memory
 del ols_franke_n
 
 ridge_franke_n = RidgeRegression(stddev=1, degree=4, lambd=1e-6)
 ridge_franke_n.regression_method()
 R2_train_n.append(ridge_franke_n.r_squared_train)
 R2_test_n.append(ridge_franke_n.r_squared)
+# Trying to save memory
 del ridge_franke_n
 
 lasso_franke_n = LassoRegression(stddev=1, degree=4, lambd=1e-3)
 lasso_franke_n.regression_method()
 R2_train_n.append(lasso_franke_n.r_squared_train)
 R2_test_n.append(lasso_franke_n.r_squared)
+# Trying to save memory
 del lasso_franke_n
 
 reg_type_n = ["OLS", "Ridge", "Lasso"]

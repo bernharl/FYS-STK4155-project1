@@ -8,6 +8,7 @@ from main import OrdinaryLeastSquares, RidgeRegression, LassoRegression
 ols_franke = OrdinaryLeastSquares(stddev=0.1, degree=4)
 ols_franke.regression_method()
 ols_franke.plot_model("OLS")
+# Trying to save memory
 del ols_franke
 
 ols_terrain = OrdinaryLeastSquares(
@@ -20,12 +21,14 @@ ols_terrain = OrdinaryLeastSquares(
 )
 ols_terrain.regression_method()
 ols_terrain.plot_model("OLS")
+# Trying to save memory
 del ols_terrain
 
 # Ridge model plots
 ridge_franke = RidgeRegression(stddev=0.1, degree=4, lambd=1e-5)
 ridge_franke.regression_method()
 ridge_franke.plot_model("Ridge")
+# Trying to save memory
 del ridge_franke
 
 ridge_terrain = RidgeRegression(
@@ -40,6 +43,7 @@ ridge_terrain = RidgeRegression(
 )
 ridge_terrain.regression_method()
 ridge_terrain.plot_model("Ridge")
+# Trying to save memory
 del ridge_terrain
 
 
@@ -61,4 +65,5 @@ lasso_terrain = LassoRegression(
 )
 lasso_terrain.regression_method()
 lasso_terrain.plot_model("Lasso")
+# Trying to save memory
 del lasso_terrain

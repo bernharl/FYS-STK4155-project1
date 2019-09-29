@@ -24,6 +24,7 @@ for i in degrees:
     print(i)
     OLS = OrdinaryLeastSquares(degree=i, stddev=0.1, terrain_data=False)
     pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
+    # Trying to save memory
     del OLS
 pred_log = np.log10(pred_error)
 pred_log_train = np.log10(pred_error_train)
@@ -72,6 +73,7 @@ for j, lamb in enumerate(lambda_Ridge):
     pred_error_ridge[j], pred_error_train_ridge[j] = ridge_reg.k_fold(
         k=5, calc_train=True
     )
+    # Trying to save memory
     del ridge_reg
 pred_log = np.log10(pred_error_ridge)
 pred_log_train = np.log10(pred_error_train_ridge)
@@ -120,6 +122,7 @@ for j, lamb in enumerate(lambda_lasso):
     pred_error_lasso[j], pred_error_train_lasso[j] = lasso_reg.k_fold(
         k=5, calc_train=True
     )
+    # Trying to save memory
     del lasso_reg
 pred_log = np.log10(pred_error_lasso)
 pred_log_train = np.log10(pred_error_train_lasso)
