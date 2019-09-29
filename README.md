@@ -14,3 +14,11 @@ To run all test functions, generate data and plots used in the report, please ru
 ## Additional Figures mentioned in report
 ### Section 5.1
 * [3D plotted Ridge fit of Franke's function](/doc/figs/3dmodel_Ridge_Franke.pdf).
+* [3D plotted LASSO fit of Franke's function](/doc/figs/3dmodel_Lasso_Franke.pdf).
+
+### Section 5.2
+* [3D plotted Ridge fit of terrain data](/doc/figs/3dmodel_Ridge_terrain.pdf).
+* [3D plotted LASSO fit of terrain data](/doc/figs/3dmodel_Lasso_terrain.pdf).
+* [EPE plotted for OLS as a function of model complexity, using only every 150th point in the x and y directions](/doc/figs/biasvariancetradeoff_ols_terrain_150_skip.pdf).
+* [EPE plotted for Ridge as a function of the hyperparameter, using only every 150th point in the x and y directions](/doc/figs/biasvariancetradeoff_Ridge_terrain_150_skip.pdf).
+* [EPE plotted for LASSO as a function of the hyperparameter, using only every 150th point in the x and y directions](/doc/figs/biasvariancetradeoff_LASSO_terrain_150_skip.pdf).
