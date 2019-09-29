@@ -34,7 +34,7 @@
 
 \begin{abstract} \noindent
  The Ordinary Least Squares (OLS), Ridge and  the Least Absolute Shrinkage and Selection Operator (Lasso) linear regression methods are commonly some of the first concepts taught in statistical learning. In this project, 
-we use these methods to make two-dimensional polynomial fits of two different data sets. The first set consists of only 400 points generated using Franke's function with added noise, while the second set consists of real-life terrain data and contains over 800 thousand data points. To compare these methods and examine their differences, we use $k$-fold cross validation to find the expected prediction error (EPE) and $R^2$ scores to evaluate the performance of these methods on both data sets. In both cases, the OLS seems to outperform the other methods, both in $R^2$-score and EPE, with the EPE for both Lasso and Ridge being at a minimum for lower shrinkage factors. The $R^2$ scores for the OLS models were 0.822 and 0.868 for the synthetic data and terrain data respectively, which indicate that the OLS, albeit simple, can be a  sufficiently powerful tool in certain situations. However, if higher precision is desired, it would probably be better to consider different regression methods altogether. 
+we use these methods to make two-dimensional polynomial fits of two different data sets. The first set consists of only 400 points generated using Franke's function \cite{franke1979critical} with added noise , while the second set consists of real-life terrain data and contains over 800 thousand data points. To compare these methods and examine their differences, we use $k$-fold cross validation to find the expected prediction error (EPE) and $R^2$ scores to evaluate the performance of these methods on both data sets. In both cases, the OLS seems to outperform the other methods, both in $R^2$-score and EPE, with the EPE for both Lasso and Ridge being at a minimum for lower shrinkage factors. The $R^2$ scores for the OLS models were 0.822 and 0.868 for the synthetic data and terrain data respectively, which indicate that the OLS, albeit simple, can be a  sufficiently powerful tool in certain situations. However, if higher precision is desired, it would probably be better to consider different regression methods altogether. 
 \end{abstract}
 
 \begin{multicols}{2}
@@ -172,13 +172,13 @@ One method of resampling is called the $k$-fold cross-validation method, which g
 \section{Method}
 To get an understanding of the three regression methods, we initially use Franke's function with added noise to study how to model a fit for two-dimensional data using all three methods. We then try to apply this knowledge to real-life terrain data of Lake Tanganyika, Africa, from the US Geological Survey \href{https://earthexplorer.usgs.gov/}{EarthExplorer}  website \cite{earthexplorer} .  The subscript F pertains to the results and data from Franke's function, while the subscript T pertains to the terrain data and its results.  The expressions used to generate the data from Franke's function and added noise are shown in Equation (\ref{eq:Franke}) and (\ref{eq:Frankenoise}). The generated data set contains 400 data points, whereas the terrain data contains approximately $6.5$ million points. Analyzing the entire set would require more memory than what is available to us, so we are instead using every 4th data point in both directions, leaving us with approximately 800 thousand points.  For both data sets we used a third of the data as test data and the remainder as training data.
 \\
-Franke's function is given by
+Franke's function \cite{franke1979critical} is given by
 \begin{align}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4}   - \frac{(9y-2)^2}{4}\right)} \nonumber\\
  &+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \nonumber\\
  &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} \nonumber\\
- &-\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }. \label{eq:Franke}
-\end{align} which is defined on $x,\ y \in [0,1]$.
+ &-\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) } . \label{eq:Franke}
+\end{align} which is defined on $x,\ y \in [0,1]$. 
 
 To imitate real data, we add some stochastic noise to the function using a Gaussian kernel, so that the actual data is
 \begin{equation}
