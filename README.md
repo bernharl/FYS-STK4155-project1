@@ -10,3 +10,7 @@ We will be using the following regression methods,
 in combination with our own implementation of k-fold cross-validation in order to eventually model a two-dimensional polynomial fit to real terrain data downloaded from [USGS EarthExplorer](https://earthexplorer.usgs.gov/).
 
 To run all test functions, generate data and plots used in the report, please run main_script.sh.
+
+## 3d plot of Franke's function fit with Ridge regression
+As mentioned in section 5.1 in the report.
+![Franke Ridge](/doc/figs/3dmodel_Ridge_Franke.pdf)
