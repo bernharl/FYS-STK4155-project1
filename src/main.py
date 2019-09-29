@@ -58,26 +58,29 @@ class RegressionClass:
             if isinstance(filename, str):
                 self.filename = filename
                 self.path = path
+                # Reading data, skiping points in x and y direction
                 self.z_meshgrid = np.asarray(self.read_image_data(), dtype=np.int16)[
                     ::skip_y_terrain, ::skip_x_terrain
                 ]
                 RuntimeWarning(
-                    "Given standard deviation is ignored and replaced by the image data's deviations"
+                    "Given standard deviation is ignored and replaced by the image data's standar deviation"
                 )
                 self.stddev = np.std(self.z_meshgrid)
 
+                # Defining x and y
                 x = np.arange(0, self.z_meshgrid.shape[1]) / (
                     self.z_meshgrid.shape[1] - 1
                 )
                 y = np.arange(0, self.z_meshgrid.shape[0]) / (
                     self.z_meshgrid.shape[0] - 1
                 )
-
+                # Meshgridding, needed for plot and to get all combinations
                 self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             else:
                 raise ValueError("filename must be a string")
         else:
             self.stddev = stddev
+            # Defining x and y
             x = np.linspace(0, 1, n_points, endpoint=True)
             y = np.linspace(0, 1, n_points, endpoint=True)
 
@@ -85,18 +88,19 @@ class RegressionClass:
             self.x_meshgrid, self.y_meshgrid = np.meshgrid(x, y)
             self.z_meshgrid = self.noise_function()
 
+        # Flattening inputs and data to make it possible to create design matrix
         self.x = np.concatenate(self.x_meshgrid)
         self.y = np.concatenate(self.y_meshgrid)
         self.z_ = np.concatenate(self.z_meshgrid)
-        self.n = len(self.x)
         self.degree = degree
+        # Creating design matrix
         self.X = self.design_matrix(self.x, self.y)
         # Split data into training and test set.
         self.X_train, self.X_test, self.z_train, self.z_test = sklms.train_test_split(
             self.X, self.z_, test_size=0.33, shuffle=True
         )
         self.modeled = False
-        self.terrain_data = terrain_data
+        self.terrain_data = terrain_data # This is a boolean
 
     def generate_data(self):
         """
@@ -112,7 +116,7 @@ class RegressionClass:
 
     def read_image_data(self):
         """
-        Reads terrain data from file. Only used if self.terrain_data==False.
+        Reads terrain data from file. Only used if self.terrain_data==True.
         """
         if self.path == None:
             file_name_path = self.filename
@@ -127,6 +131,7 @@ class RegressionClass:
          the data generated with Franke's function.
         """
         f = self.generate_data()
+        # Gaussian noise
         noise = np.random.normal(0, self.stddev, size=f.shape)
         return f + noise
 
@@ -142,16 +147,17 @@ class RegressionClass:
         """
         if not plot_data and not self.modeled:
             raise RuntimeError("Please either plot modeled data, real data or both")
-
+        # Cannot plot all data if using terrain data, would crash matplotlib
         if self.terrain_data:
             skip = 1000
         else:
             skip = 1
         fig = plt.figure()
+        # Figure size set to equal the width of the report, using golden ratio for height.
         fig.set_size_inches(2 * 2.942, 2 * 1.818)
         fig.tight_layout()
         ax = fig.gca(projection="3d")
-        # Plot the surface.
+        # If modeled, plot scatterplot of model
         if self.modeled:
             ax.scatter(
                 self.x[::skip],
@@ -160,6 +166,7 @@ class RegressionClass:
                 s=2,
                 color="black",
             )
+        # Plot the data modeled.
         if plot_data:
             surf = ax.plot_surface(
                 self.x_meshgrid,
@@ -177,6 +184,7 @@ class RegressionClass:
         ax.set_xlabel("x")
         ax.set_ylabel("y")
         ax.set_zlabel("z")
+        # Setting nice viewing angle for terrain data
         if self.terrain_data:
             ax.zaxis.set_major_formatter(FormatStrFormatter("%g"))
             zticks = np.linspace(np.min(self.z_), np.max(self.z_), 4)
@@ -188,6 +196,7 @@ class RegressionClass:
                 bbox_inches="tight",
                 dpi=1000,
             )
+        # Setting nice viewing angle for Franke data
         else:
             ax.zaxis.set_major_formatter(FormatStrFormatter("%.2g"))
 
@@ -224,6 +233,10 @@ class RegressionClass:
         mse_train(float): The average training error of the folds, only returned
                           if calc_train==True.
         """
+        # This method is implemented in a pretty "hacky" manner, so for it to not
+        # change the model if it is already modeled, we have to save the old
+        # arrays before overwriting them. This is terribly ineficcient memory-wise,
+        # and should not be repeated in the next project.
         already_modeled = self.modeled
         X_train_old, X_test_old, z_train_old, z_test_old = (
             self.X_train,
@@ -433,7 +446,7 @@ class RidgeRegression(RegressionClass):
         beta = np.zeros(len(self.X_train[0]))
 
         # Using np.linalg.solve instead of inverting matrix directly, should
-        # be more stable.
+        # be more stable. Using centered inputs.
         beta[1:] = np.linalg.solve(
             (self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)).T
             @ (self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0))
@@ -453,6 +466,7 @@ class RidgeRegression(RegressionClass):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
+        # As inputs are centered, we must add the intercept manually.
         return ((self.X - np.mean(self.X_train, axis=0)) @ self.beta) + np.mean(
             self.z_train
         )
@@ -466,6 +480,7 @@ class RidgeRegression(RegressionClass):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
+        # As inputs are centered, we must add the intercept manually.
         return ((self.X_test - np.mean(self.X_train, axis=0)) @ self.beta) + np.mean(
             self.z_train
         )
@@ -479,6 +494,7 @@ class RidgeRegression(RegressionClass):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
+        # As inputs are centered, we must add the intercept manually.
         return ((self.X_train - np.mean(self.X_train, axis=0)) @ self.beta) + np.mean(
             self.z_train
         )
@@ -506,6 +522,7 @@ class LassoRegression(RidgeRegression):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
+        # As inputs are centered, we must add the intercept manually.
         return self.beta.predict(
             self.X_test[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
         ) + np.mean(self.z_train)
@@ -519,6 +536,7 @@ class LassoRegression(RidgeRegression):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
+        # As inputs are centered, we must add the intercept manually.
         return self.beta.predict(
             self.X[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
         ) + np.mean(self.z_train)
@@ -532,6 +550,7 @@ class LassoRegression(RidgeRegression):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
+        # As inputs are centered, we must add the intercept manually.      
         return self.beta.predict(
             self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
         ) + np.mean(self.z_train)
