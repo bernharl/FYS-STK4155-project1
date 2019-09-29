@@ -12,6 +12,7 @@ in combination with our own implementation of k-fold cross-validation in order t
 To run all test functions, generate data and plots used in the report, please run main_script.sh.
 
 ## Additional Figures mentioned in report
+Unfortunately, Github does not support embedding graphics in pdf format, so we have to link to them instead. The reason we use .pdf is that we want to use vector graphics for figures.
 ### Section 5.1
 * [3D plotted Ridge fit of Franke's function](/doc/figs/3dmodel_Ridge_Franke.pdf).
 * [3D plotted LASSO fit of Franke's function](/doc/figs/3dmodel_Lasso_Franke.pdf).
