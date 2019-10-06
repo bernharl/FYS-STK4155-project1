@@ -27,6 +27,7 @@ Unfortunately, Github does not support embedding graphics in pdf format, so we h
 ### Section 5.1
 * [3D plotted Ridge fit of Franke's function](/doc/figs/3dmodel_Ridge_Franke.pdf).
 * [3D plotted LASSO fit of Franke's function](/doc/figs/3dmodel_Lasso_Franke.pdf).
+* [Bias variance decomposition of Ridge error as a function of hyperparameter](/doc/figs/biasvariancetradeoff_Ridge_Franke_ruined_decomp.pdf)
 
 ### Section 5.2
 * [3D plotted Ridge fit of terrain data](/doc/figs/3dmodel_Ridge_terrain.pdf).
