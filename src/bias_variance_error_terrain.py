@@ -107,8 +107,8 @@ ax.set_xlabel(r"$\lambda$")
 ax.set_ylabel(r"Error")
 ax.set_ylim(
     [
-        np.min(pred_log_train) - np.min(np.abs(pred_log_train)) * 0.1,
-        np.max(pred_log) + np.max(np.abs(pred_log)) * 0.3,
+        np.min(pred_error_train_ridge) - np.min(np.abs(pred_error_train_ridge)) * 0.1,
+        np.max(pred_error_ridge) + np.max(np.abs(pred_error_ridge)) * 0.3,
     ]
 )
 
