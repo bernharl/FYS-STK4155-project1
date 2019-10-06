@@ -101,7 +101,7 @@ for j, lamb in enumerate(lambda_Ridge):
 
 fig, ax = plt.subplots()
 fig.set_size_inches(0.9 * 2 * 2.9, 0.9 * 2 * 1.81134774961)
-ax.loglog(lambda_Ridge, pred_error_ridge_train, label="Train", color="g")
+ax.loglog(lambda_Ridge, pred_error_train_ridge, label="Train", color="g")
 ax.loglog(lambda_Ridge, pred_error_ridge, linestyle="--", label="Test", color="r")
 ax.set_xlabel(r"$\lambda$")
 ax.set_ylabel(r"Error")
