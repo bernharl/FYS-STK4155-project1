@@ -20,6 +20,8 @@ degrees = np.arange(0, 15)
 # Empty arrays for storing train and test errors.
 pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)
+bias_squared = np.zeros_like(pred_error)
+variance = np.zeros_like(pred_error)
 
 for i in degrees:
     print(i)
