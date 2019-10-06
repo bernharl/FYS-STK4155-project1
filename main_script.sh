@@ -5,7 +5,7 @@ cd src
 echo "Run test functions? (y/n)"
 read yn_r
 if [ "$yn_r" == "y" ]
-then 
+then
   pytest -v
 fi
 
@@ -17,10 +17,11 @@ then
 fi
 
 echo "Create plots? (y/n)"
-read yn_r3 
+read yn_r3
 if [ "$yn_r3" == "y" ]
 then
   python bias_variance_error_terrain.py
+  python bias_variance_error_terrain_150.py
   python bias_variance_error_Franke.py
   python beta_variance_ols_plot.py
   python model_plots.py
