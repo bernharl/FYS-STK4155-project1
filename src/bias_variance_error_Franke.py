@@ -19,28 +19,34 @@ degrees = np.arange(0, 11)
 
 pred_error = np.zeros_like(degrees, dtype=float)
 pred_error_train = np.zeros_like(pred_error)
+bias_squared = np.zeros_like(pred_error)
+variance = np.zeros_like(pred_error)
 
 for i in degrees:
     print(i)
     OLS = OrdinaryLeastSquares(degree=i, stddev=0.1, terrain_data=False)
-    pred_error[i], pred_error_train[i] = OLS.k_fold(k=5, calc_train=True)
+    pred_error[i], pred_error_train[i], bias_squared[i], variance[i] = OLS.k_fold(
+        k=5, calc_train=True, decompose=True
+    )
     # Trying to save memory
     del OLS
-pred_log = np.log10(pred_error)
-pred_log_train = np.log10(pred_error_train)
+
+
 fig, ax = plt.subplots()
 fig.set_size_inches(0.9 * 2 * 2.9, 0.9 * 2 * 1.81134774961)
-ax.plot(degrees, pred_log_train, label="Train", color="g")
-ax.plot(degrees, pred_log, linestyle="--", label="Test", color="r")
+ax.semilogy(degrees, pred_error_train, label="Train", color="g")
+ax.semilogy(degrees, pred_error, linestyle="--", label="Test", color="r")
+ax.semilogy(degrees, bias_squared, label="Bias")
+ax.semilogy(degrees, variance, label="Variance")
 ax.set_xlabel("Model Complexity [polynomial degree]")
 ax.set_xticks(degrees[::2])
-ax.set_ylabel(r"log$_{10}$(Prediction Error)")
+ax.set_ylabel("Error")
 ax.set_ylim(
     [
-        np.min(pred_log_train) - np.min(np.abs(pred_log_train)) * 0.1,
-        np.max(pred_log) + np.max(np.abs(pred_log)) * 0.3,
+        np.min(pred_error_train) - np.min(np.abs(pred_error_train)) * 0.1,
+        np.max(pred_error) + np.max(np.abs(pred_error)) * 0.3,
     ]
-    )
+)
 
 ax.text(
     0.05,
@@ -75,19 +81,17 @@ for j, lamb in enumerate(lambda_Ridge):
     )
     # Trying to save memory
     del ridge_reg
-pred_log = np.log10(pred_error_ridge)
-pred_log_train = np.log10(pred_error_train_ridge)
 
 fig, ax = plt.subplots()
 fig.set_size_inches(0.9 * 2 * 2.9, 0.9 * 2 * 1.81134774961)
-ax.plot(np.log10(lambda_Ridge), pred_log_train, label="Train", color="g")
-ax.plot(np.log10(lambda_Ridge), pred_log, linestyle="--", label="Test", color="r")
-ax.set_xlabel(r"log$_{10}\lambda$")
-ax.set_ylabel(r"log$_{10}$(Prediction Error)")
+ax.loglog(lambda_Ridge, pred_error_train_ridge, label="Train", color="g")
+ax.loglog(lambda_Ridge, pred_error_ridge, linestyle="--", label="Test", color="r")
+ax.set_xlabel(r"$\lambda$")
+ax.set_ylabel(r"Error")
 ax.set_ylim(
     [
-        np.min(pred_log_train) - np.min(np.abs(pred_log_train)) * 0.1,
-        np.max(pred_log) + np.max(np.abs(pred_log)) * 0.3,
+        np.min(pred_error_train_ridge) - np.min(np.abs(pred_error_train_ridge)) * 0.1,
+        np.max(pred_error_ridge) + np.max(np.abs(pred_error_ridge)) * 0.3,
     ]
 )
 
@@ -124,19 +128,18 @@ for j, lamb in enumerate(lambda_lasso):
     )
     # Trying to save memory
     del lasso_reg
-pred_log = np.log10(pred_error_lasso)
-pred_log_train = np.log10(pred_error_train_lasso)
+
 
 fig, ax = plt.subplots()
 fig.set_size_inches(0.9 * 2 * 2.9, 0.9 * 2 * 1.81134774961)
-ax.plot(np.log10(lambda_lasso), pred_log_train, label="Train", color="g")
-ax.plot(np.log10(lambda_lasso), pred_log, linestyle="--", label="Test", color="r")
-ax.set_xlabel(r"log$_{10}\lambda$")
-ax.set_ylabel(r"log$_{10}$(Prediction Error)")
+ax.loglog(lambda_lasso, pred_error_train_lasso, label="Train", color="g")
+ax.loglog(lambda_lasso, pred_error_lasso, linestyle="--", label="Test", color="r")
+ax.set_xlabel(r"$\lambda$")
+ax.set_ylabel("Error")
 ax.set_ylim(
     [
-        np.min(pred_log_train) - np.min(np.abs(pred_log_train)) * 0.1,
-        np.max(pred_log) + np.max(np.abs(pred_log)) * 0.3,
+        np.min(pred_error_train_lasso) - np.min(np.abs(pred_error_train_lasso)) * 0.1,
+        np.max(pred_error_lasso) + np.max(np.abs(pred_error_lasso)) * 0.3,
     ]
 )
 
