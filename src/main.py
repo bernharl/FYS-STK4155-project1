@@ -461,8 +461,8 @@ class RidgeRegression(RegressionClass):
     def regression_model(self):
         """
         Returns the entire regression model. Is for instance used in plotting.
-        This has to be defined separately for Ridge because Ridge needs centered
-        inputs.
+        This has to be defined separately for Ridge regression as Ridge needs 
+        centered inputs.
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
@@ -475,8 +475,8 @@ class RidgeRegression(RegressionClass):
     def eval_model(self):
         """
         Returns the model applied to the test inputs.
-        This has to be defined separately for Ridge because Ridge needs centered
-        inputs.
+        This has to be defined separately for Ridge regression as Ridge needs 
+        centered inputs.
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
@@ -489,8 +489,8 @@ class RidgeRegression(RegressionClass):
     def eval_model_train(self):
         """
         Returns the model applied to the training inputs.
-        This has to be defined separately for Ridge because Ridge needs centered
-        inputs.
+        This has to be defined separately for Ridge regression as Ridge needs 
+        centered inputs.
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
@@ -517,7 +517,7 @@ class LassoRegression(RidgeRegression):
     def eval_model(self):
         """
         Returns the model applied to the test inputs.
-        This has to be defined separately for LASSO because uses Scikit-Learn's
+        This has to be defined separately for LASSO as it uses Scikit-Learn's
         method.
         """
         if not self.modeled:
@@ -531,7 +531,7 @@ class LassoRegression(RidgeRegression):
     def regression_model(self):
         """
         Returns the entire regression model. Is for instance used in plotting.
-        This has to be defined separately for LASSO because uses Scikit-Learn's
+        This has to be defined separately for LASSO as it uses Scikit-Learn's
         method.
         """
         if not self.modeled:
@@ -545,7 +545,7 @@ class LassoRegression(RidgeRegression):
     def eval_model_train(self):
         """
         Returns the model applied to the training inputs.
-        This has to be defined separately for LASSO because uses Scikit-Learn's
+        This has to be defined separately for LASSO as it uses Scikit-Learn's
         method.
         """
         if not self.modeled:
