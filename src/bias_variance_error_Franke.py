@@ -36,7 +36,7 @@ fig, ax = plt.subplots()
 fig.set_size_inches(0.9 * 2 * 2.9, 0.9 * 2 * 1.81134774961)
 ax.semilogy(degrees, pred_error_train, label="Train", color="g")
 ax.semilogy(degrees, pred_error, linestyle="--", label="Test", color="r")
-ax.semilogy(degrees, bias_squared, label="Bias")
+ax.semilogy(degrees, bias_squared, label=r"Bias$^2$")
 ax.semilogy(degrees, variance, label="Variance")
 ax.set_xlabel("Model Complexity [polynomial degree]")
 ax.set_xticks(degrees[::2])
@@ -73,11 +73,13 @@ fig.savefig("../doc/figs/biasvariancetradeoff_ols_Franke.pdf", dpi=1000)
 lambda_Ridge = np.logspace(-7, 1, 80)
 pred_error_ridge = np.zeros_like(lambda_Ridge)
 pred_error_train_ridge = np.zeros_like(pred_error_ridge)
+bias_squared_ridge = np.zeros_like(pred_error_ridge)
+variance_ridge = np.zeros_like(pred_error_ridge)
 
 for j, lamb in enumerate(lambda_Ridge):
     ridge_reg = RidgeRegression(lambd=lamb, stddev=0.1, degree=4, terrain_data=False)
     pred_error_ridge[j], pred_error_train_ridge[j] = ridge_reg.k_fold(
-        k=5, calc_train=True
+        k=5, calc_train=True, decompose=False
     )
     # Trying to save memory
     del ridge_reg

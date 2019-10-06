@@ -100,7 +100,7 @@ class RegressionClass:
             self.X, self.z_, test_size=0.33, shuffle=True
         )
         self.modeled = False
-        self.terrain_data = terrain_data # This is a boolean
+        self.terrain_data = terrain_data  # This is a boolean
 
     def generate_data(self):
         """
@@ -212,7 +212,7 @@ class RegressionClass:
 
         plt.close()
 
-    def k_fold(self, k=5, calc_train=False):
+    def k_fold(self, k=5, calc_train=False, decompose=False):
         """
         Performs k-fold cross validation for the defined training data.
 
@@ -250,6 +250,9 @@ class RegressionClass:
         mse = np.zeros(k)
         if calc_train:
             mse_train = np.zeros_like(mse)
+        if decompose:
+            bias_squared = np.zeros_like(mse)
+            variance = np.zeros_like(mse)
 
         for i in range(k):
             test_index = index[i]
@@ -269,9 +272,18 @@ class RegressionClass:
             if calc_train:
                 mse_train[i] = self.mean_squared_error_train
 
+            if decompose:
+                bias_squared[i] = np.mean((self.z_test - np.mean(self.eval_model)) ** 2)
+
+                variance[i] = np.var(self.eval_model)
+
         mse = np.mean(mse)
         if calc_train:
             mse_train = np.mean(mse_train)
+
+        if decompose:
+            bias = np.mean(bias_squared)
+            variance = np.mean(variance)
 
         self.X_train, self.X_test, self.z_train, self.z_test = (
             X_train_old,
@@ -282,10 +294,16 @@ class RegressionClass:
         if already_modeled:
             self.regression_method()
 
-        if calc_train:
-            return mse, mse_train
+        return_values = [mse]
 
-        return mse
+        if calc_train:
+            return_values.append(mse_train)
+
+        if decompose:
+            return_values.append(bias)
+            return_values.append(variance)
+
+        return return_values
 
     def design_matrix(self, x, y):
         """
@@ -461,7 +479,7 @@ class RidgeRegression(RegressionClass):
     def regression_model(self):
         """
         Returns the entire regression model. Is for instance used in plotting.
-        This has to be defined separately for Ridge regression as Ridge needs 
+        This has to be defined separately for Ridge regression as Ridge needs
         centered inputs.
         """
         if not self.modeled:
@@ -475,7 +493,7 @@ class RidgeRegression(RegressionClass):
     def eval_model(self):
         """
         Returns the model applied to the test inputs.
-        This has to be defined separately for Ridge regression as Ridge needs 
+        This has to be defined separately for Ridge regression as Ridge needs
         centered inputs.
         """
         if not self.modeled:
@@ -489,7 +507,7 @@ class RidgeRegression(RegressionClass):
     def eval_model_train(self):
         """
         Returns the model applied to the training inputs.
-        This has to be defined separately for Ridge regression as Ridge needs 
+        This has to be defined separately for Ridge regression as Ridge needs
         centered inputs.
         """
         if not self.modeled:
@@ -550,7 +568,7 @@ class LassoRegression(RidgeRegression):
         """
         if not self.modeled:
             raise RuntimeError("Run a regression method first!")
-        # As inputs are centered, we must add the intercept manually.      
+        # As inputs are centered, we must add the intercept manually.
         return self.beta.predict(
             self.X_train[:, 1:] - np.mean(self.X_train[:, 1:], axis=0)
         ) + np.mean(self.z_train)
